@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace FileCabinetApp
 {
@@ -9,7 +10,7 @@ namespace FileCabinetApp
         private const int CommandHelpIndex = 0;
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
-
+        private const string Format = "yyyy-MMM-dd";
         private static bool isRunning = true;
         private static FileCabinetService fileCabinetService = new FileCabinetService();
 
@@ -19,6 +20,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("exit", Exit),
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("create", Create),
+            new Tuple<string, Action<string>>("list", List),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -27,6 +29,7 @@ namespace FileCabinetApp
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
             new string[] { "stat", "displays statistics for the entries", "The 'stat' command displays statistics for the entries." },
             new string[] { "create", "creates a record", "The 'create' command creates a record." },
+            new string[] { "list", "returns a list of records added to the service", "The 'list' command eturns a list of records added to the service" },
         };
 
         public static void Main(string[] args)
@@ -120,6 +123,21 @@ namespace FileCabinetApp
 
             int id = fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth);
             Console.WriteLine($"Record #{id} is created.");
+        }
+
+        private static void List(string parameters)
+        {
+            FileCabinetRecord[] records = fileCabinetService.GetRecords();
+
+            for (int i = 0; i < records.Length; i++)
+            {
+                int id = records[i].Id;
+                string firstName = records[i].FirstName;
+                string lastName = records[i].LastName;
+                string dateOfBirth = records[i].DateOfBirth.ToString(Format, CultureInfo.CurrentCulture);
+
+                Console.WriteLine($"#{id}, {firstName}, {lastName}, {dateOfBirth}");
+            }
         }
     }
 }
