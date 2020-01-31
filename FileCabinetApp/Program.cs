@@ -120,8 +120,14 @@ namespace FileCabinetApp
             Console.Write("Date of birth:");
             string date = Console.ReadLine();
             DateTime dateOfBirth = DateTime.ParseExact(date, "M/dd/yyyy", null);
+            Console.Write("Salary:");
+            short salary = short.Parse(Console.ReadLine(), CultureInfo.CurrentCulture);
+            Console.Write("Work rate:");
+            decimal workRate = decimal.Parse(Console.ReadLine(), CultureInfo.CurrentCulture);
+            Console.Write("Gender(M/F):");
+            char gender = char.Parse(Console.ReadLine());
 
-            int id = fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth);
+            int id = fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, salary, workRate, gender);
             Console.WriteLine($"Record #{id} is created.");
         }
 
@@ -135,8 +141,11 @@ namespace FileCabinetApp
                 string firstName = records[i].FirstName;
                 string lastName = records[i].LastName;
                 string dateOfBirth = records[i].DateOfBirth.ToString(Format, CultureInfo.CurrentCulture);
+                short salary = records[i].Salary;
+                decimal workRate = records[i].WorkRate;
+                char gender = records[i].Gender;
 
-                Console.WriteLine($"#{id}, {firstName}, {lastName}, {dateOfBirth}");
+                Console.WriteLine($"#{id}, {firstName}, {lastName}, {dateOfBirth}, {salary}, {workRate}, {gender}");
             }
         }
     }
