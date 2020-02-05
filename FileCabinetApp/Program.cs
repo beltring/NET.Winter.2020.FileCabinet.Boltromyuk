@@ -113,22 +113,39 @@ namespace FileCabinetApp
 
         private static void Create(string parameters)
         {
-            Console.Write("First name:");
-            string firstName = Console.ReadLine();
-            Console.Write("Last name:");
-            string lastName = Console.ReadLine();
-            Console.Write("Date of birth:");
-            string date = Console.ReadLine();
-            DateTime dateOfBirth = DateTime.ParseExact(date, "M/dd/yyyy", null);
-            Console.Write("Salary:");
-            short salary = short.Parse(Console.ReadLine(), CultureInfo.CurrentCulture);
-            Console.Write("Work rate:");
-            decimal workRate = decimal.Parse(Console.ReadLine(), CultureInfo.CurrentCulture);
-            Console.Write("Gender(M/F):");
-            char gender = char.Parse(Console.ReadLine());
+            while (true)
+            {
+                try
+                {
+                    Console.Write("First name:");
+                    string firstName = Console.ReadLine();
+                    Console.Write("Last name:");
+                    string lastName = Console.ReadLine();
+                    Console.Write("Date of birth:");
+                    string date = Console.ReadLine();
+                    DateTime dateOfBirth = DateTime.ParseExact(date, "M/dd/yyyy", null);
+                    Console.Write("Salary:");
+                    short salary = short.Parse(Console.ReadLine(), CultureInfo.CurrentCulture);
+                    Console.Write("Work rate:");
+                    decimal workRate = decimal.Parse(Console.ReadLine(), CultureInfo.CurrentCulture);
+                    Console.Write("Gender(M/F):");
+                    char gender = char.Parse(Console.ReadLine());
 
-            int id = fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, salary, workRate, gender);
-            Console.WriteLine($"Record #{id} is created.");
+                    int id = fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, salary, workRate, gender);
+                    Console.WriteLine($"Record #{id} is created.");
+                    break;
+                }
+                catch (ArgumentNullException)
+                {
+                    Console.WriteLine("Invalid data, try again.");
+                    continue;
+                }
+                catch (ArgumentException)
+                {
+                    Console.WriteLine("Invalid data, try again.");
+                    continue;
+                }
+            }
         }
 
         private static void List(string parameters)
