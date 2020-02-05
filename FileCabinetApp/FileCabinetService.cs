@@ -40,6 +40,32 @@ namespace FileCabinetApp
             return this.list.Count;
         }
 
+        public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, short salary, decimal workRate, char gender)
+        {
+            if (this.list.Exists(x => x.Id == id))
+            {
+                Validation(firstName, lastName, dateOfBirth, salary, workRate, gender);
+
+                foreach (var record in this.list)
+                {
+                    if (record.Id == id)
+                    {
+                        record.FirstName = firstName;
+                        record.LastName = lastName;
+                        record.DateOfBirth = dateOfBirth;
+                        record.Salary = salary;
+                        record.WorkRate = workRate;
+                        record.Gender = gender;
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                throw new ArgumentException("There is no record with this id");
+            }
+        }
+
         private static void Validation(string firstName, string lastName, DateTime dateOfBirth, short salary, decimal workRate, char gender)
         {
             if (firstName == null)

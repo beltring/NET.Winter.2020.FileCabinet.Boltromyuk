@@ -21,6 +21,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("list", List),
+            new Tuple<string, Action<string>>("edit", Edit),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -29,7 +30,8 @@ namespace FileCabinetApp
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
             new string[] { "stat", "displays statistics for the entries", "The 'stat' command displays statistics for the entries." },
             new string[] { "create", "creates a record", "The 'create' command creates a record." },
-            new string[] { "list", "returns a list of records added to the service", "The 'list' command eturns a list of records added to the service" },
+            new string[] { "list", "returns a list of records added to the service", "The 'list' command returns a list of records added to the service" },
+            new string[] { "edit", "editing record", "The 'edit' command editing record" },
         };
 
         public static void Main(string[] args)
@@ -163,6 +165,43 @@ namespace FileCabinetApp
                 char gender = records[i].Gender;
 
                 Console.WriteLine($"#{id}, {firstName}, {lastName}, {dateOfBirth}, {salary}, {workRate}, {gender}");
+            }
+        }
+
+        private static void Edit(string parameters)
+        {
+            int id = 0;
+
+            try
+            {
+                id = int.Parse(parameters, CultureInfo.CurrentCulture);
+                if (id <= fileCabinetService.GetStat())
+                {
+                    Console.Write("First name:");
+                    string firstName = Console.ReadLine();
+                    Console.Write("Last name:");
+                    string lastName = Console.ReadLine();
+                    Console.Write("Date of birth:");
+                    string date = Console.ReadLine();
+                    DateTime dateOfBirth = DateTime.ParseExact(date, "M/d/yyyy", null);
+                    Console.Write("Salary:");
+                    short salary = short.Parse(Console.ReadLine(), CultureInfo.CurrentCulture);
+                    Console.Write("Work rate:");
+                    decimal workRate = decimal.Parse(Console.ReadLine(), CultureInfo.CurrentCulture);
+                    Console.Write("Gender(M/F):");
+                    char gender = char.Parse(Console.ReadLine());
+
+                    fileCabinetService.EditRecord(id, firstName, lastName, dateOfBirth, salary, workRate, gender);
+                    Console.WriteLine($"Record #{id} is updated.");
+                }
+                else
+                {
+                    Console.WriteLine($"#{id} record is not found.");
+                }
+            }
+            catch (ArgumentException)
+            {
+                Console.WriteLine($"#{id} record is not found.");
             }
         }
     }
