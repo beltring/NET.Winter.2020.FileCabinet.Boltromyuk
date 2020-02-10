@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace FileCabinetApp
@@ -64,6 +65,29 @@ namespace FileCabinetApp
             {
                 throw new ArgumentException("There is no record with this id");
             }
+        }
+
+        public FileCabinetRecord[] FindByFirstName(string firstName)
+        {
+            if (firstName is null)
+            {
+                throw new ArgumentNullException($"{nameof(firstName)} can't be null");
+            }
+
+            firstName = firstName.ToLower(CultureInfo.CurrentCulture);
+            List<FileCabinetRecord> listElements = new List<FileCabinetRecord>();
+
+            for (int i = 0; i < this.list.Count; i++)
+            {
+                string firstName1 = this.list[i].FirstName.ToLower(CultureInfo.CurrentCulture);
+
+                if (firstName == firstName1)
+                {
+                    listElements.Add(this.list[i]);
+                }
+            }
+
+            return listElements.ToArray();
         }
 
         private static void Validation(string firstName, string lastName, DateTime dateOfBirth, short salary, decimal workRate, char gender)

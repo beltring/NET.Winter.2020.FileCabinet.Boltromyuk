@@ -22,6 +22,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("edit", Edit),
+            new Tuple<string, Action<string>>("find", Find),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -32,6 +33,7 @@ namespace FileCabinetApp
             new string[] { "create", "creates a record", "The 'create' command creates a record." },
             new string[] { "list", "returns a list of records added to the service", "The 'list' command returns a list of records added to the service" },
             new string[] { "edit", "editing record", "The 'edit' command editing record" },
+            new string[] { "find", "find records", "The 'find' command find records" },
         };
 
         public static void Main(string[] args)
@@ -202,6 +204,33 @@ namespace FileCabinetApp
             catch (ArgumentException)
             {
                 Console.WriteLine($"#{id} record is not found.");
+            }
+        }
+
+        private static void Find(string parameters)
+        {
+            string[] param = parameters.Split(' ');
+            FileCabinetRecord[] records = null;
+
+            string search = param[1].Trim('"');
+            string searchParam = param[0].ToLower(CultureInfo.CurrentCulture);
+
+            switch (searchParam)
+            {
+                case "firstname":
+                    records = fileCabinetService.FindByFirstName(search);
+                    break;
+            }
+
+            Representation(records);
+        }
+
+        private static void Representation(FileCabinetRecord[] records)
+        {
+            foreach (FileCabinetRecord record in records)
+            {
+                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.Year}-{record.DateOfBirth.Month}-{record.DateOfBirth.Day}, " +
+                    $"{record.Salary}, {record.WorkRate}, {record.Gender}");
             }
         }
     }
