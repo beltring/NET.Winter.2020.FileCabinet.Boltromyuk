@@ -113,6 +113,21 @@ namespace FileCabinetApp
             return listElements.ToArray();
         }
 
+        public FileCabinetRecord[] FindByDateOfBirth(DateTime dateOfBirth)
+        {
+            List<FileCabinetRecord> listElements = new List<FileCabinetRecord>();
+
+            for (int i = 0; i < this.list.Count; i++)
+            {
+                if (this.list[i].DateOfBirth.Equals(dateOfBirth))
+                {
+                    listElements.Add(this.list[i]);
+                }
+            }
+
+            return listElements.ToArray();
+        }
+
         private static void Validation(string firstName, string lastName, DateTime dateOfBirth, short salary, decimal workRate, char gender)
         {
             if (firstName == null)

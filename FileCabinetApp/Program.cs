@@ -223,6 +223,10 @@ namespace FileCabinetApp
                 case "lastname":
                     records = fileCabinetService.FindByLastName(search);
                     break;
+                case "dateofbirth":
+                    DateTime dateofbirth = DateTime.ParseExact(search, "yyyy-MMM-dd", null);
+                    records = fileCabinetService.FindByDateOfBirth(dateofbirth);
+                    break;
             }
 
             Representation(records);
@@ -232,7 +236,7 @@ namespace FileCabinetApp
         {
             foreach (FileCabinetRecord record in records)
             {
-                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.Year}-{record.DateOfBirth.Month}-{record.DateOfBirth.Day}, " +
+                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.CurrentCulture)}, " +
                     $"{record.Salary}, {record.WorkRate}, {record.Gender}");
             }
         }
