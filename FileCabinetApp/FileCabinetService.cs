@@ -8,6 +8,7 @@ namespace FileCabinetApp
     public class FileCabinetService
     {
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+        private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
 
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, short salary, decimal workRate, char gender)
         {
@@ -25,6 +26,7 @@ namespace FileCabinetApp
             };
 
             this.list.Add(record);
+            this.AddToFirstNameDictionary(firstName, record);
 
             return record.Id;
         }
@@ -47,19 +49,17 @@ namespace FileCabinetApp
             {
                 Validation(firstName, lastName, dateOfBirth, salary, workRate, gender);
 
-                foreach (var record in this.list)
-                {
-                    if (record.Id == id)
-                    {
-                        record.FirstName = firstName;
-                        record.LastName = lastName;
-                        record.DateOfBirth = dateOfBirth;
-                        record.Salary = salary;
-                        record.WorkRate = workRate;
-                        record.Gender = gender;
-                        return;
-                    }
-                }
+                FileCabinetRecord record = this.list.Find(x => x.Id == id);
+                string name = record.FirstName;
+
+                record.FirstName = firstName;
+                record.LastName = lastName;
+                record.DateOfBirth = dateOfBirth;
+                record.Salary = salary;
+                record.WorkRate = workRate;
+                record.Gender = gender;
+
+                this.UpdateFirstNameDictionary(id, name, record);
             }
             else
             {
@@ -75,19 +75,9 @@ namespace FileCabinetApp
             }
 
             firstName = firstName.ToLower(CultureInfo.CurrentCulture);
-            List<FileCabinetRecord> listElements = new List<FileCabinetRecord>();
+            List<FileCabinetRecord> firstNameList = this.firstNameDictionary[firstName];
 
-            for (int i = 0; i < this.list.Count; i++)
-            {
-                string firstName1 = this.list[i].FirstName.ToLower(CultureInfo.CurrentCulture);
-
-                if (firstName == firstName1)
-                {
-                    listElements.Add(this.list[i]);
-                }
-            }
-
-            return listElements.ToArray();
+            return firstNameList.ToArray();
         }
 
         public FileCabinetRecord[] FindByLastName(string lastName)
@@ -169,6 +159,38 @@ namespace FileCabinetApp
             if (gender != 'M' && gender != 'F')
             {
                 throw new ArgumentException($"Invalid value, the value of the {nameof(gender)} variable must be M or F.");
+            }
+        }
+
+        private void AddToFirstNameDictionary(string firstName, FileCabinetRecord record)
+        {
+            firstName = firstName.ToLower(CultureInfo.CurrentCulture);
+
+            if (this.firstNameDictionary.ContainsKey(firstName))
+            {
+                this.firstNameDictionary[firstName].Add(record);
+            }
+            else
+            {
+                List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+                list.Add(record);
+                this.firstNameDictionary.Add(firstName, list);
+            }
+        }
+
+        private void UpdateFirstNameDictionary(int id, string firstName, FileCabinetRecord modifiedRecord)
+        {
+            List<FileCabinetRecord> list = this.firstNameDictionary[firstName.ToLower(CultureInfo.CurrentCulture)];
+            FileCabinetRecord record = list.Find(x => x.Id == id);
+
+            if (firstName == modifiedRecord.FirstName)
+            {
+                record = modifiedRecord;
+            }
+            else
+            {
+                list.Remove(record);
+                this.AddToFirstNameDictionary(modifiedRecord.FirstName, modifiedRecord);
             }
         }
     }
