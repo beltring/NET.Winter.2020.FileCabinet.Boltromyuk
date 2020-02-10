@@ -90,6 +90,29 @@ namespace FileCabinetApp
             return listElements.ToArray();
         }
 
+        public FileCabinetRecord[] FindByLastName(string lastName)
+        {
+            if (lastName is null)
+            {
+                throw new ArgumentNullException($"fdf");
+            }
+
+            lastName = lastName.ToLower(CultureInfo.CurrentCulture);
+            List<FileCabinetRecord> listElements = new List<FileCabinetRecord>();
+
+            for (int i = 0; i < this.list.Count; i++)
+            {
+                string lastName1 = this.list[i].LastName.ToLower(CultureInfo.CurrentCulture);
+
+                if (lastName == lastName1)
+                {
+                    listElements.Add(this.list[i]);
+                }
+            }
+
+            return listElements.ToArray();
+        }
+
         private static void Validation(string firstName, string lastName, DateTime dateOfBirth, short salary, decimal workRate, char gender)
         {
             if (firstName == null)

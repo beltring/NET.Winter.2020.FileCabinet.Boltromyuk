@@ -220,6 +220,9 @@ namespace FileCabinetApp
                 case "firstname":
                     records = fileCabinetService.FindByFirstName(search);
                     break;
+                case "lastname":
+                    records = fileCabinetService.FindByLastName(search);
+                    break;
             }
 
             Representation(records);
