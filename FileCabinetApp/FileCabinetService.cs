@@ -19,32 +19,32 @@ namespace FileCabinetApp
         /// <summary>
         /// This method creates a record.
         /// </summary>
-        /// <param name="firstName">First name.</param>
-        /// <param name="lastName">Last name.</param>
-        /// <param name="dateOfBirth">Date of birthday.</param>
-        /// <param name="salary">Salary.</param>
-        /// <param name="workRate">Work rate.</param>
-        /// <param name="gender">Gender.</param>
+        /// <param name="parameters">Parameters.</param>
         /// <returns>Id new record.</returns>
-        public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, short salary, decimal workRate, char gender)
+        public int CreateRecord(RecordsParameters parameters)
         {
-            Validation(firstName, lastName, dateOfBirth, salary, workRate, gender);
+            if (parameters is null)
+            {
+                throw new ArgumentNullException($"{nameof(parameters)} can't be null.");
+            }
+
+            Validation(parameters);
 
             var record = new FileCabinetRecord
             {
                 Id = this.list.Count + 1,
-                FirstName = firstName,
-                LastName = lastName,
-                DateOfBirth = dateOfBirth,
-                Salary = salary,
-                WorkRate = workRate,
-                Gender = gender,
+                FirstName = parameters.FirstName,
+                LastName = parameters.LastName,
+                DateOfBirth = parameters.DateOfBirth,
+                Salary = parameters.Salary,
+                WorkRate = parameters.WorkRate,
+                Gender = parameters.Gender,
             };
 
             this.list.Add(record);
-            this.AddToFirstNameDictionary(firstName, record);
-            this.AddToLastNameDictionary(lastName, record);
-            this.AddToDateOfBirthDictionary(dateOfBirth, record);
+            this.AddToFirstNameDictionary(parameters.FirstName, record);
+            this.AddToLastNameDictionary(parameters.LastName, record);
+            this.AddToDateOfBirthDictionary(parameters.DateOfBirth, record);
 
             return record.Id;
         }
@@ -73,29 +73,29 @@ namespace FileCabinetApp
         /// This method changes the record.
         /// </summary>
         /// <param name="id">Id.</param>
-        /// <param name="firstName">First name.</param>
-        /// <param name="lastName">Last name.</param>
-        /// <param name="dateOfBirth">Date of birthday.</param>
-        /// <param name="salary">Salary.</param>
-        /// <param name="workRate">Work rate.</param>
-        /// <param name="gender">Gender.</param>
-        public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, short salary, decimal workRate, char gender)
+        /// <param name="parameters">Parameters.</param>
+        public void EditRecord(int id, RecordsParameters parameters)
         {
+            if (parameters is null)
+            {
+                throw new ArgumentNullException($"{nameof(parameters)} can't be null.");
+            }
+
             if (this.list.Exists(x => x.Id == id))
             {
-                Validation(firstName, lastName, dateOfBirth, salary, workRate, gender);
+                Validation(parameters);
 
                 FileCabinetRecord record = this.list.Find(x => x.Id == id);
                 string initialFirstName = record.FirstName;
                 string initialLastName = record.LastName;
                 DateTime initialDateOfBirth = record.DateOfBirth;
 
-                record.FirstName = firstName;
-                record.LastName = lastName;
-                record.DateOfBirth = dateOfBirth;
-                record.Salary = salary;
-                record.WorkRate = workRate;
-                record.Gender = gender;
+                record.FirstName = parameters.FirstName;
+                record.LastName = parameters.LastName;
+                record.DateOfBirth = parameters.DateOfBirth;
+                record.Salary = parameters.Salary;
+                record.WorkRate = parameters.WorkRate;
+                record.Gender = parameters.Gender;
 
                 this.UpdateFirstNameDictionary(id, initialFirstName, record);
                 this.UpdateLastNameDictionary(id, initialLastName, record);
@@ -171,47 +171,47 @@ namespace FileCabinetApp
             return Array.Empty<FileCabinetRecord>();
         }
 
-        private static void Validation(string firstName, string lastName, DateTime dateOfBirth, short salary, decimal workRate, char gender)
+        private static void Validation(RecordsParameters parameters)
         {
-            if (firstName == null)
+            if (parameters.FirstName == null)
             {
-                throw new ArgumentNullException($"The {nameof(firstName)} parameter must not be null");
+                throw new ArgumentNullException($"The {nameof(parameters.FirstName)} parameter must not be null");
             }
 
-            if (lastName == null)
+            if (parameters.LastName == null)
             {
-                throw new ArgumentNullException($"The {nameof(firstName)} parameter must not be null");
+                throw new ArgumentNullException($"The {nameof(parameters.LastName)} parameter must not be null");
             }
 
-            if (firstName.Length < 2 || firstName.Length > 60)
+            if (parameters.FirstName.Length < 2 || parameters.FirstName.Length > 60)
             {
-                throw new ArgumentException($"The length of {nameof(firstName)} must be between 2 and 60 characters");
+                throw new ArgumentException($"The length of {nameof(parameters.FirstName)} must be between 2 and 60 characters");
             }
 
-            if (lastName.Length < 2 || lastName.Length > 60)
+            if (parameters.LastName.Length < 2 || parameters.LastName.Length > 60)
             {
-                throw new ArgumentException($"The length of {nameof(lastName)} must be between 2 and 60 characters");
+                throw new ArgumentException($"The length of {nameof(parameters.LastName)} must be between 2 and 60 characters");
             }
 
-            if (dateOfBirth.Year < 1950 || (dateOfBirth.Year >= DateTime.Now.Year
-                && dateOfBirth.Month >= DateTime.Now.Month && dateOfBirth.Day > DateTime.Now.Day))
+            if (parameters.DateOfBirth.Year < 1950 || (parameters.DateOfBirth.Year >= DateTime.Now.Year
+                && parameters.DateOfBirth.Month >= DateTime.Now.Month && parameters.DateOfBirth.Day > DateTime.Now.Day))
             {
                 throw new ArgumentException("Minimum date of birth 01-Jan-1950 maximum current date");
             }
 
-            if (salary < 100 || salary > 10000)
+            if (parameters.Salary < 100 || parameters.Salary > 10000)
             {
-                throw new ArgumentException($"Invalid value, the {nameof(salary)} value must be between 100 and 10000");
+                throw new ArgumentException($"Invalid value, the {nameof(parameters.Salary)} value must be between 100 and 10000");
             }
 
-            if (workRate < 0.25m || workRate > 1.5m)
+            if (parameters.WorkRate < 0.25m || parameters.WorkRate > 1.5m)
             {
-                throw new ArgumentException($"Invalid value, the {nameof(workRate)} value must be between 0.25 and 1.5");
+                throw new ArgumentException($"Invalid value, the {nameof(parameters.WorkRate)} value must be between 0.25 and 1.5");
             }
 
-            if (gender != 'M' && gender != 'F')
+            if (parameters.Gender != 'M' && parameters.Gender != 'F')
             {
-                throw new ArgumentException($"Invalid value, the value of the {nameof(gender)} variable must be M or F");
+                throw new ArgumentException($"Invalid value, the value of the {nameof(parameters.Gender)} variable must be M or F");
             }
         }
 

@@ -124,28 +124,16 @@ namespace FileCabinetApp
 
         private static void Create(string parameters)
         {
-            cultureInfo.DateTimeFormat.ShortDatePattern = "MM/dd/yyyy";
             bool isRunning = true;
 
             while (isRunning)
             {
                 try
                 {
-                    Console.Write("First name:");
-                    string firstName = Console.ReadLine();
-                    Console.Write("Last name:");
-                    string lastName = Console.ReadLine();
-                    Console.Write("Date of birth:");
-                    string date = Console.ReadLine();
-                    DateTime dateOfBirth = DateTime.ParseExact(date, "d", cultureInfo);
-                    Console.Write("Salary:");
-                    short salary = short.Parse(Console.ReadLine(), cultureInfo);
-                    Console.Write("Work rate:");
-                    decimal workRate = decimal.Parse(Console.ReadLine(), cultureInfo);
-                    Console.Write("Gender(M/F):");
-                    char gender = char.Parse(Console.ReadLine());
+                    RecordsParameters recordsParameters = new RecordsParameters();
+                    recordsParameters.ReadParameters();
 
-                    int id = fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, salary, workRate, gender);
+                    int id = fileCabinetService.CreateRecord(recordsParameters);
                     Console.WriteLine($"Record #{id} is created.");
                     isRunning = false;
                 }
@@ -189,21 +177,10 @@ namespace FileCabinetApp
                 id = int.Parse(parameters, cultureInfo);
                 if (id <= fileCabinetService.GetStat())
                 {
-                    Console.Write("First name:");
-                    string firstName = Console.ReadLine();
-                    Console.Write("Last name:");
-                    string lastName = Console.ReadLine();
-                    Console.Write("Date of birth:");
-                    string date = Console.ReadLine();
-                    DateTime dateOfBirth = DateTime.ParseExact(date, "d", cultureInfo);
-                    Console.Write("Salary:");
-                    short salary = short.Parse(Console.ReadLine(), cultureInfo);
-                    Console.Write("Work rate:");
-                    decimal workRate = decimal.Parse(Console.ReadLine(), cultureInfo);
-                    Console.Write("Gender(M/F):");
-                    char gender = char.Parse(Console.ReadLine());
+                    RecordsParameters recordsParameters = new RecordsParameters();
+                    recordsParameters.ReadParameters();
 
-                    fileCabinetService.EditRecord(id, firstName, lastName, dateOfBirth, salary, workRate, gender);
+                    fileCabinetService.EditRecord(id, recordsParameters);
                     Console.WriteLine($"Record #{id} is updated.");
                 }
                 else

@@ -4,5 +4,187 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.FileCabinetRecord">
+            <summary>
+            This class describes the record entity.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Id">
+            <summary>
+            Gets or sets id.
+            </summary>
+            <value>
+            Integer number.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.FirstName">
+            <summary>
+            Gets or sets FirstName.
+            </summary>
+            <value>
+            FirstName.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.LastName">
+            <summary>
+            Gets or sets LastName.
+            </summary>
+            <value>
+            LastName.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.DateOfBirth">
+            <summary>
+            Gets or sets DateOfBirth.
+            </summary>
+            <value>
+            DateOfBirth.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Salary">
+            <summary>
+            Gets or sets Salary.
+            </summary>
+            <value>
+            Salary.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.WorkRate">
+            <summary>
+            Gets or sets WorkRate.
+            </summary>
+            <value>
+            WorkRate.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Gender">
+            <summary>
+            Gets or sets Gender.
+            </summary>
+            <value>
+            Gender.
+            </value>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetService">
+            <summary>
+            This class provides functionality for working with record.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(FileCabinetApp.RecordsParameters)">
+            <summary>
+            This method creates a record.
+            </summary>
+            <param name="parameters">Parameters.</param>
+            <returns>Id new record.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.GetRecords">
+            <summary>
+            This method return records.
+            </summary>
+            <returns>Array of the records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.GetStat">
+            <summary>
+            This method returns count of records.
+            </summary>
+            <returns>Count records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(System.Int32,FileCabinetApp.RecordsParameters)">
+            <summary>
+            This method changes the record.
+            </summary>
+            <param name="id">Id.</param>
+            <param name="parameters">Parameters.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.FindByFirstName(System.String)">
+            <summary>
+            This method searches for a record by first name.
+            </summary>
+            <param name="firstName">First name.</param>
+            <returns>Array of the records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.FindByLastName(System.String)">
+            <summary>
+            This method searches for a record by last name.
+            </summary>
+            <param name="lastName">last name.</param>
+            <returns>Array of the records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.FindByDateOfBirth(System.DateTime)">
+            <summary>
+            This method searches for a record by date of birthday.
+            </summary>
+            <param name="dateOfBirth">Date of birthday.</param>
+            <returns>Array of the records.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Program">
+            <summary>
+            Class Program.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Program.Main(System.String[])">
+            <summary>
+            The method that starts the program execution.
+            </summary>
+            <param name="args">Input parameters.</param>
+        </member>
+        <member name="T:FileCabinetApp.RecordsParameters">
+            <summary>
+            This class describes a group of parameters.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.RecordsParameters.FirstName">
+            <summary>
+            Gets firstName.
+            </summary>
+            <value>
+            FirstName.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.RecordsParameters.LastName">
+            <summary>
+            Gets lastName.
+            </summary>
+            <value>
+            LastName.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.RecordsParameters.DateOfBirth">
+            <summary>
+            Gets dateOfBirth.
+            </summary>
+            <value>
+            DateOfBirth.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.RecordsParameters.Salary">
+            <summary>
+            Gets salary.
+            </summary>
+            <value>
+            Salary.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.RecordsParameters.WorkRate">
+            <summary>
+            Gets workRate.
+            </summary>
+            <value>
+            WorkRate.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.RecordsParameters.Gender">
+            <summary>
+            Gets gender.
+            </summary>
+            <value>
+            Gender.
+            </value>
+        </member>
+        <member name="M:FileCabinetApp.RecordsParameters.ReadParameters">
+            <summary>
+            This method reads parameter input from the console.
+            </summary>
+        </member>
     </members>
 </doc>
