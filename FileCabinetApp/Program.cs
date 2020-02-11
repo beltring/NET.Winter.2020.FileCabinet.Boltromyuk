@@ -3,6 +3,9 @@ using System.Globalization;
 
 namespace FileCabinetApp
 {
+    /// <summary>
+    /// Class Program.
+    /// </summary>
     public static class Program
     {
         private const string DeveloperName = "Pavel Boltromyuk";
@@ -36,6 +39,10 @@ namespace FileCabinetApp
             new string[] { "find", "find records", "The 'find' command find records" },
         };
 
+        /// <summary>
+        /// The method that starts the program execution.
+        /// </summary>
+        /// <param name="args">Input parameters.</param>
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
