@@ -9,6 +9,7 @@ namespace FileCabinetApp
     {
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
+        private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
 
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, short salary, decimal workRate, char gender)
         {
@@ -27,6 +28,7 @@ namespace FileCabinetApp
 
             this.list.Add(record);
             this.AddToFirstNameDictionary(firstName, record);
+            this.AddToLastNameDictionary(lastName, record);
 
             return record.Id;
         }
@@ -50,7 +52,8 @@ namespace FileCabinetApp
                 Validation(firstName, lastName, dateOfBirth, salary, workRate, gender);
 
                 FileCabinetRecord record = this.list.Find(x => x.Id == id);
-                string name = record.FirstName;
+                string initialFirstName = record.FirstName;
+                string initialLastName = record.LastName;
 
                 record.FirstName = firstName;
                 record.LastName = lastName;
@@ -59,7 +62,8 @@ namespace FileCabinetApp
                 record.WorkRate = workRate;
                 record.Gender = gender;
 
-                this.UpdateFirstNameDictionary(id, name, record);
+                this.UpdateFirstNameDictionary(id, initialFirstName, record);
+                this.UpdateLastNameDictionary(id, initialLastName, record);
             }
             else
             {
@@ -84,23 +88,13 @@ namespace FileCabinetApp
         {
             if (lastName is null)
             {
-                throw new ArgumentNullException($"fdf");
+                throw new ArgumentNullException($"{nameof(lastName)} can't be null");
             }
 
             lastName = lastName.ToLower(CultureInfo.CurrentCulture);
-            List<FileCabinetRecord> listElements = new List<FileCabinetRecord>();
+            List<FileCabinetRecord> firstNameList = this.lastNameDictionary[lastName];
 
-            for (int i = 0; i < this.list.Count; i++)
-            {
-                string lastName1 = this.list[i].LastName.ToLower(CultureInfo.CurrentCulture);
-
-                if (lastName == lastName1)
-                {
-                    listElements.Add(this.list[i]);
-                }
-            }
-
-            return listElements.ToArray();
+            return firstNameList.ToArray();
         }
 
         public FileCabinetRecord[] FindByDateOfBirth(DateTime dateOfBirth)
@@ -191,6 +185,38 @@ namespace FileCabinetApp
             {
                 list.Remove(record);
                 this.AddToFirstNameDictionary(modifiedRecord.FirstName, modifiedRecord);
+            }
+        }
+
+        private void AddToLastNameDictionary(string lastName, FileCabinetRecord record)
+        {
+            lastName = lastName.ToLower(CultureInfo.CurrentCulture);
+
+            if (this.lastNameDictionary.ContainsKey(lastName))
+            {
+                this.lastNameDictionary[lastName].Add(record);
+            }
+            else
+            {
+                List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+                list.Add(record);
+                this.lastNameDictionary.Add(lastName, list);
+            }
+        }
+
+        private void UpdateLastNameDictionary(int id, string lastName, FileCabinetRecord modifiedRecord)
+        {
+            List<FileCabinetRecord> list = this.lastNameDictionary[lastName.ToLower(CultureInfo.CurrentCulture)];
+            FileCabinetRecord record = list.Find(x => x.Id == id);
+
+            if (lastName == modifiedRecord.LastName)
+            {
+                record = modifiedRecord;
+            }
+            else
+            {
+                list.Remove(record);
+                this.AddToLastNameDictionary(modifiedRecord.LastName, modifiedRecord);
             }
         }
     }
