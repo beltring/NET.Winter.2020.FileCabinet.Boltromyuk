@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace FileCabinetApp
@@ -7,6 +8,9 @@ namespace FileCabinetApp
     public class FileCabinetService
     {
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+        private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
+        private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
+        private readonly Dictionary<DateTime, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<DateTime, List<FileCabinetRecord>>();
 
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, short salary, decimal workRate, char gender)
         {
@@ -24,6 +28,9 @@ namespace FileCabinetApp
             };
 
             this.list.Add(record);
+            this.AddToFirstNameDictionary(firstName, record);
+            this.AddToLastNameDictionary(lastName, record);
+            this.AddToDateOfBirthDictionary(dateOfBirth, record);
 
             return record.Id;
         }
@@ -46,24 +53,59 @@ namespace FileCabinetApp
             {
                 Validation(firstName, lastName, dateOfBirth, salary, workRate, gender);
 
-                foreach (var record in this.list)
-                {
-                    if (record.Id == id)
-                    {
-                        record.FirstName = firstName;
-                        record.LastName = lastName;
-                        record.DateOfBirth = dateOfBirth;
-                        record.Salary = salary;
-                        record.WorkRate = workRate;
-                        record.Gender = gender;
-                        return;
-                    }
-                }
+                FileCabinetRecord record = this.list.Find(x => x.Id == id);
+                string initialFirstName = record.FirstName;
+                string initialLastName = record.LastName;
+                DateTime initialDateOfBirth = record.DateOfBirth;
+
+                record.FirstName = firstName;
+                record.LastName = lastName;
+                record.DateOfBirth = dateOfBirth;
+                record.Salary = salary;
+                record.WorkRate = workRate;
+                record.Gender = gender;
+
+                this.UpdateFirstNameDictionary(id, initialFirstName, record);
+                this.UpdateLastNameDictionary(id, initialLastName, record);
+                this.UpdateDateOfBirthDictionary(id, initialDateOfBirth, record);
             }
             else
             {
                 throw new ArgumentException("There is no record with this id");
             }
+        }
+
+        public FileCabinetRecord[] FindByFirstName(string firstName)
+        {
+            if (firstName is null)
+            {
+                throw new ArgumentNullException($"{nameof(firstName)} can't be null");
+            }
+
+            firstName = firstName.ToLower(CultureInfo.CurrentCulture);
+            List<FileCabinetRecord> firstNameList = this.firstNameDictionary[firstName];
+
+            return firstNameList.ToArray();
+        }
+
+        public FileCabinetRecord[] FindByLastName(string lastName)
+        {
+            if (lastName is null)
+            {
+                throw new ArgumentNullException($"{nameof(lastName)} can't be null");
+            }
+
+            lastName = lastName.ToLower(CultureInfo.CurrentCulture);
+            List<FileCabinetRecord> lastNameList = this.lastNameDictionary[lastName];
+
+            return lastNameList.ToArray();
+        }
+
+        public FileCabinetRecord[] FindByDateOfBirth(DateTime dateOfBirth)
+        {
+            List<FileCabinetRecord> listElements = this.dateOfBirthDictionary[dateOfBirth];
+
+            return listElements.ToArray();
         }
 
         private static void Validation(string firstName, string lastName, DateTime dateOfBirth, short salary, decimal workRate, char gender)
@@ -107,6 +149,100 @@ namespace FileCabinetApp
             if (gender != 'M' && gender != 'F')
             {
                 throw new ArgumentException($"Invalid value, the value of the {nameof(gender)} variable must be M or F.");
+            }
+        }
+
+        private void AddToFirstNameDictionary(string firstName, FileCabinetRecord record)
+        {
+            firstName = firstName.ToLower(CultureInfo.CurrentCulture);
+
+            if (this.firstNameDictionary.ContainsKey(firstName))
+            {
+                this.firstNameDictionary[firstName].Add(record);
+            }
+            else
+            {
+                List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+                list.Add(record);
+                this.firstNameDictionary.Add(firstName, list);
+            }
+        }
+
+        private void UpdateFirstNameDictionary(int id, string firstName, FileCabinetRecord modifiedRecord)
+        {
+            List<FileCabinetRecord> list = this.firstNameDictionary[firstName.ToLower(CultureInfo.CurrentCulture)];
+            FileCabinetRecord record = list.Find(x => x.Id == id);
+
+            if (firstName == modifiedRecord.FirstName)
+            {
+                record = modifiedRecord;
+            }
+            else
+            {
+                list.Remove(record);
+                this.AddToFirstNameDictionary(modifiedRecord.FirstName, modifiedRecord);
+            }
+        }
+
+        private void AddToLastNameDictionary(string lastName, FileCabinetRecord record)
+        {
+            lastName = lastName.ToLower(CultureInfo.CurrentCulture);
+
+            if (this.lastNameDictionary.ContainsKey(lastName))
+            {
+                this.lastNameDictionary[lastName].Add(record);
+            }
+            else
+            {
+                List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+                list.Add(record);
+                this.lastNameDictionary.Add(lastName, list);
+            }
+        }
+
+        private void UpdateLastNameDictionary(int id, string lastName, FileCabinetRecord modifiedRecord)
+        {
+            List<FileCabinetRecord> list = this.lastNameDictionary[lastName.ToLower(CultureInfo.CurrentCulture)];
+            FileCabinetRecord record = list.Find(x => x.Id == id);
+
+            if (lastName == modifiedRecord.LastName)
+            {
+                record = modifiedRecord;
+            }
+            else
+            {
+                list.Remove(record);
+                this.AddToLastNameDictionary(modifiedRecord.LastName, modifiedRecord);
+            }
+        }
+
+        private void AddToDateOfBirthDictionary(DateTime dateOfBirth, FileCabinetRecord record)
+        {
+            if (this.dateOfBirthDictionary.ContainsKey(dateOfBirth))
+            {
+                this.dateOfBirthDictionary[dateOfBirth].Add(record);
+            }
+            else
+            {
+                List<FileCabinetRecord> list = new List<FileCabinetRecord>();
+                list.Add(record);
+                this.dateOfBirthDictionary.Add(dateOfBirth, list);
+            }
+        }
+
+        private void UpdateDateOfBirthDictionary(int id, DateTime dateOfBirth, FileCabinetRecord modifiedRecord)
+        {
+            List<FileCabinetRecord> list = this.dateOfBirthDictionary[dateOfBirth];
+            FileCabinetRecord record = list.Find(x => x.Id == id);
+
+            if (dateOfBirth == modifiedRecord.DateOfBirth)
+            {
+                record = modifiedRecord;
+            }
+            else
+            {
+                list.Remove(record);
+                this.AddToDateOfBirthDictionary(modifiedRecord.DateOfBirth, modifiedRecord);
             }
         }
     }
