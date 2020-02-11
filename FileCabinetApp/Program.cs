@@ -10,9 +10,9 @@ namespace FileCabinetApp
         private const int CommandHelpIndex = 0;
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
-        private const string Format = "yyyy-MMM-dd";
         private static bool isRunning = true;
         private static FileCabinetService fileCabinetService = new FileCabinetService();
+        private static CultureInfo cultureInfo = CultureInfo.CreateSpecificCulture("en-US");
 
         private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
         {
@@ -117,7 +117,10 @@ namespace FileCabinetApp
 
         private static void Create(string parameters)
         {
-            while (true)
+            cultureInfo.DateTimeFormat.ShortDatePattern = "MM/dd/yyyy";
+            bool isRunning = true;
+
+            while (isRunning)
             {
                 try
                 {
@@ -127,26 +130,36 @@ namespace FileCabinetApp
                     string lastName = Console.ReadLine();
                     Console.Write("Date of birth:");
                     string date = Console.ReadLine();
-                    DateTime dateOfBirth = DateTime.ParseExact(date, "M/dd/yyyy", null);
+                    DateTime dateOfBirth = DateTime.ParseExact(date, "d", cultureInfo);
                     Console.Write("Salary:");
-                    short salary = short.Parse(Console.ReadLine(), CultureInfo.CurrentCulture);
+                    short salary = short.Parse(Console.ReadLine(), cultureInfo);
                     Console.Write("Work rate:");
-                    decimal workRate = decimal.Parse(Console.ReadLine(), CultureInfo.CurrentCulture);
+                    decimal workRate = decimal.Parse(Console.ReadLine(), cultureInfo);
                     Console.Write("Gender(M/F):");
                     char gender = char.Parse(Console.ReadLine());
 
                     int id = fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, salary, workRate, gender);
                     Console.WriteLine($"Record #{id} is created.");
-                    break;
+                    isRunning = false;
                 }
-                catch (ArgumentNullException)
+                catch (ArgumentNullException ex)
                 {
-                    Console.WriteLine("Invalid data, try again.");
+                    Console.WriteLine($"{ex.Message}, try again.");
                     continue;
                 }
-                catch (ArgumentException)
+                catch (ArgumentException ex)
                 {
-                    Console.WriteLine("Invalid data, try again.");
+                    Console.WriteLine($"{ex.Message}, try again.");
+                    continue;
+                }
+                catch (FormatException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    continue;
+                }
+                catch (OverflowException ex)
+                {
+                    Console.WriteLine(ex.Message);
                     continue;
                 }
             }
@@ -156,27 +169,17 @@ namespace FileCabinetApp
         {
             FileCabinetRecord[] records = fileCabinetService.GetRecords();
 
-            for (int i = 0; i < records.Length; i++)
-            {
-                int id = records[i].Id;
-                string firstName = records[i].FirstName;
-                string lastName = records[i].LastName;
-                string dateOfBirth = records[i].DateOfBirth.ToString(Format, CultureInfo.CurrentCulture);
-                short salary = records[i].Salary;
-                decimal workRate = records[i].WorkRate;
-                char gender = records[i].Gender;
-
-                Console.WriteLine($"#{id}, {firstName}, {lastName}, {dateOfBirth}, {salary}, {workRate}, {gender}");
-            }
+            Representation(records);
         }
 
         private static void Edit(string parameters)
         {
             int id = 0;
+            cultureInfo.DateTimeFormat.ShortDatePattern = "MM/dd/yyyy";
 
             try
             {
-                id = int.Parse(parameters, CultureInfo.CurrentCulture);
+                id = int.Parse(parameters, cultureInfo);
                 if (id <= fileCabinetService.GetStat())
                 {
                     Console.Write("First name:");
@@ -185,11 +188,11 @@ namespace FileCabinetApp
                     string lastName = Console.ReadLine();
                     Console.Write("Date of birth:");
                     string date = Console.ReadLine();
-                    DateTime dateOfBirth = DateTime.ParseExact(date, "M/d/yyyy", null);
+                    DateTime dateOfBirth = DateTime.ParseExact(date, "d", cultureInfo);
                     Console.Write("Salary:");
-                    short salary = short.Parse(Console.ReadLine(), CultureInfo.CurrentCulture);
+                    short salary = short.Parse(Console.ReadLine(), cultureInfo);
                     Console.Write("Work rate:");
-                    decimal workRate = decimal.Parse(Console.ReadLine(), CultureInfo.CurrentCulture);
+                    decimal workRate = decimal.Parse(Console.ReadLine(), cultureInfo);
                     Console.Write("Gender(M/F):");
                     char gender = char.Parse(Console.ReadLine());
 
@@ -201,9 +204,17 @@ namespace FileCabinetApp
                     Console.WriteLine($"#{id} record is not found.");
                 }
             }
-            catch (ArgumentException)
+            catch (ArgumentException ex)
             {
-                Console.WriteLine($"#{id} record is not found.");
+                Console.WriteLine($"{ex.Message}, try again.");
+            }
+            catch (FormatException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (OverflowException ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
 
@@ -211,9 +222,10 @@ namespace FileCabinetApp
         {
             string[] param = parameters.Split(' ');
             FileCabinetRecord[] records = null;
+            cultureInfo.DateTimeFormat.ShortDatePattern = "yyyy-MMM-dd";
 
             string search = param[1].Trim('"');
-            string searchParam = param[0].ToLower(CultureInfo.CurrentCulture);
+            string searchParam = param[0].ToLower(cultureInfo);
 
             switch (searchParam)
             {
@@ -224,7 +236,7 @@ namespace FileCabinetApp
                     records = fileCabinetService.FindByLastName(search);
                     break;
                 case "dateofbirth":
-                    DateTime dateofbirth = DateTime.ParseExact(search, "yyyy-MMM-dd", null);
+                    DateTime dateofbirth = DateTime.ParseExact(search, "d", cultureInfo);
                     records = fileCabinetService.FindByDateOfBirth(dateofbirth);
                     break;
             }
@@ -234,9 +246,11 @@ namespace FileCabinetApp
 
         private static void Representation(FileCabinetRecord[] records)
         {
+            cultureInfo.DateTimeFormat.ShortDatePattern = "yyyy-MMM-dd";
+
             foreach (FileCabinetRecord record in records)
             {
-                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.CurrentCulture)}, " +
+                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("d", cultureInfo)}, " +
                     $"{record.Salary}, {record.WorkRate}, {record.Gender}");
             }
         }
