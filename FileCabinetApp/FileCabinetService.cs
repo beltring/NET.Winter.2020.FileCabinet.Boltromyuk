@@ -16,6 +16,16 @@ namespace FileCabinetApp
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<DateTime, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<DateTime, List<FileCabinetRecord>>();
         private readonly CultureInfo cultureInfo = CultureInfo.CreateSpecificCulture("en-US");
+        private readonly IRecordValidator validator;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileCabinetService"/> class.
+        /// </summary>
+        /// <param name="validator">Type IRecordValidator.</param>
+        protected FileCabinetService(IRecordValidator validator)
+        {
+            this.validator = validator;
+        }
 
         /// <summary>
         /// This method creates a record.
@@ -29,7 +39,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException($"{nameof(parameters)} can't be null.");
             }
 
-            this.CreateValidator().ValidateParameters(parameters);
+            this.validator.ValidateParameters(parameters);
 
             var record = new FileCabinetRecord
             {
@@ -84,7 +94,7 @@ namespace FileCabinetApp
 
             if (this.list.Exists(x => x.Id == id))
             {
-                this.CreateValidator().ValidateParameters(parameters);
+                this.validator.ValidateParameters(parameters);
 
                 FileCabinetRecord record = this.list.Find(x => x.Id == id);
                 string initialFirstName = record.FirstName;
@@ -171,12 +181,6 @@ namespace FileCabinetApp
 
             return Array.Empty<FileCabinetRecord>();
         }
-
-        /// <summary>
-        /// Validate parameters.
-        /// </summary>
-        /// <returns>IRecordValidator type.</returns>
-        protected abstract IRecordValidator CreateValidator();
 
         private void AddToFirstNameDictionary(string firstName, FileCabinetRecord record)
         {
