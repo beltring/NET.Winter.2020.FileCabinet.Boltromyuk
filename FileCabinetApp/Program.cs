@@ -14,7 +14,7 @@ namespace FileCabinetApp
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
         private static bool isRunning = true;
-        private static FileCabinetService fileCabinetService = new FileCabinetCustomService();
+        private static FileCabinetService fileCabinetService;
         private static CultureInfo cultureInfo = CultureInfo.CreateSpecificCulture("en-US");
 
         private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
@@ -45,7 +45,15 @@ namespace FileCabinetApp
         /// <param name="args">Input parameters.</param>
         public static void Main(string[] args)
         {
+            if (args == null)
+            {
+                throw new ArgumentNullException($"{nameof(args)} can't be null.");
+            }
+
+            string rule = CheckCommandLine(args);
+
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
+            Console.WriteLine(rule);
             Console.WriteLine(Program.HintMessage);
             Console.WriteLine();
 
@@ -237,6 +245,32 @@ namespace FileCabinetApp
                 Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("d", cultureInfo)}, " +
                     $"{record.Salary}, {record.WorkRate}, {record.Gender}");
             }
+        }
+
+        private static string CheckCommandLine(string[] args)
+        {
+            string command = string.Empty;
+            string result = "Using default validation rules.";
+
+            if (args.Length == 1)
+            {
+                command = args[0];
+            }
+
+            if (args.Length == 2)
+            {
+                command = args[1];
+            }
+
+            if (command.Contains("custom", StringComparison.OrdinalIgnoreCase))
+            {
+                fileCabinetService = new FileCabinetCustomService();
+                result = "Using custom validation rules.";
+            }
+
+            fileCabinetService = new FileCabinetDefaultService();
+
+            return result;
         }
     }
 }
