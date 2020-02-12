@@ -8,7 +8,7 @@ namespace FileCabinetApp
     /// <summary>
     /// This class provides functionality for working with record.
     /// </summary>
-    public class FileCabinetService
+    public abstract class FileCabinetService
     {
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
@@ -28,7 +28,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException($"{nameof(parameters)} can't be null.");
             }
 
-            Validation(parameters);
+            this.ValidateParameters(parameters);
 
             var record = new FileCabinetRecord
             {
@@ -83,7 +83,7 @@ namespace FileCabinetApp
 
             if (this.list.Exists(x => x.Id == id))
             {
-                Validation(parameters);
+                this.ValidateParameters(parameters);
 
                 FileCabinetRecord record = this.list.Find(x => x.Id == id);
                 string initialFirstName = record.FirstName;
@@ -171,49 +171,11 @@ namespace FileCabinetApp
             return Array.Empty<FileCabinetRecord>();
         }
 
-        private static void Validation(RecordsParameters parameters)
-        {
-            if (parameters.FirstName == null)
-            {
-                throw new ArgumentNullException($"The {nameof(parameters.FirstName)} parameter must not be null");
-            }
-
-            if (parameters.LastName == null)
-            {
-                throw new ArgumentNullException($"The {nameof(parameters.LastName)} parameter must not be null");
-            }
-
-            if (parameters.FirstName.Length < 2 || parameters.FirstName.Length > 60)
-            {
-                throw new ArgumentException($"The length of {nameof(parameters.FirstName)} must be between 2 and 60 characters");
-            }
-
-            if (parameters.LastName.Length < 2 || parameters.LastName.Length > 60)
-            {
-                throw new ArgumentException($"The length of {nameof(parameters.LastName)} must be between 2 and 60 characters");
-            }
-
-            if (parameters.DateOfBirth.Year < 1950 || (parameters.DateOfBirth.Year >= DateTime.Now.Year
-                && parameters.DateOfBirth.Month >= DateTime.Now.Month && parameters.DateOfBirth.Day > DateTime.Now.Day))
-            {
-                throw new ArgumentException("Minimum date of birth 01-Jan-1950 maximum current date");
-            }
-
-            if (parameters.Salary < 100 || parameters.Salary > 10000)
-            {
-                throw new ArgumentException($"Invalid value, the {nameof(parameters.Salary)} value must be between 100 and 10000");
-            }
-
-            if (parameters.WorkRate < 0.25m || parameters.WorkRate > 1.5m)
-            {
-                throw new ArgumentException($"Invalid value, the {nameof(parameters.WorkRate)} value must be between 0.25 and 1.5");
-            }
-
-            if (parameters.Gender != 'M' && parameters.Gender != 'F')
-            {
-                throw new ArgumentException($"Invalid value, the value of the {nameof(parameters.Gender)} variable must be M or F");
-            }
-        }
+        /// <summary>
+        /// Validate parameters.
+        /// </summary>
+        /// <param name="parameters">Parameters.</param>
+        protected abstract void ValidateParameters(RecordsParameters parameters);
 
         private void AddToFirstNameDictionary(string firstName, FileCabinetRecord record)
         {

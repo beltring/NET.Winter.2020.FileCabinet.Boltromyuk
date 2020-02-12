@@ -4,6 +4,28 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.FileCabinetCustomService">
+            <summary>
+            This class provides functionality for working with record.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetCustomService.ValidateParameters(FileCabinetApp.RecordsParameters)">
+            <summary>
+            Custom validate parameters.
+            </summary>
+            <param name="parameters">Parameters.</param>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetDefaultService">
+            <summary>
+            This class provides functionality for working with record.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetDefaultService.ValidateParameters(FileCabinetApp.RecordsParameters)">
+            <summary>
+            Default validate parameters.
+            </summary>
+            <param name="parameters">Parameters.</param>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
             This class describes the record entity.
@@ -116,6 +138,12 @@
             </summary>
             <param name="dateOfBirth">Date of birthday.</param>
             <returns>Array of the records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.ValidateParameters(FileCabinetApp.RecordsParameters)">
+            <summary>
+            Validate parameters.
+            </summary>
+            <param name="parameters">Parameters.</param>
         </member>
         <member name="T:FileCabinetApp.Program">
             <summary>
