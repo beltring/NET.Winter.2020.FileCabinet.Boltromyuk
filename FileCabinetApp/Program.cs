@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Globalization;
+using FileCabinetApp.Interfaces;
 
 namespace FileCabinetApp
 {
@@ -14,7 +16,7 @@ namespace FileCabinetApp
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
         private static bool isRunning = true;
-        private static FileCabinetService fileCabinetService;
+        private static IFileCabinetService fileCabinetService;
         private static CultureInfo cultureInfo = CultureInfo.CreateSpecificCulture("en-US");
 
         private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
@@ -170,7 +172,7 @@ namespace FileCabinetApp
 
         private static void List(string parameters)
         {
-            FileCabinetRecord[] records = fileCabinetService.GetRecords();
+            ReadOnlyCollection<FileCabinetRecord> records = fileCabinetService.GetRecords();
 
             Representation(records);
         }
@@ -213,7 +215,7 @@ namespace FileCabinetApp
         private static void Find(string parameters)
         {
             string[] param = parameters.Split(' ');
-            FileCabinetRecord[] records = null;
+            ReadOnlyCollection<FileCabinetRecord> records = null;
             cultureInfo.DateTimeFormat.ShortDatePattern = "yyyy-MMM-dd";
 
             string search = param[1].Trim('"');
@@ -222,21 +224,21 @@ namespace FileCabinetApp
             switch (searchParam)
             {
                 case "firstname":
-                    records = fileCabinetService.FindByFirstName(search);
+                    records = new ReadOnlyCollection<FileCabinetRecord>(fileCabinetService.FindByFirstName(search));
                     break;
                 case "lastname":
-                    records = fileCabinetService.FindByLastName(search);
+                    records = new ReadOnlyCollection<FileCabinetRecord>(fileCabinetService.FindByLastName(search));
                     break;
                 case "dateofbirth":
                     DateTime dateofbirth = DateTime.ParseExact(search, "d", cultureInfo);
-                    records = fileCabinetService.FindByDateOfBirth(dateofbirth);
+                    records = new ReadOnlyCollection<FileCabinetRecord>(fileCabinetService.FindByDateOfBirth(dateofbirth));
                     break;
             }
 
             Representation(records);
         }
 
-        private static void Representation(FileCabinetRecord[] records)
+        private static void Representation(ReadOnlyCollection<FileCabinetRecord> records)
         {
             cultureInfo.DateTimeFormat.ShortDatePattern = "yyyy-MMM-dd";
 
