@@ -4,27 +4,49 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.CustomValidator">
+            <summary>
+            This class provides data validation.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CustomValidator.ValidateParameters(FileCabinetApp.RecordsParameters)">
+            <summary>
+            Custom validate parameters.
+            </summary>
+            <param name="parameters">Parameters.</param>
+        </member>
+        <member name="T:FileCabinetApp.DefaultValidator">
+            <summary>
+            This class provides data validation.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidator.ValidateParameters(FileCabinetApp.RecordsParameters)">
+            <summary>
+            Default validate parameters.
+            </summary>
+            <param name="parameters">Parameters.</param>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetCustomService">
             <summary>
             This class provides functionality for working with record.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetCustomService.ValidateParameters(FileCabinetApp.RecordsParameters)">
+        <member name="M:FileCabinetApp.FileCabinetCustomService.CreateValidator">
             <summary>
-            Custom validate parameters.
+            Default validate parameters.
             </summary>
-            <param name="parameters">Parameters.</param>
+            <returns>IRecordValidator type.</returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetDefaultService">
             <summary>
             This class provides functionality for working with record.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetDefaultService.ValidateParameters(FileCabinetApp.RecordsParameters)">
+        <member name="M:FileCabinetApp.FileCabinetDefaultService.CreateValidator">
             <summary>
             Default validate parameters.
             </summary>
-            <param name="parameters">Parameters.</param>
+            <returns>IRecordValidator type.</returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
@@ -139,7 +161,18 @@
             <param name="dateOfBirth">Date of birthday.</param>
             <returns>Array of the records.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.ValidateParameters(FileCabinetApp.RecordsParameters)">
+        <member name="M:FileCabinetApp.FileCabinetService.CreateValidator">
+            <summary>
+            Validate parameters.
+            </summary>
+            <returns>IRecordValidator type.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Interfaces.IRecordValidator">
+            <summary>
+            Interface IRecordValidator.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Interfaces.IRecordValidator.ValidateParameters(FileCabinetApp.RecordsParameters)">
             <summary>
             Validate parameters.
             </summary>

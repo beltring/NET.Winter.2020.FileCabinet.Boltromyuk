@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using FileCabinetApp.Interfaces;
 
 namespace FileCabinetApp
 {
@@ -28,7 +29,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException($"{nameof(parameters)} can't be null.");
             }
 
-            this.ValidateParameters(parameters);
+            this.CreateValidator().ValidateParameters(parameters);
 
             var record = new FileCabinetRecord
             {
@@ -83,7 +84,7 @@ namespace FileCabinetApp
 
             if (this.list.Exists(x => x.Id == id))
             {
-                this.ValidateParameters(parameters);
+                this.CreateValidator().ValidateParameters(parameters);
 
                 FileCabinetRecord record = this.list.Find(x => x.Id == id);
                 string initialFirstName = record.FirstName;
@@ -174,8 +175,8 @@ namespace FileCabinetApp
         /// <summary>
         /// Validate parameters.
         /// </summary>
-        /// <param name="parameters">Parameters.</param>
-        protected abstract void ValidateParameters(RecordsParameters parameters);
+        /// <returns>IRecordValidator type.</returns>
+        protected abstract IRecordValidator CreateValidator();
 
         private void AddToFirstNameDictionary(string firstName, FileCabinetRecord record)
         {
