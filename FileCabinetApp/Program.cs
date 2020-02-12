@@ -264,11 +264,13 @@ namespace FileCabinetApp
 
             if (command.Contains("custom", StringComparison.OrdinalIgnoreCase))
             {
-                fileCabinetService = new FileCabinetCustomService();
+                fileCabinetService = new FileCabinetService(new CustomValidator());
                 result = "Using custom validation rules.";
+
+                return result;
             }
 
-            fileCabinetService = new FileCabinetDefaultService();
+            fileCabinetService = new FileCabinetService(new DefaultValidator());
 
             return result;
         }
