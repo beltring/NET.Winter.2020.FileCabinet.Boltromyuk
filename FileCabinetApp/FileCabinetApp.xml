@@ -4,27 +4,137 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.Converter">
+            <summary>
+            Class converter.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Converter.StringConverter(System.String)">
+            <summary>
+            This method converts string.
+            </summary>
+            <param name="input">Input string.</param>
+            <returns>Return string.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Converter.DateConverter(System.String)">
+            <summary>
+            This method converts a string to datetime.
+            </summary>
+            <param name="input">Input string.</param>
+            <returns>Return date.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Converter.SalaryConverter(System.String)">
+            <summary>
+            This method converts a string to short.
+            </summary>
+            <param name="input">Input string.</param>
+            <returns>Return short value.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Converter.WorkRateConverter(System.String)">
+            <summary>
+            This method converts a string to decimal.
+            </summary>
+            <param name="input">Input string.</param>
+            <returns>Return work rate.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Converter.GenderConverter(System.String)">
+            <summary>
+            This method converts a string to char.
+            </summary>
+            <param name="input">Input string.</param>
+            <returns>Return gender.</returns>
+        </member>
         <member name="T:FileCabinetApp.CustomValidator">
             <summary>
             This class provides data validation.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CustomValidator.ValidateParameters(FileCabinetApp.RecordsParameters)">
+        <member name="M:FileCabinetApp.CustomValidator.ValidateParameters(FileCabinetApp.RecordEventArgs)">
             <summary>
             Custom validate parameters.
             </summary>
             <param name="parameters">Parameters.</param>
+        </member>
+        <member name="M:FileCabinetApp.CustomValidator.StringValidator(System.String)">
+            <summary>
+            Validate string.
+            </summary>
+            <param name="inputString">String for validation.</param>
+            <returns>The validation result and message are returned.</returns>
+        </member>
+        <member name="M:FileCabinetApp.CustomValidator.DateOfBirthValidator(System.DateTime)">
+            <summary>
+            Validate date of birthday.
+            </summary>
+            <param name="dateOfBirth">Date of birthday.</param>
+            <returns>The validation result and message are returned.</returns>
+        </member>
+        <member name="M:FileCabinetApp.CustomValidator.SalaryValidator(System.Int16)">
+            <summary>
+            Validate salary.
+            </summary>
+            <param name="salary">Salary.</param>
+            <returns>The validation result and message are returned.</returns>
+        </member>
+        <member name="M:FileCabinetApp.CustomValidator.WorkRateValidator(System.Decimal)">
+            <summary>
+            Validate work rate.
+            </summary>
+            <param name="workRate">Work Rate.</param>
+            <returns>The validation result and message are returned.</returns>
+        </member>
+        <member name="M:FileCabinetApp.CustomValidator.GenderValidator(System.Char)">
+            <summary>
+            Validate gender.
+            </summary>
+            <param name="gender">Gender.</param>
+            <returns>The validation result and message are returned.</returns>
         </member>
         <member name="T:FileCabinetApp.DefaultValidator">
             <summary>
             This class provides data validation.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.DefaultValidator.ValidateParameters(FileCabinetApp.RecordsParameters)">
+        <member name="M:FileCabinetApp.DefaultValidator.ValidateParameters(FileCabinetApp.RecordEventArgs)">
             <summary>
             Default validate parameters.
             </summary>
             <param name="parameters">Parameters.</param>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidator.StringValidator(System.String)">
+            <summary>
+            Validate string.
+            </summary>
+            <param name="inputString">String for validation.</param>
+            <returns>The validation result and message are returned.</returns>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidator.DateOfBirthValidator(System.DateTime)">
+            <summary>
+            Validate date of birthday.
+            </summary>
+            <param name="dateOfBirth">Date of birthday.</param>
+            <returns>The validation result and message are returned.</returns>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidator.SalaryValidator(System.Int16)">
+            <summary>
+            Validate salary.
+            </summary>
+            <param name="salary">Salary.</param>
+            <returns>The validation result and message are returned.</returns>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidator.WorkRateValidator(System.Decimal)">
+            <summary>
+            Validate work rate.
+            </summary>
+            <param name="workRate">Work Rate.</param>
+            <returns>The validation result and message are returned.</returns>
+        </member>
+        <member name="M:FileCabinetApp.DefaultValidator.GenderValidator(System.Char)">
+            <summary>
+            Validate gender.
+            </summary>
+            <param name="gender">Gender.</param>
+            <returns>The validation result and message are returned.</returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
@@ -98,7 +208,7 @@
             </summary>
             <param name="validator">Type IRecordValidator.</param>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(FileCabinetApp.RecordsParameters)">
+        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(FileCabinetApp.RecordEventArgs)">
             <summary>
             This method creates a record.
             </summary>
@@ -117,7 +227,7 @@
             </summary>
             <returns>Count records.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(System.Int32,FileCabinetApp.RecordsParameters)">
+        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(System.Int32,FileCabinetApp.RecordEventArgs)">
             <summary>
             This method changes the record.
             </summary>
@@ -150,7 +260,7 @@
             Interface IFileCabinetService.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Interfaces.IFileCabinetService.CreateRecord(FileCabinetApp.RecordsParameters)">
+        <member name="M:FileCabinetApp.Interfaces.IFileCabinetService.CreateRecord(FileCabinetApp.RecordEventArgs)">
             <summary>
             This method creates a record.
             </summary>
@@ -169,7 +279,7 @@
             </summary>
             <returns>Count records.</returns>
         </member>
-        <member name="M:FileCabinetApp.Interfaces.IFileCabinetService.EditRecord(System.Int32,FileCabinetApp.RecordsParameters)">
+        <member name="M:FileCabinetApp.Interfaces.IFileCabinetService.EditRecord(System.Int32,FileCabinetApp.RecordEventArgs)">
             <summary>
             This method changes the record.
             </summary>
@@ -202,11 +312,46 @@
             Interface IRecordValidator.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Interfaces.IRecordValidator.ValidateParameters(FileCabinetApp.RecordsParameters)">
+        <member name="M:FileCabinetApp.Interfaces.IRecordValidator.ValidateParameters(FileCabinetApp.RecordEventArgs)">
             <summary>
             Validate parameters.
             </summary>
             <param name="parameters">Parameters.</param>
+        </member>
+        <member name="M:FileCabinetApp.Interfaces.IRecordValidator.StringValidator(System.String)">
+            <summary>
+            Validate string.
+            </summary>
+            <param name="inputString">String for validation.</param>
+            <returns>The validation result and message are returned.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Interfaces.IRecordValidator.DateOfBirthValidator(System.DateTime)">
+            <summary>
+            Validate date of birthday.
+            </summary>
+            <param name="dateOfBirth">Date of birthday.</param>
+            <returns>The validation result and message are returned.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Interfaces.IRecordValidator.SalaryValidator(System.Int16)">
+            <summary>
+            Validate salary.
+            </summary>
+            <param name="salary">Salary.</param>
+            <returns>The validation result and message are returned.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Interfaces.IRecordValidator.WorkRateValidator(System.Decimal)">
+            <summary>
+            Validate work rate.
+            </summary>
+            <param name="workRate">Work Rate.</param>
+            <returns>The validation result and message are returned.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Interfaces.IRecordValidator.GenderValidator(System.Char)">
+            <summary>
+            Validate gender.
+            </summary>
+            <param name="gender">Gender.</param>
+            <returns>The validation result and message are returned.</returns>
         </member>
         <member name="T:FileCabinetApp.Program">
             <summary>
@@ -219,63 +364,58 @@
             </summary>
             <param name="args">Input parameters.</param>
         </member>
-        <member name="T:FileCabinetApp.RecordsParameters">
+        <member name="T:FileCabinetApp.RecordEventArgs">
             <summary>
             This class describes a group of parameters.
             </summary>
         </member>
-        <member name="P:FileCabinetApp.RecordsParameters.FirstName">
+        <member name="P:FileCabinetApp.RecordEventArgs.FirstName">
             <summary>
-            Gets firstName.
+            Gets or sets firstName.
             </summary>
             <value>
             FirstName.
             </value>
         </member>
-        <member name="P:FileCabinetApp.RecordsParameters.LastName">
+        <member name="P:FileCabinetApp.RecordEventArgs.LastName">
             <summary>
-            Gets lastName.
+            Gets or sets lastName.
             </summary>
             <value>
             LastName.
             </value>
         </member>
-        <member name="P:FileCabinetApp.RecordsParameters.DateOfBirth">
+        <member name="P:FileCabinetApp.RecordEventArgs.DateOfBirth">
             <summary>
-            Gets dateOfBirth.
+            Gets or sets dateOfBirth.
             </summary>
             <value>
             DateOfBirth.
             </value>
         </member>
-        <member name="P:FileCabinetApp.RecordsParameters.Salary">
+        <member name="P:FileCabinetApp.RecordEventArgs.Salary">
             <summary>
-            Gets salary.
+            Gets or sets salary.
             </summary>
             <value>
             Salary.
             </value>
         </member>
-        <member name="P:FileCabinetApp.RecordsParameters.WorkRate">
+        <member name="P:FileCabinetApp.RecordEventArgs.WorkRate">
             <summary>
-            Gets workRate.
+            Gets or sets workRate.
             </summary>
             <value>
             WorkRate.
             </value>
         </member>
-        <member name="P:FileCabinetApp.RecordsParameters.Gender">
+        <member name="P:FileCabinetApp.RecordEventArgs.Gender">
             <summary>
-            Gets gender.
+            Gets or sets gender.
             </summary>
             <value>
             Gender.
             </value>
-        </member>
-        <member name="M:FileCabinetApp.RecordsParameters.ReadParameters">
-            <summary>
-            This method reads parameter input from the console.
-            </summary>
         </member>
     </members>
 </doc>

@@ -33,7 +33,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="parameters">Parameters.</param>
         /// <returns>Id new record.</returns>
-        public int CreateRecord(RecordsParameters parameters)
+        public int CreateRecord(RecordEventArgs parameters)
         {
             if (parameters is null)
             {
@@ -86,7 +86,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="id">Id.</param>
         /// <param name="parameters">Parameters.</param>
-        public void EditRecord(int id, RecordsParameters parameters)
+        public void EditRecord(int id, RecordEventArgs parameters)
         {
             if (parameters is null)
             {

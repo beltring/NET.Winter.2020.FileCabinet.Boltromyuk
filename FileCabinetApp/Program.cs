@@ -18,6 +18,7 @@ namespace FileCabinetApp
         private static bool isRunning = true;
         private static IFileCabinetService fileCabinetService;
         private static CultureInfo cultureInfo = CultureInfo.CreateSpecificCulture("en-US");
+        private static IRecordValidator validator;
 
         private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
         {
@@ -134,40 +135,10 @@ namespace FileCabinetApp
 
         private static void Create(string parameters)
         {
-            bool isRunning = true;
+            RecordEventArgs eventArgs = ConsoleRead();
 
-            while (isRunning)
-            {
-                try
-                {
-                    RecordsParameters recordsParameters = new RecordsParameters();
-                    recordsParameters.ReadParameters();
-
-                    int id = fileCabinetService.CreateRecord(recordsParameters);
-                    Console.WriteLine($"Record #{id} is created.");
-                    isRunning = false;
-                }
-                catch (ArgumentNullException ex)
-                {
-                    Console.WriteLine($"{ex.Message}, try again.");
-                    continue;
-                }
-                catch (ArgumentException ex)
-                {
-                    Console.WriteLine($"{ex.Message}, try again.");
-                    continue;
-                }
-                catch (FormatException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    continue;
-                }
-                catch (OverflowException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    continue;
-                }
-            }
+            int id = fileCabinetService.CreateRecord(eventArgs);
+            Console.WriteLine($"Record #{id} is created.");
         }
 
         private static void List(string parameters)
@@ -182,33 +153,17 @@ namespace FileCabinetApp
             int id = 0;
             cultureInfo.DateTimeFormat.ShortDatePattern = "MM/dd/yyyy";
 
-            try
+            id = int.Parse(parameters, cultureInfo);
+            if (id <= fileCabinetService.GetStat())
             {
-                id = int.Parse(parameters, cultureInfo);
-                if (id <= fileCabinetService.GetStat())
-                {
-                    RecordsParameters recordsParameters = new RecordsParameters();
-                    recordsParameters.ReadParameters();
+                RecordEventArgs eventArgs = ConsoleRead();
 
-                    fileCabinetService.EditRecord(id, recordsParameters);
-                    Console.WriteLine($"Record #{id} is updated.");
-                }
-                else
-                {
-                    Console.WriteLine($"#{id} record is not found.");
-                }
+                fileCabinetService.EditRecord(id, eventArgs);
+                Console.WriteLine($"Record #{id} is updated.");
             }
-            catch (ArgumentException ex)
+            else
             {
-                Console.WriteLine($"{ex.Message}, try again.");
-            }
-            catch (FormatException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            catch (OverflowException ex)
-            {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine($"#{id} record is not found.");
             }
         }
 
@@ -266,15 +221,96 @@ namespace FileCabinetApp
 
             if (command.Contains("custom", StringComparison.OrdinalIgnoreCase))
             {
-                fileCabinetService = new FileCabinetService(new CustomValidator());
+                CustomValidator customValidator = new CustomValidator();
+                fileCabinetService = new FileCabinetService(customValidator);
+                validator = customValidator;
                 result = "Using custom validation rules.";
 
                 return result;
             }
 
-            fileCabinetService = new FileCabinetService(new DefaultValidator());
+            DefaultValidator defaultValidator = new DefaultValidator();
+            fileCabinetService = new FileCabinetService(defaultValidator);
+            validator = defaultValidator;
 
             return result;
+        }
+
+        private static RecordEventArgs ConsoleRead()
+        {
+            Func<string, Tuple<bool, string, string>> stringConverter = Converter.StringConverter;
+            Func<string, Tuple<bool, string>> stringValidator = validator.StringValidator;
+
+            Func<string, Tuple<bool, string, DateTime>> dateConverter = Converter.DateConverter;
+            Func<DateTime, Tuple<bool, string>> dateOfBirthValidator = validator.DateOfBirthValidator;
+
+            Func<string, Tuple<bool, string, short>> salaryConverter = Converter.SalaryConverter;
+            Func<short, Tuple<bool, string>> salaryValidator = validator.SalaryValidator;
+
+            Func<string, Tuple<bool, string, decimal>> workRateConverter = Converter.WorkRateConverter;
+            Func<decimal, Tuple<bool, string>> workRateValidator = validator.WorkRateValidator;
+
+            Func<string, Tuple<bool, string, char>> genderConverter = Converter.GenderConverter;
+            Func<char, Tuple<bool, string>> genderValidator = validator.GenderValidator;
+
+            Console.Write("First name: ");
+            string firstName = ReadInput(stringConverter, stringValidator);
+
+            Console.Write("Last name: ");
+            var lastName = ReadInput(stringConverter, stringValidator);
+
+            Console.Write("Date of birth: ");
+            var dob = ReadInput(dateConverter, dateOfBirthValidator);
+
+            Console.Write("Salary: ");
+            short salary = ReadInput(salaryConverter, salaryValidator);
+
+            Console.Write("Work rate: ");
+            decimal workRate = ReadInput(workRateConverter, workRateValidator);
+
+            Console.Write("Gender: ");
+            char gender = ReadInput(genderConverter, genderValidator);
+
+            RecordEventArgs eventArgs = new RecordEventArgs()
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                DateOfBirth = dob,
+                Salary = salary,
+                WorkRate = workRate,
+                Gender = gender,
+            };
+
+            return eventArgs;
+        }
+
+        private static T ReadInput<T>(Func<string, Tuple<bool, string, T>> converter, Func<T, Tuple<bool, string>> validator)
+        {
+            do
+            {
+                T value;
+
+                var input = Console.ReadLine();
+                var conversionResult = converter(input);
+
+                if (!conversionResult.Item1)
+                {
+                    Console.WriteLine($"Conversion failed: {conversionResult.Item2}. Please, correct your input.");
+                    continue;
+                }
+
+                value = conversionResult.Item3;
+
+                var validationResult = validator(value);
+                if (!validationResult.Item1)
+                {
+                    Console.WriteLine($"Validation failed: {validationResult.Item2}. Please, correct your input.");
+                    continue;
+                }
+
+                return value;
+            }
+            while (true);
         }
     }
 }

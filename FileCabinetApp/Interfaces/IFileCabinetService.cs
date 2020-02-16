@@ -15,7 +15,7 @@ namespace FileCabinetApp.Interfaces
         /// </summary>
         /// <param name="parameters">Parameters.</param>
         /// <returns>Id new record.</returns>
-        int CreateRecord(RecordsParameters parameters);
+        int CreateRecord(RecordEventArgs parameters);
 
         /// <summary>
         /// This method return records.
@@ -34,7 +34,7 @@ namespace FileCabinetApp.Interfaces
         /// </summary>
         /// <param name="id">Id.</param>
         /// <param name="parameters">Parameters.</param>
-        void EditRecord(int id, RecordsParameters parameters);
+        void EditRecord(int id, RecordEventArgs parameters);
 
         /// <summary>
         /// This method searches for a record by first name.

@@ -14,7 +14,7 @@ namespace FileCabinetApp
         /// Custom validate parameters.
         /// </summary>
         /// <param name="parameters">Parameters.</param>
-        public void ValidateParameters(RecordsParameters parameters)
+        public void ValidateParameters(RecordEventArgs parameters)
         {
             DateTime date = new DateTime(2010, 12, 31);
 
@@ -62,6 +62,109 @@ namespace FileCabinetApp
             {
                 throw new ArgumentException($"Invalid value, the value of the {nameof(parameters.Gender)} variable must be M or F");
             }
+        }
+
+        /// <summary>
+        /// Validate string.
+        /// </summary>
+        /// <param name="inputString">String for validation.</param>
+        /// <returns>The validation result and message are returned.</returns>
+        public Tuple<bool, string> StringValidator(string inputString)
+        {
+            string message = string.Empty;
+            bool flag = true;
+
+            if (inputString == null)
+            {
+                message = "parameter must not be null";
+                flag = false;
+            }
+
+            if (inputString.Length < 3 || inputString.Length > 20)
+            {
+                message = "length must be between 3 and 20 characters";
+                flag = false;
+            }
+
+            return new Tuple<bool, string>(flag, message);
+        }
+
+        /// <summary>
+        /// Validate date of birthday.
+        /// </summary>
+        /// <param name="dateOfBirth">Date of birthday.</param>
+        /// <returns>The validation result and message are returned.</returns>
+        public Tuple<bool, string> DateOfBirthValidator(DateTime dateOfBirth)
+        {
+            DateTime date = new DateTime(2010, 12, 31);
+
+            string message = string.Empty;
+            bool flag = true;
+
+            if (dateOfBirth.Year < 1960 || (dateOfBirth > date))
+            {
+                message = "Minimum date of birth 01-Jan-1960 maximum 31-Dec-2010";
+                flag = false;
+            }
+
+            return new Tuple<bool, string>(flag, message);
+        }
+
+        /// <summary>
+        /// Validate salary.
+        /// </summary>
+        /// <param name="salary">Salary.</param>
+        /// <returns>The validation result and message are returned.</returns>
+        public Tuple<bool, string> SalaryValidator(short salary)
+        {
+            string message = string.Empty;
+            bool flag = true;
+
+            if (salary < 300 || salary > 6500)
+            {
+                message = "salary must be between 300 and 6500";
+                flag = false;
+            }
+
+            return new Tuple<bool, string>(flag, message);
+        }
+
+        /// <summary>
+        /// Validate work rate.
+        /// </summary>
+        /// <param name="workRate">Work Rate.</param>
+        /// <returns>The validation result and message are returned.</returns>
+        public Tuple<bool, string> WorkRateValidator(decimal workRate)
+        {
+            string message = string.Empty;
+            bool flag = true;
+
+            if (workRate < 0.25m || workRate > 1.0m)
+            {
+                message = "work rate must be between 0.25 and 1.0";
+                flag = false;
+            }
+
+            return new Tuple<bool, string>(flag, message);
+        }
+
+        /// <summary>
+        /// Validate gender.
+        /// </summary>
+        /// <param name="gender">Gender.</param>
+        /// <returns>The validation result and message are returned.</returns>
+        public Tuple<bool, string> GenderValidator(char gender)
+        {
+            string message = string.Empty;
+            bool flag = true;
+
+            if (gender != 'M' && gender != 'F')
+            {
+                message = "must be M or F";
+                flag = false;
+            }
+
+            return new Tuple<bool, string>(flag, message);
         }
     }
 }
