@@ -1,24 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace FileCabinetApp
 {
     /// <summary>
-    /// This class describes the record entity.
+    /// This class describes a group of parameters.
     /// </summary>
-    public class FileCabinetRecord
+    public sealed class RecordEventArgs
     {
         /// <summary>
-        /// Gets or sets id.
-        /// </summary>
-        /// <value>
-        /// Integer number.
-        /// </value>
-        public int Id { get; set; }
-
-        /// <summary>
-        /// Gets or sets FirstName.
+        /// Gets or sets firstName.
         /// </summary>
         /// <value>
         /// FirstName.
@@ -26,7 +19,7 @@ namespace FileCabinetApp
         public string FirstName { get; set; }
 
         /// <summary>
-        /// Gets or sets LastName.
+        /// Gets or sets lastName.
         /// </summary>
         /// <value>
         /// LastName.
@@ -34,7 +27,7 @@ namespace FileCabinetApp
         public string LastName { get; set; }
 
         /// <summary>
-        /// Gets or sets DateOfBirth.
+        /// Gets or sets dateOfBirth.
         /// </summary>
         /// <value>
         /// DateOfBirth.
@@ -42,7 +35,7 @@ namespace FileCabinetApp
         public DateTime DateOfBirth { get; set; }
 
         /// <summary>
-        /// Gets or sets Salary.
+        /// Gets or sets salary.
         /// </summary>
         /// <value>
         /// Salary.
@@ -50,7 +43,7 @@ namespace FileCabinetApp
         public short Salary { get; set; }
 
         /// <summary>
-        /// Gets or sets WorkRate.
+        /// Gets or sets workRate.
         /// </summary>
         /// <value>
         /// WorkRate.
@@ -58,7 +51,7 @@ namespace FileCabinetApp
         public decimal WorkRate { get; set; }
 
         /// <summary>
-        /// Gets or sets Gender.
+        /// Gets or sets gender.
         /// </summary>
         /// <value>
         /// Gender.
