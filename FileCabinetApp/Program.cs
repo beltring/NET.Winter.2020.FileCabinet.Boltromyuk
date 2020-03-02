@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using FileCabinetApp.Interfaces;
 
 namespace FileCabinetApp
@@ -29,6 +30,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("edit", Edit),
             new Tuple<string, Action<string>>("find", Find),
+            new Tuple<string, Action<string>>("export", Export),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -40,6 +42,7 @@ namespace FileCabinetApp
             new string[] { "list", "returns a list of records added to the service", "The 'list' command returns a list of records added to the service" },
             new string[] { "edit", "editing record", "The 'edit' command editing record" },
             new string[] { "find", "find records", "The 'find' command find records" },
+            new string[] { "find", "export records", "The 'export' command export records to csv or xml file." },
         };
 
         /// <summary>
@@ -193,6 +196,16 @@ namespace FileCabinetApp
             Representation(records);
         }
 
+        private static void Export(string parameters)
+        {
+            string[] param = parameters.Split(' ');
+            string path = param[1];
+            if (param[0] == "csv")
+            {
+                ExportToCsv(path);
+            }
+        }
+
         private static void Representation(ReadOnlyCollection<FileCabinetRecord> records)
         {
             cultureInfo.DateTimeFormat.ShortDatePattern = "yyyy-MMM-dd";
@@ -311,6 +324,40 @@ namespace FileCabinetApp
                 return value;
             }
             while (true);
+        }
+
+        private static void ExportToCsv(string path)
+        {
+            if (IsExists(path))
+            {
+                try
+                {
+                    using StreamWriter sw = new StreamWriter(path);
+                    var snapshot = fileCabinetService.MakeSnapshot();
+                    snapshot.SaveToCsv(sw);
+                    Console.WriteLine($"All records are exported to file {path}.");
+                }
+                catch (IOException)
+                {
+                    Console.WriteLine($"Export failed: can't open file {path}.");
+                }
+                catch (ArgumentException)
+                {
+                    Console.WriteLine("Add at least one record.");
+                }
+            }
+        }
+
+        private static bool IsExists(string path)
+        {
+            if (File.Exists(path))
+            {
+                Console.WriteLine($"File is exist - rewrite {path}?[Y / n]");
+                string result = Console.ReadLine();
+                return result == "Y" ? true : false;
+            }
+
+            return true;
         }
     }
 }
