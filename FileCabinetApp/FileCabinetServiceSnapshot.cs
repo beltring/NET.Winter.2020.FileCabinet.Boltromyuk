@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Xml;
 
 namespace FileCabinetApp
 {
@@ -33,6 +34,18 @@ namespace FileCabinetApp
             foreach (var record in this.records)
             {
                 csvWriter.Write(record);
+            }
+        }
+
+        /// <summary>Saves to XML.</summary>
+        /// <param name="xmlWriter">The XML writer.</param>
+        public void SaveToXML(XmlWriter xmlWriter)
+        {
+            var xmlWrite = new FileCabinetRecordXmlWriter(xmlWriter);
+
+            foreach (var record in this.records)
+            {
+                xmlWrite.Write(record);
             }
         }
     }

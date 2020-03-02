@@ -210,6 +210,19 @@
             <param name="record">The record.</param>
             <exception cref="T:System.ArgumentNullException">Throw when record is null.</exception>
         </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordXmlWriter">
+            <summary>class FileCabinetRecordXmlWriter.</summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.#ctor(System.Xml.XmlWriter)">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordXmlWriter"/> class.</summary>
+            <param name="writer">The writer.</param>
+            <exception cref="T:System.ArgumentNullException">Throw when writer is null.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.Write(FileCabinetApp.FileCabinetRecord)">
+            <summary>Writes the specified record.</summary>
+            <param name="record">The record.</param>
+            <exception cref="T:System.ArgumentNullException">Throw when writer is null.</exception>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetService">
             <summary>
             This class provides functionality for working with record.
@@ -283,6 +296,10 @@
         <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.SaveToCsv(System.IO.StreamWriter)">
             <summary>Saves to CSV.</summary>
             <param name="streamWriter">The stream writer.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.SaveToXML(System.Xml.XmlWriter)">
+            <summary>Saves to XML.</summary>
+            <param name="xmlWriter">The XML writer.</param>
         </member>
         <member name="T:FileCabinetApp.Interfaces.IFileCabinetService">
             <summary>

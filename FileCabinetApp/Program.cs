@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
+using System.Xml;
 using FileCabinetApp.Interfaces;
 
 namespace FileCabinetApp
@@ -204,6 +205,11 @@ namespace FileCabinetApp
             {
                 ExportToCsv(path);
             }
+
+            if (param[0] == "xml")
+            {
+                ExportToXml(path);
+            }
         }
 
         private static void Representation(ReadOnlyCollection<FileCabinetRecord> records)
@@ -344,6 +350,27 @@ namespace FileCabinetApp
                 catch (ArgumentException)
                 {
                     Console.WriteLine("Add at least one record.");
+                }
+            }
+        }
+
+        private static void ExportToXml(string path)
+        {
+            if (IsExists(path))
+            {
+                try
+                {
+                    XmlWriterSettings settings = new XmlWriterSettings();
+                    settings.WriteEndDocumentOnClose = true;
+
+                    using XmlWriter xmlWriter = XmlWriter.Create(path, settings);
+                    var snapshot = fileCabinetService.MakeSnapshot();
+                    snapshot.SaveToXML(xmlWriter);
+                    Console.WriteLine($"All records are exported to file {path}.");
+                }
+                catch (DirectoryNotFoundException)
+                {
+                    Console.WriteLine($"Export failed: can't open file {path}.");
                 }
             }
         }
