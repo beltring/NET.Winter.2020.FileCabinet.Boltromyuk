@@ -185,6 +185,18 @@ namespace FileCabinetApp
             return null;
         }
 
+        /// <summary>Makes the snapshot.</summary>
+        /// <returns>Snapshot.</returns>
+        public FileCabinetServiceSnapshot MakeSnapshot()
+        {
+            if (this.list.Count == 0)
+            {
+                throw new ArgumentException($"Length {nameof(this.list)} can't be less 0.");
+            }
+
+            return new FileCabinetServiceSnapshot(this.list.ToArray());
+        }
+
         private void AddToFirstNameDictionary(string firstName, FileCabinetRecord record)
         {
             firstName = firstName.ToLower(this.cultureInfo);
