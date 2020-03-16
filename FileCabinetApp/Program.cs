@@ -23,7 +23,7 @@ namespace FileCabinetApp
         private static bool isRunning = true;
         private static IFileCabinetService fileCabinetService;
         private static IRecordValidator validator = new DefaultValidator();
-        private static FileStream fileStream = null;
+        private static FileStream fileStream;
 
         private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
         {
@@ -241,8 +241,7 @@ namespace FileCabinetApp
 
             if (isFile)
             {
-                string path = AppDomain.CurrentDomain.BaseDirectory + DefaultBinaryFileName;
-                fileStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                fileStream = new FileStream(DefaultBinaryFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite);
                 fileCabinetService = new FileCabinetFilesystemService(validator, fileStream);
                 return result;
             }

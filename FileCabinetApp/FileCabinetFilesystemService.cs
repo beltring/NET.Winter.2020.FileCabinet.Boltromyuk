@@ -11,6 +11,17 @@ namespace FileCabinetApp
     /// <seealso cref="FileCabinetApp.Interfaces.IFileCabinetService" />
     public class FileCabinetFilesystemService : IFileCabinetService
     {
+        private const int RecordLength // 278
+            = sizeof(short) // status
+            + sizeof(int) // id
+            + (NameLength * 2) // first and last name
+            + (sizeof(int) * 3) // dateofbirth
+            + sizeof(short) // salary
+            + sizeof(decimal) // workRate
+            + sizeof(char); // gender
+
+        private const int NameLength = 120;
+
         private readonly FileStream fileStream;
         private readonly IRecordValidator validator;
 
@@ -19,8 +30,8 @@ namespace FileCabinetApp
         /// <param name="fileStream">The file stream.</param>
         public FileCabinetFilesystemService(IRecordValidator validator, FileStream fileStream)
         {
-            this.validator = validator;
-            this.fileStream = fileStream;
+            this.validator = validator ?? throw new ArgumentNullException($"{nameof(validator)} can't be null.");
+            this.fileStream = fileStream ?? throw new ArgumentNullException($"{nameof(fileStream)} can't be null.");
         }
 
         /// <summary>This method creates a record.</summary>
@@ -28,7 +39,27 @@ namespace FileCabinetApp
         /// <returns>Id new record.</returns>
         public int CreateRecord(RecordEventArgs parameters)
         {
-            throw new NotImplementedException();
+            if (parameters is null)
+            {
+                throw new ArgumentNullException($"{nameof(parameters)} can't be null.");
+            }
+
+            this.validator.ValidateParameters(parameters);
+
+            var record = new FileCabinetRecord
+            {
+                Id = this.fileStream.Position != 0 ? (int)(this.fileStream.Position / RecordLength) + 1 : 1,
+                FirstName = parameters.FirstName,
+                LastName = parameters.LastName,
+                DateOfBirth = parameters.DateOfBirth,
+                Salary = parameters.Salary,
+                WorkRate = parameters.WorkRate,
+                Gender = parameters.Gender,
+            };
+
+            this.WriteToBinaryFile(record);
+
+            return record.Id;
         }
 
         /// <summary>This method changes the record.</summary>
@@ -82,6 +113,26 @@ namespace FileCabinetApp
         public FileCabinetServiceSnapshot MakeSnapshot()
         {
             throw new NotImplementedException();
+        }
+
+        private void WriteToBinaryFile(FileCabinetRecord record)
+        {
+            using (BinaryWriter writeBinay = new BinaryWriter(this.fileStream, Encoding.Unicode, true))
+            {
+                var encoding = UnicodeEncoding.Unicode;
+                short status = 0;
+
+                writeBinay.Write(status); // 0 - not deleted, 1 - deleted
+                writeBinay.Write(record.Id);
+                writeBinay.Write(encoding.GetBytes(record.FirstName.PadRight(60)));
+                writeBinay.Write(encoding.GetBytes(record.LastName.PadRight(60)));
+                writeBinay.Write(record.DateOfBirth.Year);
+                writeBinay.Write(record.DateOfBirth.Month);
+                writeBinay.Write(record.DateOfBirth.Day);
+                writeBinay.Write(record.Salary);
+                writeBinay.Write(record.WorkRate);
+                writeBinay.Write(record.Gender);
+            }
         }
     }
 }
