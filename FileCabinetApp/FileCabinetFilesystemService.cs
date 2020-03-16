@@ -126,7 +126,7 @@ namespace FileCabinetApp
         /// <returns>Count records.</returns>
         public int GetStat()
         {
-            throw new NotImplementedException();
+            return (int)(this.fileStream.Position / RecordLength);
         }
 
         /// <summary>Makes the snapshot.</summary>
