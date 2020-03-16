@@ -98,7 +98,28 @@ namespace FileCabinetApp
         /// <returns>Array of the records.</returns>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
-            throw new NotImplementedException();
+            this.fileStream.Position = 0;
+            using BinaryReader binaryReader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
+            long count = this.fileStream.Length / RecordLength;
+            List<FileCabinetRecord> records = new List<FileCabinetRecord>();
+
+            while (count-- > 0)
+            {
+                binaryReader.ReadBytes(2);
+                records.Add(new FileCabinetRecord
+                {
+                    Id = binaryReader.ReadInt32(),
+                    FirstName = System.Text.UnicodeEncoding.Unicode.GetString(binaryReader.ReadBytes(120), 0, 120).Trim(),
+                    LastName = System.Text.UnicodeEncoding.Unicode.GetString(binaryReader.ReadBytes(120), 0, 120).Trim(),
+                    DateOfBirth = new DateTime(binaryReader.ReadInt32(), binaryReader.ReadInt32(), binaryReader.ReadInt32()),
+                    Salary = binaryReader.ReadInt16(),
+                    WorkRate = ToDecimal(binaryReader.ReadBytes(16)),
+                    Gender = binaryReader.ReadChar(),
+                });
+            }
+
+            ReadOnlyCollection<FileCabinetRecord> result = new ReadOnlyCollection<FileCabinetRecord>(records);
+            return result;
         }
 
         /// <summary>This method returns count of records.</summary>
@@ -115,23 +136,39 @@ namespace FileCabinetApp
             throw new NotImplementedException();
         }
 
+        private static decimal ToDecimal(byte[] bytes)
+        {
+            if (bytes.Length != 16)
+            {
+                throw new ArgumentException("A decimal must be created from exactly 16 bytes");
+            }
+
+            int[] bits = new int[4];
+            for (int i = 0; i <= 15; i += 4)
+            {
+                bits[i / 4] = BitConverter.ToInt32(bytes, i);
+            }
+
+            return new decimal(bits);
+        }
+
         private void WriteToBinaryFile(FileCabinetRecord record)
         {
-            using (BinaryWriter writeBinay = new BinaryWriter(this.fileStream, Encoding.Unicode, true))
+            using (BinaryWriter binaryWriter = new BinaryWriter(this.fileStream, Encoding.Unicode, true))
             {
                 var encoding = UnicodeEncoding.Unicode;
                 short status = 0;
 
-                writeBinay.Write(status); // 0 - not deleted, 1 - deleted
-                writeBinay.Write(record.Id);
-                writeBinay.Write(encoding.GetBytes(record.FirstName.PadRight(60)));
-                writeBinay.Write(encoding.GetBytes(record.LastName.PadRight(60)));
-                writeBinay.Write(record.DateOfBirth.Year);
-                writeBinay.Write(record.DateOfBirth.Month);
-                writeBinay.Write(record.DateOfBirth.Day);
-                writeBinay.Write(record.Salary);
-                writeBinay.Write(record.WorkRate);
-                writeBinay.Write(record.Gender);
+                binaryWriter.Write(status); // 0 - not deleted, 1 - deleted
+                binaryWriter.Write(record.Id);
+                binaryWriter.Write(encoding.GetBytes(record.FirstName.PadRight(60)));
+                binaryWriter.Write(encoding.GetBytes(record.LastName.PadRight(60)));
+                binaryWriter.Write(record.DateOfBirth.Year);
+                binaryWriter.Write(record.DateOfBirth.Month);
+                binaryWriter.Write(record.DateOfBirth.Day);
+                binaryWriter.Write(record.Salary);
+                binaryWriter.Write(record.WorkRate);
+                binaryWriter.Write(record.Gender);
             }
         }
     }
