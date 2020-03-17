@@ -24,6 +24,8 @@ namespace FileCabinetApp
         private const int StatusLength = sizeof(short);
         private const int FirstNamePosition = StatusLength + sizeof(int);
         private const int LastNamePosition = FirstNamePosition + NameLength;
+        private const int DayOfBirthPosition = LastNamePosition + NameLength;
+        private const int DateLength = sizeof(int) * 3;
 
         private readonly Encoding encoding = Encoding.Unicode;
         private readonly FileStream fileStream;
@@ -107,7 +109,39 @@ namespace FileCabinetApp
         /// <returns>Array of the records.</returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
         {
-            throw new NotImplementedException();
+            using BinaryReader binaryReader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
+            var dateList = new List<FileCabinetRecord>();
+            int count = (int)(this.fileStream.Length / RecordLength);
+            this.fileStream.Position = DayOfBirthPosition;
+            DateTime dateFromFile;
+            while (count-- > 0)
+            {
+                dateFromFile = new DateTime(binaryReader.ReadInt32(), binaryReader.ReadInt32(), binaryReader.ReadInt32());
+                if (DateTime.Compare(dateFromFile, dateOfBirth) == 0)
+                {
+                    this.fileStream.Position -= DayOfBirthPosition + DateLength;
+                    binaryReader.ReadBytes(StatusLength);
+                    dateList.Add(new FileCabinetRecord
+                    {
+                        Id = binaryReader.ReadInt32(),
+                        FirstName = this.encoding.GetString(binaryReader.ReadBytes(120), 0, 120).Trim(),
+                        LastName = this.encoding.GetString(binaryReader.ReadBytes(120), 0, 120).Trim(),
+                        DateOfBirth = new DateTime(binaryReader.ReadInt32(), binaryReader.ReadInt32(), binaryReader.ReadInt32()),
+                        Salary = binaryReader.ReadInt16(),
+                        WorkRate = ToDecimal(binaryReader.ReadBytes(16)),
+                        Gender = binaryReader.ReadChar(),
+                    });
+
+                    this.fileStream.Position += DayOfBirthPosition;
+                }
+                else
+                {
+                    this.fileStream.Position += RecordLength - DateLength;
+                }
+            }
+
+            var dateCollection = new ReadOnlyCollection<FileCabinetRecord>(dateList);
+            return dateCollection;
         }
 
         /// <summary>This method searches for a record by first name.</summary>
@@ -158,7 +192,7 @@ namespace FileCabinetApp
             using BinaryReader binaryReader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
             var dateList = new List<FileCabinetRecord>();
             int count = (int)(this.fileStream.Length / RecordLength);
-            this.fileStream.Position = 126; // last name position
+            this.fileStream.Position = LastNamePosition;
             string lastNameFromFile;
 
             while (count-- > 0)
