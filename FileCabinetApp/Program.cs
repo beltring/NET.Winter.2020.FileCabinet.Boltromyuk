@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using FileCabinetApp.Interfaces;
 
@@ -14,13 +15,15 @@ namespace FileCabinetApp
     {
         private const string DeveloperName = "Pavel Boltromyuk";
         private const string HintMessage = "Enter your command, or enter 'help' to get help.";
+        private const string DefaultBinaryFileName = "cabinet-records.db";
         private const int CommandHelpIndex = 0;
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
+        private static readonly CultureInfo CultureInfo = CultureInfo.CreateSpecificCulture("en-US");
         private static bool isRunning = true;
         private static IFileCabinetService fileCabinetService;
-        private static CultureInfo cultureInfo = CultureInfo.CreateSpecificCulture("en-US");
-        private static IRecordValidator validator;
+        private static IRecordValidator validator = new DefaultValidator();
+        private static FileStream fileStream;
 
         private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
         {
@@ -43,7 +46,7 @@ namespace FileCabinetApp
             new string[] { "list", "returns a list of records added to the service", "The 'list' command returns a list of records added to the service" },
             new string[] { "edit", "editing record", "The 'edit' command editing record" },
             new string[] { "find", "find records", "The 'find' command find records" },
-            new string[] { "find", "export records", "The 'export' command export records to csv or xml file." },
+            new string[] { "export", "export records", "The 'export' command export records to csv or xml file." },
         };
 
         /// <summary>
@@ -155,9 +158,9 @@ namespace FileCabinetApp
         private static void Edit(string parameters)
         {
             int id = 0;
-            cultureInfo.DateTimeFormat.ShortDatePattern = "MM/dd/yyyy";
+            CultureInfo.DateTimeFormat.ShortDatePattern = "MM/dd/yyyy";
 
-            id = int.Parse(parameters, cultureInfo);
+            id = int.Parse(parameters, CultureInfo);
             if (id <= fileCabinetService.GetStat())
             {
                 RecordEventArgs eventArgs = ConsoleRead();
@@ -175,10 +178,10 @@ namespace FileCabinetApp
         {
             string[] param = parameters.Split(' ');
             ReadOnlyCollection<FileCabinetRecord> records = null;
-            cultureInfo.DateTimeFormat.ShortDatePattern = "yyyy-MMM-dd";
+            CultureInfo.DateTimeFormat.ShortDatePattern = "yyyy-MMM-dd";
 
             string search = param[1].Trim('"');
-            string searchParam = param[0].ToLower(cultureInfo);
+            string searchParam = param[0].ToLower(CultureInfo);
 
             switch (searchParam)
             {
@@ -189,7 +192,7 @@ namespace FileCabinetApp
                     records = new ReadOnlyCollection<FileCabinetRecord>(fileCabinetService.FindByLastName(search));
                     break;
                 case "dateofbirth":
-                    DateTime dateofbirth = DateTime.ParseExact(search, "d", cultureInfo);
+                    DateTime dateofbirth = DateTime.ParseExact(search, "d", CultureInfo);
                     records = new ReadOnlyCollection<FileCabinetRecord>(fileCabinetService.FindByDateOfBirth(dateofbirth));
                     break;
             }
@@ -214,43 +217,36 @@ namespace FileCabinetApp
 
         private static void Representation(ReadOnlyCollection<FileCabinetRecord> records)
         {
-            cultureInfo.DateTimeFormat.ShortDatePattern = "yyyy-MMM-dd";
+            CultureInfo.DateTimeFormat.ShortDatePattern = "yyyy-MMM-dd";
 
             foreach (FileCabinetRecord record in records)
             {
-                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("d", cultureInfo)}, " +
+                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("d", CultureInfo)}, " +
                     $"{record.Salary}, {record.WorkRate}, {record.Gender}");
             }
         }
 
         private static string CheckCommandLine(string[] args)
         {
-            string command = string.Empty;
             string result = "Using default validation rules.";
 
-            if (args.Length == 1)
-            {
-                command = args[0];
-            }
+            bool isCustom = args.Any(x => x.Contains("custom", StringComparison.OrdinalIgnoreCase));
+            bool isFile = args.Any(x => x.Contains("file", StringComparison.OrdinalIgnoreCase));
 
-            if (args.Length == 2)
+            if (isCustom)
             {
-                command = args[1];
-            }
-
-            if (command.Contains("custom", StringComparison.OrdinalIgnoreCase))
-            {
-                CustomValidator customValidator = new CustomValidator();
-                fileCabinetService = new FileCabinetService(customValidator);
-                validator = customValidator;
+                validator = new CustomValidator();
                 result = "Using custom validation rules.";
+            }
 
+            if (isFile)
+            {
+                fileStream = new FileStream(DefaultBinaryFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                fileCabinetService = new FileCabinetFilesystemService(validator, fileStream);
                 return result;
             }
 
-            DefaultValidator defaultValidator = new DefaultValidator();
-            fileCabinetService = new FileCabinetService(defaultValidator);
-            validator = defaultValidator;
+            fileCabinetService = new FileCabinetMemoryService(validator);
 
             return result;
         }
