@@ -67,7 +67,36 @@ namespace FileCabinetApp
         /// <param name="parameters">Parameters.</param>
         public void EditRecord(int id, RecordEventArgs parameters)
         {
-            throw new NotImplementedException();
+            if (id < 0)
+            {
+                throw new ArgumentException($"{nameof(id)} can't be less than zero.");
+            }
+
+            if (parameters is null)
+            {
+                throw new ArgumentNullException($"{nameof(parameters)} can't be null.");
+            }
+
+            int index = this.CheckId(id);
+            if (index == -1)
+            {
+                throw new ArgumentException($"The {nameof(id)} doesn't exist.");
+            }
+
+            this.validator.ValidateParameters(parameters);
+
+            this.fileStream.Position = (RecordLength * (index - 1)) + 2 + BitConverter.GetBytes(default(int)).Length;
+            using BinaryWriter writeBinay = new BinaryWriter(this.fileStream, Encoding.Unicode, true);
+            var encoding = UnicodeEncoding.Unicode;
+
+            writeBinay.Write(encoding.GetBytes(parameters.FirstName.PadRight(60)));
+            writeBinay.Write(encoding.GetBytes(parameters.LastName.PadRight(60)));
+            writeBinay.Write(parameters.DateOfBirth.Year);
+            writeBinay.Write(parameters.DateOfBirth.Month);
+            writeBinay.Write(parameters.DateOfBirth.Day);
+            writeBinay.Write(parameters.Salary);
+            writeBinay.Write(parameters.WorkRate);
+            writeBinay.Write(parameters.Gender);
         }
 
         /// <summary>This method searches for a record by date of birthday.</summary>
@@ -102,10 +131,11 @@ namespace FileCabinetApp
             using BinaryReader binaryReader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
             long count = this.fileStream.Length / RecordLength;
             List<FileCabinetRecord> records = new List<FileCabinetRecord>();
+            const int statusLength = 2;
 
             while (count-- > 0)
             {
-                binaryReader.ReadBytes(2);
+                binaryReader.ReadBytes(statusLength);
                 records.Add(new FileCabinetRecord
                 {
                     Id = binaryReader.ReadInt32(),
@@ -170,6 +200,26 @@ namespace FileCabinetApp
                 binaryWriter.Write(record.WorkRate);
                 binaryWriter.Write(record.Gender);
             }
+        }
+
+        private int CheckId(int id)
+        {
+            int index = -1;
+            using BinaryReader binaryReader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
+            int count = (int)(this.fileStream.Length / RecordLength);
+            this.fileStream.Position = 2;
+            while (count-- > 0)
+            {
+                if (binaryReader.ReadInt32() == id)
+                {
+                    index = id;
+                    return index;
+                }
+
+                this.fileStream.Position += RecordLength - BitConverter.GetBytes(default(int)).Length;
+            }
+
+            return index;
         }
     }
 }
