@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace FileCabinetGenerator
 {
     /// <summary>This class describes the record entity.</summary>
+    [XmlRoot("record")]
     public class FileCabinetRecord
     {
         /// <summary>
@@ -14,23 +16,17 @@ namespace FileCabinetGenerator
         /// <value>
         /// Integer number.
         /// </value>
+        [XmlAttribute("id")]
         public int Id { get; set; }
 
         /// <summary>
-        /// Gets or sets FirstName.
+        /// Gets or sets full name.
         /// </summary>
         /// <value>
-        /// FirstName.
+        /// Full name.
         /// </value>
-        public string FirstName { get; set; }
-
-        /// <summary>
-        /// Gets or sets LastName.
-        /// </summary>
-        /// <value>
-        /// LastName.
-        /// </value>
-        public string LastName { get; set; }
+        [XmlElement("name")]
+        public FullName FullName { get; set; }
 
         /// <summary>
         /// Gets or sets DateOfBirth.
@@ -38,6 +34,7 @@ namespace FileCabinetGenerator
         /// <value>
         /// DateOfBirth.
         /// </value>
+        [XmlElement("dateOfBirth", DataType = "date")]
         public DateTime DateOfBirth { get; set; }
 
         /// <summary>
@@ -46,6 +43,7 @@ namespace FileCabinetGenerator
         /// <value>
         /// Salary.
         /// </value>
+        [XmlElement("salary")]
         public short Salary { get; set; }
 
         /// <summary>
@@ -54,6 +52,7 @@ namespace FileCabinetGenerator
         /// <value>
         /// WorkRate.
         /// </value>
+        [XmlElement("workRate")]
         public decimal WorkRate { get; set; }
 
         /// <summary>
@@ -62,13 +61,15 @@ namespace FileCabinetGenerator
         /// <value>
         /// Gender.
         /// </value>
+        [XmlElement("gender", Type = typeof(char))]
         public char Gender { get; set; }
 
         /// <summary>Converts to string.</summary>
         /// <returns>A <see cref="string"/> that represents this instance.</returns>
         public override string ToString()
         {
-            string result = $"{this.Id}, {this.FirstName}, {this.LastName}, {this.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture)}," +
+            string result = $"{this.Id}, {this.FullName.FirstName}, {this.FullName.LastName}, " +
+                $"{this.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture)}," +
                 $" {this.Salary}, {this.WorkRate}, {this.Gender}";
 
             return result;

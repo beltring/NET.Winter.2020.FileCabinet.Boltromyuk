@@ -15,20 +15,12 @@
             Integer number.
             </value>
         </member>
-        <member name="P:FileCabinetGenerator.FileCabinetRecord.FirstName">
+        <member name="P:FileCabinetGenerator.FileCabinetRecord.FullName">
             <summary>
-            Gets or sets FirstName.
+            Gets or sets full name.
             </summary>
             <value>
-            FirstName.
-            </value>
-        </member>
-        <member name="P:FileCabinetGenerator.FileCabinetRecord.LastName">
-            <summary>
-            Gets or sets LastName.
-            </summary>
-            <value>
-            LastName.
+            Full name.
             </value>
         </member>
         <member name="P:FileCabinetGenerator.FileCabinetRecord.DateOfBirth">
@@ -55,6 +47,10 @@
             WorkRate.
             </value>
         </member>
+        <member name="P:FileCabinetGenerator.FileCabinetRecord.GenderString">
+            <summary>Gets the gender string.</summary>
+            <value>The gender string.</value>
+        </member>
         <member name="P:FileCabinetGenerator.FileCabinetRecord.Gender">
             <summary>
             Gets or sets Gender.
@@ -67,12 +63,39 @@
             <summary>Converts to string.</summary>
             <returns>A <see cref="T:System.String"/> that represents this instance.</returns>
         </member>
+        <member name="T:FileCabinetGenerator.FullName">
+            <summary>The full name.</summary>
+        </member>
+        <member name="P:FileCabinetGenerator.FullName.FirstName">
+            <summary>
+            Gets or sets the first name.
+            </summary>
+            <value>
+            The first name.
+            </value>
+        </member>
+        <member name="P:FileCabinetGenerator.FullName.LastName">
+            <summary>
+            Gets or sets the last name.
+            </summary>
+            <value>
+            The last name.
+            </value>
+        </member>
         <member name="T:FileCabinetGenerator.Program">
             <summary>Class Program.</summary>
         </member>
         <member name="M:FileCabinetGenerator.Program.Main(System.String[])">
             <summary>Defines the entry point of the application.</summary>
             <param name="args">The arguments.</param>
+        </member>
+        <member name="T:FileCabinetGenerator.Records">
+            <summary>XMl export model.</summary>
+        </member>
+        <member name="P:FileCabinetGenerator.Records.FileCabinetRecords">
+            <summary>
+            The file cabinet records.
+            </summary>
         </member>
     </members>
 </doc>

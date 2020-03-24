@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 
 namespace FileCabinetGenerator
 {
@@ -18,8 +19,25 @@ namespace FileCabinetGenerator
         public static void Main(string[] args)
         {
             ParseCommandLine(args);
-            Console.WriteLine($"{amountRecords} records were written to {fileName}");
-            
+
+            Records records = Generator(startId, amountRecords);
+
+            switch (formatType)
+            {
+                case "csv":
+                    ExportCSV(fileName, records.FileCabinetRecords);
+                    Console.WriteLine($"{amountRecords} records were written to {fileName}");
+                    break;
+
+                case "xml":
+                    ExportXML(fileName, records);
+                    Console.WriteLine($"{amountRecords} records were written to {fileName}");
+                    break;
+
+                default:
+                    Console.WriteLine($"Records were not written.");
+                    throw new ArgumentException($"Incorrect {nameof(formatType)}.");
+            }
         }
 
         private static void ParseCommandLine(string[] args)
@@ -58,45 +76,66 @@ namespace FileCabinetGenerator
             return result;
         }
 
-        private static List<FileCabinetRecord> Generator(int startId, int recordAmoutn)
+        private static FileCabinetRecord RecordGenerator(int id)
         {
-            var recordsList = new List<FileCabinetRecord>(recordAmoutn);
             Random random = new Random();
 
-            string genderChars = "MF";
+            string genders = "MF";
             decimal[] workRates = new decimal[] { 0.25m, 0.5m, 0.75m, 1.0m, 1.25m, 1.5m };
             DateTime minDate = new DateTime(1950, 1, 1);
             DateTime maxDate = DateTime.Now;
             int days = Convert.ToInt32(maxDate.Subtract(minDate).TotalDays + 1);
 
-            for (int i = 0; i < recordAmoutn; i++)
+            FileCabinetRecord record = new FileCabinetRecord()
             {
-                FileCabinetRecord record = new FileCabinetRecord()
+                Id = id,
+                FullName = new FullName
                 {
-                    Id = startId++,
                     FirstName = "FirstName" + random.Next(0, 99999),
                     LastName = "LastName" + random.Next(0, 99999),
-                    DateOfBirth = minDate.AddDays(random.Next(0, days)),
-                    Salary = (short)random.Next(100, 10001),
-                    WorkRate = workRates[random.Next(0, workRates.Length)],
-                    Gender = genderChars[random.Next(0, genderChars.Length)],
-                };
+                },
+                DateOfBirth = minDate.AddDays(random.Next(0, days)),
+                Salary = (short)random.Next(100, 10001),
+                WorkRate = workRates[random.Next(0, workRates.Length)],
+                Gender = genders[random.Next(0, genders.Length)],
+            };
 
-                recordsList.Add(record);
+            return record;
+        }
+
+        private static Records Generator(int startId, int amountRecords)
+        {
+            Records records = new Records
+            {
+                FileCabinetRecords = new List<FileCabinetRecord>(amountRecords),
+            };
+
+            for (int i = 0; i < amountRecords; i++)
+            {
+                var record = RecordGenerator(startId++);
+                records.FileCabinetRecords.Add(record);
             }
 
-            return recordsList;
+            return records;
         }
 
         private static void ExportCSV(string path, IEnumerable<FileCabinetRecord> records)
         {
             using StreamWriter writer = new StreamWriter(path);
-            //writer.WriteLine("Id,First Name,Last Name,Date of Birth,Salary,Work rate,Gender");
 
+            // writer.WriteLine("Id,First Name,Last Name,Date of Birth,Salary,Work rate,Gender");
             foreach (var record in records)
             {
                 writer.WriteLine(record.ToString());
             }
+        }
+
+        private static void ExportXML(string path, Records records)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(Records));
+
+            using StreamWriter writer = new StreamWriter(path);
+            serializer.Serialize(writer, records);
         }
     }
 }
