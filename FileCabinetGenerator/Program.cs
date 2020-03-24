@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace FileCabinetGenerator
@@ -18,6 +19,7 @@ namespace FileCabinetGenerator
         {
             ParseCommandLine(args);
             Console.WriteLine($"{amountRecords} records were written to {fileName}");
+            
         }
 
         private static void ParseCommandLine(string[] args)
@@ -84,6 +86,17 @@ namespace FileCabinetGenerator
             }
 
             return recordsList;
+        }
+
+        private static void ExportCSV(string path, IEnumerable<FileCabinetRecord> records)
+        {
+            using StreamWriter writer = new StreamWriter(path);
+            //writer.WriteLine("Id,First Name,Last Name,Date of Birth,Salary,Work rate,Gender");
+
+            foreach (var record in records)
+            {
+                writer.WriteLine(record.ToString());
+            }
         }
     }
 }

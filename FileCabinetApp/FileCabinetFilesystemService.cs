@@ -149,6 +149,11 @@ namespace FileCabinetApp
         /// <returns>Array of the records.</returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
         {
+            if (firstName is null)
+            {
+                throw new ArgumentNullException($"{nameof(firstName)} can't be null.");
+            }
+
             using BinaryReader binaryReader = new BinaryReader(this.fileStream, this.encoding, true);
             var dateList = new List<FileCabinetRecord>();
             int count = (int)(this.fileStream.Length / RecordLength);
@@ -189,6 +194,11 @@ namespace FileCabinetApp
         /// <returns>Array of the records.</returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
         {
+            if (lastName is null)
+            {
+                throw new ArgumentNullException($"{nameof(lastName)} can't be null.");
+            }
+
             using BinaryReader binaryReader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
             var dateList = new List<FileCabinetRecord>();
             int count = (int)(this.fileStream.Length / RecordLength);
