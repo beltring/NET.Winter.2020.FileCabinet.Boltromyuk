@@ -10,9 +10,12 @@ namespace FileCabinetGenerator
     public class Records
     {
         /// <summary>
-        /// The file cabinet records.
+        /// Gets the file cabinet records.
         /// </summary>
+        /// <value>
+        /// The file cabinet records.
+        /// </value>
         [XmlElement("record")]
-        public List<FileCabinetRecord> FileCabinetRecords { get; set; }
+        public List<FileCabinetRecord> FileCabinetRecords { get; }
     }
 }

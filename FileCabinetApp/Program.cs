@@ -35,6 +35,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("edit", Edit),
             new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("export", Export),
+            new Tuple<string, Action<string>>("import", Import),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -47,6 +48,7 @@ namespace FileCabinetApp
             new string[] { "edit", "editing record", "The 'edit' command editing record" },
             new string[] { "find", "find records", "The 'find' command find records" },
             new string[] { "export", "export records", "The 'export' command export records to csv or xml file." },
+            new string[] { "import", "import records", "The 'import' command import records to csv or xml file." },
         };
 
         /// <summary>
@@ -202,26 +204,56 @@ namespace FileCabinetApp
 
         private static void Export(string parameters)
         {
-            string[] param = parameters.Split(' ');
-            string path = param[1];
-            if (param[0] == "csv")
+            if (!string.IsNullOrEmpty(parameters))
             {
-                ExportToCsv(path);
+                string[] param = parameters.Split(' ');
+                string path = param[1];
+                if (param[0] == "csv")
+                {
+                    ExportToCsv(path);
+                }
+
+                if (param[0] == "xml")
+                {
+                    ExportToXml(path);
+                }
+            }
+            else
+            {
+                throw new ArgumentException($"{nameof(parameters)} can't be empty.");
+            }
+        }
+
+        private static void Import(string parameters)
+        {
+            string[] comands = parameters.Split(' ');
+            string fileFormat = comands[0];
+            string path = comands[1];
+
+            if (!File.Exists(path))
+            {
+                Console.WriteLine($"Import error: file {nameof(path)} is not exist.");
+                return;
             }
 
-            if (param[0] == "xml")
+            switch (fileFormat)
             {
-                ExportToXml(path);
+                case "csv":
+                    ImportFromCSVFile(path);
+                    break;
+                case "xml":
+                    ImportFromXMLFile(path);
+                    break;
+                default:
+                    throw new ArgumentException($"Incorrect {nameof(fileFormat)}.");
             }
         }
 
         private static void Representation(ReadOnlyCollection<FileCabinetRecord> records)
         {
-            CultureInfo.DateTimeFormat.ShortDatePattern = "yyyy-MMM-dd";
-
             foreach (FileCabinetRecord record in records)
             {
-                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("d", CultureInfo)}, " +
+                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo)}, " +
                     $"{record.Salary}, {record.WorkRate}, {record.Gender}");
             }
         }
@@ -381,6 +413,37 @@ namespace FileCabinetApp
             }
 
             return true;
+        }
+
+        private static void ImportFromCSVFile(string path)
+        {
+            int count = 0;
+            using StreamReader reader = new StreamReader(path);
+
+            while (!reader.EndOfStream)
+            {
+                var elements = reader.ReadLine().Split(',');
+
+                FileCabinetRecord record = new FileCabinetRecord()
+                {
+                    Id = int.Parse(elements[0], CultureInfo.InvariantCulture),
+                    FirstName = elements[1],
+                    LastName = elements[2],
+                    DateOfBirth = DateTime.Parse(elements[3], CultureInfo.InvariantCulture),
+                    Salary = short.Parse(elements[4], CultureInfo.InvariantCulture),
+                    WorkRate = decimal.Parse(elements[5], CultureInfo.InvariantCulture),
+                    Gender = char.Parse(elements[6]),
+                };
+
+                count++;
+            }
+
+            Console.WriteLine($"{count} records were imported from {path}.");
+        }
+
+        private static void ImportFromXMLFile(string path)
+        {
+            throw new NotImplementedException();
         }
     }
 }
