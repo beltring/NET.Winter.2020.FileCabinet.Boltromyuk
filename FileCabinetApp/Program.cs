@@ -144,7 +144,7 @@ namespace FileCabinetApp
 
         private static void Create(string parameters)
         {
-            RecordEventArgs eventArgs = ConsoleRead();
+            RecordArgs eventArgs = ConsoleRead();
 
             int id = fileCabinetService.CreateRecord(eventArgs);
             Console.WriteLine($"Record #{id} is created.");
@@ -165,7 +165,7 @@ namespace FileCabinetApp
             id = int.Parse(parameters, CultureInfo);
             if (id <= fileCabinetService.GetStat())
             {
-                RecordEventArgs eventArgs = ConsoleRead();
+                RecordArgs eventArgs = ConsoleRead();
 
                 fileCabinetService.EditRecord(id, eventArgs);
                 Console.WriteLine($"Record #{id} is updated.");
@@ -180,26 +180,32 @@ namespace FileCabinetApp
         {
             string[] param = parameters.Split(' ');
             ReadOnlyCollection<FileCabinetRecord> records = null;
-            CultureInfo.DateTimeFormat.ShortDatePattern = "yyyy-MMM-dd";
 
-            string search = param[1].Trim('"');
-            string searchParam = param[0].ToLower(CultureInfo);
-
-            switch (searchParam)
+            if (param.Length > 1)
             {
-                case "firstname":
-                    records = new ReadOnlyCollection<FileCabinetRecord>(fileCabinetService.FindByFirstName(search));
-                    break;
-                case "lastname":
-                    records = new ReadOnlyCollection<FileCabinetRecord>(fileCabinetService.FindByLastName(search));
-                    break;
-                case "dateofbirth":
-                    DateTime dateofbirth = DateTime.ParseExact(search, "d", CultureInfo);
-                    records = new ReadOnlyCollection<FileCabinetRecord>(fileCabinetService.FindByDateOfBirth(dateofbirth));
-                    break;
-            }
+                string search = param[1].Trim('"');
+                string searchParam = param[0].ToLower(CultureInfo);
 
-            Representation(records);
+                switch (searchParam)
+                {
+                    case "firstname":
+                        records = fileCabinetService.FindByFirstName(search);
+                        break;
+                    case "lastname":
+                        records = fileCabinetService.FindByLastName(search);
+                        break;
+                    case "dateofbirth":
+                        DateTime dateofbirth = DateTime.ParseExact(search, "yyyy-MMM-dd", CultureInfo);
+                        records = fileCabinetService.FindByDateOfBirth(dateofbirth);
+                        break;
+                }
+
+                Representation(records);
+            }
+            else
+            {
+                Console.WriteLine("The command was entered incorrectly. Input format: \"find category item\".");
+            }
         }
 
         private static void Export(string parameters)
@@ -226,35 +232,54 @@ namespace FileCabinetApp
 
         private static void Import(string parameters)
         {
-            string[] comands = parameters.Split(' ');
-            string fileFormat = comands[0];
-            string path = comands[1];
+            string[] commands = parameters.Split(' ');
+            string fileFormat = commands[0];
+            string path = commands[1];
 
-            if (!File.Exists(path))
+            if (commands.Length > 1)
             {
-                Console.WriteLine($"Import error: file {nameof(path)} is not exist.");
-                return;
+                if (!File.Exists(path))
+                {
+                    Console.WriteLine($"Import error: file {nameof(path)} is not exist.");
+                    return;
+                }
+
+                switch (fileFormat)
+                {
+                    case "csv":
+                        ImportFromCsv(path);
+                        break;
+                    case "xml":
+                        ImportFromXML(path);
+                        break;
+                    default:
+                        Console.WriteLine($"Incorrect {nameof(fileFormat)}.");
+                        break;
+                }
             }
-
-            switch (fileFormat)
+            else
             {
-                case "csv":
-                    ImportFromCSVFile(path);
-                    break;
-                case "xml":
-                    ImportFromXMLFile(path);
-                    break;
-                default:
-                    throw new ArgumentException($"Incorrect {nameof(fileFormat)}.");
+                Console.WriteLine("The command was entered incorrectly. Input format: \"import type path\".");
             }
         }
 
         private static void Representation(ReadOnlyCollection<FileCabinetRecord> records)
         {
-            foreach (FileCabinetRecord record in records)
+            if (records is null)
             {
-                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo)}, " +
-                    $"{record.Salary}, {record.WorkRate}, {record.Gender}");
+                Console.WriteLine("The record is not found");
+            }
+            else if (records.Count < 1)
+            {
+                Console.WriteLine("The record is not found");
+            }
+            else
+            {
+                foreach (FileCabinetRecord record in records)
+                {
+                    Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo)}, " +
+                        $"{record.Salary}, {record.WorkRate}, {record.Gender}");
+                }
             }
         }
 
@@ -283,7 +308,7 @@ namespace FileCabinetApp
             return result;
         }
 
-        private static RecordEventArgs ConsoleRead()
+        private static RecordArgs ConsoleRead()
         {
             Func<string, Tuple<bool, string, string>> stringConverter = Converter.StringConverter;
             Func<string, Tuple<bool, string>> stringValidator = validator.StringValidator;
@@ -318,7 +343,7 @@ namespace FileCabinetApp
             Console.Write("Gender: ");
             char gender = ReadInput(genderConverter, genderValidator);
 
-            RecordEventArgs eventArgs = new RecordEventArgs()
+            RecordArgs eventArgs = new RecordArgs()
             {
                 FirstName = firstName,
                 LastName = lastName,
@@ -380,6 +405,10 @@ namespace FileCabinetApp
                     Console.WriteLine("Add at least one record.");
                 }
             }
+            else
+            {
+                Console.WriteLine($"File {path} didn't found.");
+            }
         }
 
         private static void ExportToXml(string path)
@@ -401,6 +430,10 @@ namespace FileCabinetApp
                     Console.WriteLine($"Export failed: can't open file {path}.");
                 }
             }
+            else
+            {
+                Console.WriteLine($"File {path} didn't found.");
+            }
         }
 
         private static bool IsExists(string path)
@@ -415,33 +448,25 @@ namespace FileCabinetApp
             return true;
         }
 
-        private static void ImportFromCSVFile(string path)
+        private static void ImportFromCsv(string path)
         {
-            int count = 0;
+            FileCabinetServiceSnapshot snapshot = new FileCabinetServiceSnapshot();
             using StreamReader reader = new StreamReader(path);
 
-            while (!reader.EndOfStream)
+            snapshot.LoadFromCSV(reader, out int countRecords);
+            fileCabinetService.Restore(snapshot);
+
+            if (countRecords > 0)
             {
-                var elements = reader.ReadLine().Split(',');
-
-                FileCabinetRecord record = new FileCabinetRecord()
-                {
-                    Id = int.Parse(elements[0], CultureInfo.InvariantCulture),
-                    FirstName = elements[1],
-                    LastName = elements[2],
-                    DateOfBirth = DateTime.Parse(elements[3], CultureInfo.InvariantCulture),
-                    Salary = short.Parse(elements[4], CultureInfo.InvariantCulture),
-                    WorkRate = decimal.Parse(elements[5], CultureInfo.InvariantCulture),
-                    Gender = char.Parse(elements[6]),
-                };
-
-                count++;
+                Console.WriteLine($"{countRecords} records were imported from {path}.");
             }
-
-            Console.WriteLine($"{count} records were imported from {path}.");
+            else
+            {
+                Console.WriteLine("Records were not imported, and the file is empty.");
+            }
         }
 
-        private static void ImportFromXMLFile(string path)
+        private static void ImportFromXML(string path)
         {
             throw new NotImplementedException();
         }

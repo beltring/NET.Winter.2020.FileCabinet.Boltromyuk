@@ -68,9 +68,9 @@ namespace FileCabinetGenerator
         /// <returns>A <see cref="string"/> that represents this instance.</returns>
         public override string ToString()
         {
-            string result = $"{this.Id}, {this.FullName.FirstName}, {this.FullName.LastName}, " +
-                $"{this.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture)}," +
-                $" {this.Salary}, {this.WorkRate}, {this.Gender}";
+            string result = $"{this.Id},{this.FullName.FirstName},{this.FullName.LastName}," +
+                $"{this.DateOfBirth.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)}," +
+                $"{this.Salary},{this.WorkRate},{this.Gender}";
 
             return result;
         }

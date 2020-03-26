@@ -49,7 +49,7 @@
             This class provides data validation.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CustomValidator.ValidateParameters(FileCabinetApp.RecordEventArgs)">
+        <member name="M:FileCabinetApp.CustomValidator.ValidateParameters(FileCabinetApp.RecordArgs)">
             <summary>
             Custom validate parameters.
             </summary>
@@ -95,7 +95,7 @@
             This class provides data validation.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.DefaultValidator.ValidateParameters(FileCabinetApp.RecordEventArgs)">
+        <member name="M:FileCabinetApp.DefaultValidator.ValidateParameters(FileCabinetApp.RecordArgs)">
             <summary>
             Default validate parameters.
             </summary>
@@ -145,12 +145,12 @@
             <param name="validator">The validator.</param>
             <param name="fileStream">The file stream.</param>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetFilesystemService.CreateRecord(FileCabinetApp.RecordEventArgs)">
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.CreateRecord(FileCabinetApp.RecordArgs)">
             <summary>This method creates a record.</summary>
             <param name="parameters">Parameters.</param>
             <returns>Id new record.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetFilesystemService.EditRecord(System.Int32,FileCabinetApp.RecordEventArgs)">
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.EditRecord(System.Int32,FileCabinetApp.RecordArgs)">
             <summary>This method changes the record.</summary>
             <param name="id">Id.</param>
             <param name="parameters">Parameters.</param>
@@ -182,6 +182,10 @@
             <summary>Makes the snapshot.</summary>
             <returns>Snapshot.</returns>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <summary>Restores the specified snapshot.</summary>
+            <param name="snapshot">The snapshot.</param>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetMemoryService">
             <summary>
             This class provides functionality for working with record.
@@ -193,7 +197,7 @@
             </summary>
             <param name="validator">Type IRecordValidator.</param>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetMemoryService.CreateRecord(FileCabinetApp.RecordEventArgs)">
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.CreateRecord(FileCabinetApp.RecordArgs)">
             <summary>
             This method creates a record.
             </summary>
@@ -212,7 +216,7 @@
             </summary>
             <returns>Count records.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetMemoryService.EditRecord(System.Int32,FileCabinetApp.RecordEventArgs)">
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.EditRecord(System.Int32,FileCabinetApp.RecordArgs)">
             <summary>
             This method changes the record.
             </summary>
@@ -243,6 +247,10 @@
         <member name="M:FileCabinetApp.FileCabinetMemoryService.MakeSnapshot">
             <summary>Makes the snapshot.</summary>
             <returns>Snapshot.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <summary>Restores the specified snapshot.</summary>
+            <param name="snapshot">The snapshot.</param>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
@@ -305,6 +313,17 @@
             Gender.
             </value>
         </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordCsvReader">
+            <summary>Record csv reader.</summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordCsvReader.#ctor(System.IO.StreamReader)">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordCsvReader"/> class.</summary>
+            <param name="reader">The reader.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordCsvReader.ReadAll">
+            <summary>Reads all.</summary>
+            <returns>List of records.</returns>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetRecordCsvWriter">
             <summary>Class FileCabinetRecordCsvWriter.</summary>
         </member>
@@ -339,6 +358,13 @@
             <param name="records">The records.</param>
             <exception cref="T:System.ArgumentNullException">Throw when records is null.</exception>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.#ctor">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetServiceSnapshot"/> class.</summary>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetServiceSnapshot.FileCabinetRecords">
+            <summary>Gets the file cabinet records.</summary>
+            <value>The file cabinet records.</value>
+        </member>
         <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.SaveToCsv(System.IO.StreamWriter)">
             <summary>Saves to CSV.</summary>
             <param name="streamWriter">The stream writer.</param>
@@ -347,12 +373,18 @@
             <summary>Saves to XML.</summary>
             <param name="xmlWriter">The XML writer.</param>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.LoadFromCSV(System.IO.StreamReader,System.Int32@)">
+            <summary>Loads from CSV.</summary>
+            <param name="reader">The reader.</param>
+            <param name="countRecords">Count of records.</param>
+            <exception cref="T:System.ArgumentNullException">throw when reader is null.</exception>
+        </member>
         <member name="T:FileCabinetApp.Interfaces.IFileCabinetService">
             <summary>
             Interface IFileCabinetService.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Interfaces.IFileCabinetService.CreateRecord(FileCabinetApp.RecordEventArgs)">
+        <member name="M:FileCabinetApp.Interfaces.IFileCabinetService.CreateRecord(FileCabinetApp.RecordArgs)">
             <summary>
             This method creates a record.
             </summary>
@@ -371,7 +403,7 @@
             </summary>
             <returns>Count records.</returns>
         </member>
-        <member name="M:FileCabinetApp.Interfaces.IFileCabinetService.EditRecord(System.Int32,FileCabinetApp.RecordEventArgs)">
+        <member name="M:FileCabinetApp.Interfaces.IFileCabinetService.EditRecord(System.Int32,FileCabinetApp.RecordArgs)">
             <summary>
             This method changes the record.
             </summary>
@@ -403,12 +435,18 @@
             <summary>Makes the snapshot.</summary>
             <returns>Snapshot.</returns>
         </member>
+        <member name="M:FileCabinetApp.Interfaces.IFileCabinetService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <summary>
+            Restores the specified snapshot.
+            </summary>
+            <param name="snapshot">The snapshot.</param>
+        </member>
         <member name="T:FileCabinetApp.Interfaces.IRecordValidator">
             <summary>
             Interface IRecordValidator.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Interfaces.IRecordValidator.ValidateParameters(FileCabinetApp.RecordEventArgs)">
+        <member name="M:FileCabinetApp.Interfaces.IRecordValidator.ValidateParameters(FileCabinetApp.RecordArgs)">
             <summary>
             Validate parameters.
             </summary>
@@ -460,12 +498,12 @@
             </summary>
             <param name="args">Input parameters.</param>
         </member>
-        <member name="T:FileCabinetApp.RecordEventArgs">
+        <member name="T:FileCabinetApp.RecordArgs">
             <summary>
             This class describes a group of parameters.
             </summary>
         </member>
-        <member name="P:FileCabinetApp.RecordEventArgs.FirstName">
+        <member name="P:FileCabinetApp.RecordArgs.FirstName">
             <summary>
             Gets or sets firstName.
             </summary>
@@ -473,7 +511,7 @@
             FirstName.
             </value>
         </member>
-        <member name="P:FileCabinetApp.RecordEventArgs.LastName">
+        <member name="P:FileCabinetApp.RecordArgs.LastName">
             <summary>
             Gets or sets lastName.
             </summary>
@@ -481,7 +519,7 @@
             LastName.
             </value>
         </member>
-        <member name="P:FileCabinetApp.RecordEventArgs.DateOfBirth">
+        <member name="P:FileCabinetApp.RecordArgs.DateOfBirth">
             <summary>
             Gets or sets dateOfBirth.
             </summary>
@@ -489,7 +527,7 @@
             DateOfBirth.
             </value>
         </member>
-        <member name="P:FileCabinetApp.RecordEventArgs.Salary">
+        <member name="P:FileCabinetApp.RecordArgs.Salary">
             <summary>
             Gets or sets salary.
             </summary>
@@ -497,7 +535,7 @@
             Salary.
             </value>
         </member>
-        <member name="P:FileCabinetApp.RecordEventArgs.WorkRate">
+        <member name="P:FileCabinetApp.RecordArgs.WorkRate">
             <summary>
             Gets or sets workRate.
             </summary>
@@ -505,7 +543,7 @@
             WorkRate.
             </value>
         </member>
-        <member name="P:FileCabinetApp.RecordEventArgs.Gender">
+        <member name="P:FileCabinetApp.RecordArgs.Gender">
             <summary>
             Gets or sets gender.
             </summary>

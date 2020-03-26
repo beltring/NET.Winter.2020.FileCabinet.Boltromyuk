@@ -47,10 +47,6 @@
             WorkRate.
             </value>
         </member>
-        <member name="P:FileCabinetGenerator.FileCabinetRecord.GenderString">
-            <summary>Gets the gender string.</summary>
-            <value>The gender string.</value>
-        </member>
         <member name="P:FileCabinetGenerator.FileCabinetRecord.Gender">
             <summary>
             Gets or sets Gender.
@@ -92,10 +88,17 @@
         <member name="T:FileCabinetGenerator.Records">
             <summary>XMl export model.</summary>
         </member>
+        <member name="M:FileCabinetGenerator.Records.#ctor(System.Collections.Generic.List{FileCabinetGenerator.FileCabinetRecord})">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetGenerator.Records"/> class.</summary>
+            <param name="records">The records.</param>
+        </member>
         <member name="P:FileCabinetGenerator.Records.FileCabinetRecords">
             <summary>
-            The file cabinet records.
+            Gets the file cabinet records.
             </summary>
+            <value>
+            The file cabinet records.
+            </value>
         </member>
     </members>
 </doc>

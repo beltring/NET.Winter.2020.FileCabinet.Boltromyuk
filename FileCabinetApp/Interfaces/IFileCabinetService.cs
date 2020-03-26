@@ -15,7 +15,7 @@ namespace FileCabinetApp.Interfaces
         /// </summary>
         /// <param name="parameters">Parameters.</param>
         /// <returns>Id new record.</returns>
-        int CreateRecord(RecordEventArgs parameters);
+        int CreateRecord(RecordArgs parameters);
 
         /// <summary>
         /// This method return records.
@@ -34,7 +34,7 @@ namespace FileCabinetApp.Interfaces
         /// </summary>
         /// <param name="id">Id.</param>
         /// <param name="parameters">Parameters.</param>
-        void EditRecord(int id, RecordEventArgs parameters);
+        void EditRecord(int id, RecordArgs parameters);
 
         /// <summary>
         /// This method searches for a record by first name.
@@ -60,5 +60,11 @@ namespace FileCabinetApp.Interfaces
         /// <summary>Makes the snapshot.</summary>
         /// <returns>Snapshot.</returns>
         FileCabinetServiceSnapshot MakeSnapshot();
+
+        /// <summary>
+        /// Restores the specified snapshot.
+        /// </summary>
+        /// <param name="snapshot">The snapshot.</param>
+        void Restore(FileCabinetServiceSnapshot snapshot);
     }
 }

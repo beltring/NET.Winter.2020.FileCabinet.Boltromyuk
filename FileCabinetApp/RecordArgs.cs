@@ -8,7 +8,7 @@ namespace FileCabinetApp
     /// <summary>
     /// This class describes a group of parameters.
     /// </summary>
-    public sealed class RecordEventArgs
+    public sealed class RecordArgs
     {
         /// <summary>
         /// Gets or sets firstName.

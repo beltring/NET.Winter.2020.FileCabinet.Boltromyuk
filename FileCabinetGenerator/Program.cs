@@ -105,10 +105,7 @@ namespace FileCabinetGenerator
 
         private static Records Generator(int startId, int amountRecords)
         {
-            Records records = new Records
-            {
-                FileCabinetRecords = new List<FileCabinetRecord>(amountRecords),
-            };
+            Records records = new Records(new List<FileCabinetRecord>(amountRecords));
 
             for (int i = 0; i < amountRecords; i++)
             {
@@ -123,7 +120,7 @@ namespace FileCabinetGenerator
         {
             using StreamWriter writer = new StreamWriter(path);
 
-            // writer.WriteLine("Id,First Name,Last Name,Date of Birth,Salary,Work rate,Gender");
+            writer.WriteLine("Id,First Name,Last Name,Date of Birth,Salary,Work rate,Gender");
             foreach (var record in records)
             {
                 writer.WriteLine(record.ToString());

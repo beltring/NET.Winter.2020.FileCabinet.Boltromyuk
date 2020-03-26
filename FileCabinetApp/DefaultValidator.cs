@@ -14,7 +14,7 @@ namespace FileCabinetApp
         /// Default validate parameters.
         /// </summary>
         /// <param name="parameters">Parameters.</param>
-        public void ValidateParameters(RecordEventArgs parameters)
+        public void ValidateParameters(RecordArgs parameters)
         {
             DateTime currentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
 

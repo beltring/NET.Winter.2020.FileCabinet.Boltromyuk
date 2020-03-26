@@ -43,7 +43,7 @@ namespace FileCabinetApp
         /// <summary>This method creates a record.</summary>
         /// <param name="parameters">Parameters.</param>
         /// <returns>Id new record.</returns>
-        public int CreateRecord(RecordEventArgs parameters)
+        public int CreateRecord(RecordArgs parameters)
         {
             if (parameters is null)
             {
@@ -71,7 +71,7 @@ namespace FileCabinetApp
         /// <summary>This method changes the record.</summary>
         /// <param name="id">Id.</param>
         /// <param name="parameters">Parameters.</param>
-        public void EditRecord(int id, RecordEventArgs parameters)
+        public void EditRecord(int id, RecordArgs parameters)
         {
             if (id < 0)
             {
@@ -273,6 +273,13 @@ namespace FileCabinetApp
         /// <summary>Makes the snapshot.</summary>
         /// <returns>Snapshot.</returns>
         public FileCabinetServiceSnapshot MakeSnapshot()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>Restores the specified snapshot.</summary>
+        /// <param name="snapshot">The snapshot.</param>
+        public void Restore(FileCabinetServiceSnapshot snapshot)
         {
             throw new NotImplementedException();
         }
