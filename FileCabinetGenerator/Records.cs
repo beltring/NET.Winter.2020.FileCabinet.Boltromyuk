@@ -9,20 +9,9 @@ namespace FileCabinetGenerator
     [XmlRoot("records")]
     public class Records
     {
-        /// <summary>Initializes a new instance of the <see cref="Records"/> class.</summary>
-        /// <param name="records">The records.</param>
-        public Records(List<FileCabinetRecord> records)
-        {
-            this.FileCabinetRecords = records;
-        }
-
-        /// <summary>
-        /// Gets the file cabinet records.
-        /// </summary>
-        /// <value>
-        /// The file cabinet records.
-        /// </value>
+        /// <summary>Gets the file cabinet records.</summary>
+        /// <value>The file cabinet records.</value>
         [XmlElement("record")]
-        public List<FileCabinetRecord> FileCabinetRecords { get; private set; }
+        public List<FileCabinetRecord> FileCabinetRecords { get; } = new List<FileCabinetRecord>();
     }
 }

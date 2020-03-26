@@ -77,13 +77,32 @@ namespace FileCabinetApp
         /// <exception cref="ArgumentNullException">throw when reader is null.</exception>
         internal void LoadFromCSV(StreamReader reader, out int countRecords)
         {
-            if (reader == null)
+            if (reader is null)
             {
                 throw new ArgumentNullException(nameof(reader));
             }
 
             var csvReader = new FileCabinetRecordCsvReader(reader);
             var recordsFromFile = csvReader.ReadAll();
+            countRecords = recordsFromFile.Count;
+
+            this.records = recordsFromFile.ToArray();
+        }
+
+        /// <summary>Loads from XML.</summary>
+        /// <param name="reader">The reader.</param>
+        /// <param name="countRecords">The count records.</param>
+        /// <exception cref="ArgumentNullException">throw when reader is null.</exception>
+        internal void LoadFromXML(StreamReader reader, out int countRecords)
+        {
+            if (reader is null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
+            var xmlReader = new FileCabinetRecordXmlReader(reader);
+            var recordsFromFile = xmlReader.ReadAll();
+
             countRecords = recordsFromFile.Count;
 
             this.records = recordsFromFile.ToArray();

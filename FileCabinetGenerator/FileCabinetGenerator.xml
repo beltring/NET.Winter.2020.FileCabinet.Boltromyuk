@@ -55,6 +55,10 @@
             Gender.
             </value>
         </member>
+        <member name="P:FileCabinetGenerator.FileCabinetRecord.GenderString">
+            <summary>Gets or sets the gender string.</summary>
+            <value>The gender string.</value>
+        </member>
         <member name="M:FileCabinetGenerator.FileCabinetRecord.ToString">
             <summary>Converts to string.</summary>
             <returns>A <see cref="T:System.String"/> that represents this instance.</returns>
@@ -88,17 +92,9 @@
         <member name="T:FileCabinetGenerator.Records">
             <summary>XMl export model.</summary>
         </member>
-        <member name="M:FileCabinetGenerator.Records.#ctor(System.Collections.Generic.List{FileCabinetGenerator.FileCabinetRecord})">
-            <summary>Initializes a new instance of the <see cref="T:FileCabinetGenerator.Records"/> class.</summary>
-            <param name="records">The records.</param>
-        </member>
         <member name="P:FileCabinetGenerator.Records.FileCabinetRecords">
-            <summary>
-            Gets the file cabinet records.
-            </summary>
-            <value>
-            The file cabinet records.
-            </value>
+            <summary>Gets the file cabinet records.</summary>
+            <value>The file cabinet records.</value>
         </member>
     </members>
 </doc>

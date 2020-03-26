@@ -339,6 +339,25 @@
             <param name="record">The record.</param>
             <exception cref="T:System.ArgumentNullException">Throw when record is null.</exception>
         </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordXmlReader">
+            <summary>Xml reader.</summary>
+        </member>
+        <member name="F:FileCabinetApp.FileCabinetRecordXmlReader.reader">
+            <summary>The reader.</summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlReader.#ctor(System.IO.StreamReader)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordXmlReader"/> class.
+            </summary>
+            <param name="reader">The reader.</param>
+            <exception cref="T:System.ArgumentNullException">throw when reader is null.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlReader.ReadAll">
+            <summary>
+            Reads all.
+            </summary>
+            <returns>List of records.</returns>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetRecordXmlWriter">
             <summary>class FileCabinetRecordXmlWriter.</summary>
         </member>
@@ -379,6 +398,12 @@
             <summary>Loads from CSV.</summary>
             <param name="reader">The reader.</param>
             <param name="countRecords">Count of records.</param>
+            <exception cref="T:System.ArgumentNullException">throw when reader is null.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.LoadFromXML(System.IO.StreamReader,System.Int32@)">
+            <summary>Loads from XML.</summary>
+            <param name="reader">The reader.</param>
+            <param name="countRecords">The count records.</param>
             <exception cref="T:System.ArgumentNullException">throw when reader is null.</exception>
         </member>
         <member name="T:FileCabinetApp.Interfaces.IFileCabinetService">

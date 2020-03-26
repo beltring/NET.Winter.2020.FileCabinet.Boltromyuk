@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
@@ -61,8 +63,18 @@ namespace FileCabinetGenerator
         /// <value>
         /// Gender.
         /// </value>
-        [XmlElement("gender", Type = typeof(char))]
+        [XmlIgnore]
         public char Gender { get; set; }
+
+        /// <summary>Gets or sets the gender string.</summary>
+        /// <value>The gender string.</value>
+        [XmlElement("gender")]
+        [Browsable(false)]
+        public string GenderString
+        {
+            get => this.Gender.ToString(CultureInfo.InvariantCulture);
+            set { this.Gender = value.Single(); }
+        }
 
         /// <summary>Converts to string.</summary>
         /// <returns>A <see cref="string"/> that represents this instance.</returns>

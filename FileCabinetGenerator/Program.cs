@@ -105,7 +105,7 @@ namespace FileCabinetGenerator
 
         private static Records Generator(int startId, int amountRecords)
         {
-            Records records = new Records(new List<FileCabinetRecord>(amountRecords));
+            Records records = new Records();
 
             for (int i = 0; i < amountRecords; i++)
             {

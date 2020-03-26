@@ -260,7 +260,7 @@ namespace FileCabinetApp
                         ImportFromXML(path);
                         break;
                     default:
-                        Console.WriteLine($"Incorrect {nameof(fileFormat)}.");
+                        Console.WriteLine($"Unknown file format '{fileFormat}'.Available formats: 'csv', 'xml'.");
                         break;
                 }
             }
@@ -482,7 +482,27 @@ namespace FileCabinetApp
 
         private static void ImportFromXML(string path)
         {
-            throw new NotImplementedException();
+            FileCabinetServiceSnapshot snapshot = new FileCabinetServiceSnapshot();
+
+            using StreamReader reader = new StreamReader(path);
+            snapshot.LoadFromXML(reader, out int countRecords);
+            fileCabinetService.Restore(snapshot, out Dictionary<int, string> exceptions);
+
+            countRecords -= exceptions.Count;
+
+            foreach (var ex in exceptions)
+            {
+                Console.WriteLine($"Record #{ex.Key} was not imported.Error:{ex.Value}");
+            }
+
+            if (countRecords > 0)
+            {
+                Console.WriteLine($"{countRecords} records were imported from {path}.");
+            }
+            else
+            {
+                Console.WriteLine("Records were not imported, and the file is empty.");
+            }
         }
     }
 }
