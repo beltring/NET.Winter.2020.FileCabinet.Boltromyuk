@@ -195,14 +195,17 @@ namespace FileCabinetApp
 
         /// <summary>Restores the specified snapshot.</summary>
         /// <param name="snapshot">The snapshot.</param>
-        public void Restore(FileCabinetServiceSnapshot snapshot)
+        /// <param name="exceptions">dictionary.</param>
+        public void Restore(FileCabinetServiceSnapshot snapshot, out Dictionary<int, string> exceptions)
         {
             if (snapshot is null)
             {
-                throw new ArgumentNullException(nameof(snapshot));
+                throw new ArgumentNullException($"{nameof(snapshot)} can't be null.");
             }
 
             var recordsFromFile = snapshot.FileCabinetRecords.ToList();
+
+            exceptions = this.CheckException(recordsFromFile);
 
             for (int i = 0; i < this.list.Count; i++)
             {
@@ -289,6 +292,37 @@ namespace FileCabinetApp
             this.firstNameDictionary[firstName].Add(this.list[index]);
             this.lastNameDictionary[lastName].Add(this.list[index]);
             this.dateOfBirthDictionary[record.DateOfBirth].Add(this.list[index]);
+        }
+
+        private Dictionary<int, string> CheckException(List<FileCabinetRecord> recordsFromFile)
+        {
+            var records = new List<FileCabinetRecord>(recordsFromFile);
+            Dictionary<int, string> exceptions = new Dictionary<int, string>();
+
+            foreach (var item in records)
+            {
+                try
+                {
+                    RecordArgs parameters = new RecordArgs()
+                    {
+                        FirstName = item.FirstName,
+                        LastName = item.LastName,
+                        DateOfBirth = item.DateOfBirth,
+                        Salary = item.Salary,
+                        WorkRate = item.WorkRate,
+                        Gender = item.Gender,
+                    };
+
+                    this.validator.ValidateParameters(parameters);
+                }
+                catch (ArgumentException ex)
+                {
+                    exceptions.Add(item.Id, ex.Message);
+                    recordsFromFile.Remove(item);
+                }
+            }
+
+            return exceptions;
         }
     }
 }

@@ -182,9 +182,10 @@
             <summary>Makes the snapshot.</summary>
             <returns>Snapshot.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetFilesystemService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.Restore(FileCabinetApp.FileCabinetServiceSnapshot,System.Collections.Generic.Dictionary{System.Int32,System.String}@)">
             <summary>Restores the specified snapshot.</summary>
             <param name="snapshot">The snapshot.</param>
+            <param name="exceptions">dictionary.</param>
         </member>
         <member name="T:FileCabinetApp.FileCabinetMemoryService">
             <summary>
@@ -248,9 +249,10 @@
             <summary>Makes the snapshot.</summary>
             <returns>Snapshot.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetMemoryService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.Restore(FileCabinetApp.FileCabinetServiceSnapshot,System.Collections.Generic.Dictionary{System.Int32,System.String}@)">
             <summary>Restores the specified snapshot.</summary>
             <param name="snapshot">The snapshot.</param>
+            <param name="exceptions">dictionary.</param>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
@@ -435,11 +437,10 @@
             <summary>Makes the snapshot.</summary>
             <returns>Snapshot.</returns>
         </member>
-        <member name="M:FileCabinetApp.Interfaces.IFileCabinetService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
-            <summary>
-            Restores the specified snapshot.
-            </summary>
+        <member name="M:FileCabinetApp.Interfaces.IFileCabinetService.Restore(FileCabinetApp.FileCabinetServiceSnapshot,System.Collections.Generic.Dictionary{System.Int32,System.String}@)">
+            <summary>Restores the specified snapshot.</summary>
             <param name="snapshot">The snapshot.</param>
+            <param name="exceptions">Exception dictionary.</param>
         </member>
         <member name="T:FileCabinetApp.Interfaces.IRecordValidator">
             <summary>

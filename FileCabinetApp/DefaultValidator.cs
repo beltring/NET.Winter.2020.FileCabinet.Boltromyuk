@@ -20,7 +20,7 @@ namespace FileCabinetApp
 
             if (parameters == null)
             {
-                throw new ArgumentException($"{nameof(parameters)} can't be null.");
+                throw new ArgumentNullException($"{nameof(parameters)} can't be null.");
             }
 
             if (parameters.FirstName == null)

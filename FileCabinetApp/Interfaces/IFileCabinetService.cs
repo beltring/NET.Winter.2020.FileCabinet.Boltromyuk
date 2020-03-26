@@ -61,10 +61,9 @@ namespace FileCabinetApp.Interfaces
         /// <returns>Snapshot.</returns>
         FileCabinetServiceSnapshot MakeSnapshot();
 
-        /// <summary>
-        /// Restores the specified snapshot.
-        /// </summary>
+        /// <summary>Restores the specified snapshot.</summary>
         /// <param name="snapshot">The snapshot.</param>
-        void Restore(FileCabinetServiceSnapshot snapshot);
+        /// <param name="exceptions">Exception dictionary.</param>
+        void Restore(FileCabinetServiceSnapshot snapshot, out Dictionary<int, string> exceptions);
     }
 }

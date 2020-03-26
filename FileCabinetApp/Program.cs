@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
@@ -154,7 +155,9 @@ namespace FileCabinetApp
         {
             ReadOnlyCollection<FileCabinetRecord> records = fileCabinetService.GetRecords();
 
-            Representation(records);
+            var sortRecords = records.OrderBy(x => x.Id).ToList();
+
+            Representation(sortRecords);
         }
 
         private static void Edit(string parameters)
@@ -190,17 +193,21 @@ namespace FileCabinetApp
                 {
                     case "firstname":
                         records = fileCabinetService.FindByFirstName(search);
+                        Representation(records);
                         break;
                     case "lastname":
                         records = fileCabinetService.FindByLastName(search);
+                        Representation(records);
                         break;
                     case "dateofbirth":
                         DateTime dateofbirth = DateTime.ParseExact(search, "yyyy-MMM-dd", CultureInfo);
                         records = fileCabinetService.FindByDateOfBirth(dateofbirth);
+                        Representation(records);
+                        break;
+                    default:
+                        Console.WriteLine("There is no such category.Available categories:'firstname', 'lastname', 'dateofbirth'");
                         break;
                 }
-
-                Representation(records);
             }
             else
             {
@@ -263,7 +270,7 @@ namespace FileCabinetApp
             }
         }
 
-        private static void Representation(ReadOnlyCollection<FileCabinetRecord> records)
+        private static void Representation(ICollection<FileCabinetRecord> records)
         {
             if (records is null)
             {
@@ -454,7 +461,14 @@ namespace FileCabinetApp
             using StreamReader reader = new StreamReader(path);
 
             snapshot.LoadFromCSV(reader, out int countRecords);
-            fileCabinetService.Restore(snapshot);
+            fileCabinetService.Restore(snapshot, out Dictionary<int, string> exceptions);
+
+            countRecords -= exceptions.Count;
+
+            foreach (var ex in exceptions)
+            {
+                Console.WriteLine($"Record #{ex.Key} was not imported.Error:{ex.Value}");
+            }
 
             if (countRecords > 0)
             {
