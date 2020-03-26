@@ -22,8 +22,8 @@ namespace FileCabinetApp
                 throw new ArgumentNullException($"{nameof(writer)} can't be null.");
             }
 
-            this.cultureInfo = CultureInfo.CreateSpecificCulture("es-eS");
-            this.cultureInfo.DateTimeFormat.ShortDatePattern = "MM/dd/yyyy";
+            this.cultureInfo = CultureInfo.CreateSpecificCulture("en-US");
+            this.cultureInfo.DateTimeFormat.ShortDatePattern = "yyyy-MM-dd";
 
             this.writer = writer;
             writer.WriteStartDocument();

@@ -14,13 +14,13 @@ namespace FileCabinetApp
         /// Default validate parameters.
         /// </summary>
         /// <param name="parameters">Parameters.</param>
-        public void ValidateParameters(RecordEventArgs parameters)
+        public void ValidateParameters(RecordArgs parameters)
         {
             DateTime currentDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
 
             if (parameters == null)
             {
-                throw new ArgumentException($"{nameof(parameters)} can't be null.");
+                throw new ArgumentNullException($"{nameof(parameters)} can't be null.");
             }
 
             if (parameters.FirstName == null)

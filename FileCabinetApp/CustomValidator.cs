@@ -14,7 +14,7 @@ namespace FileCabinetApp
         /// Custom validate parameters.
         /// </summary>
         /// <param name="parameters">Parameters.</param>
-        public void ValidateParameters(RecordEventArgs parameters)
+        public void ValidateParameters(RecordArgs parameters)
         {
             DateTime date = new DateTime(2010, 12, 31);
 

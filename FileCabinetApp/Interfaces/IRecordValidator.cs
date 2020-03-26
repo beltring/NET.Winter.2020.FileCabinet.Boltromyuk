@@ -13,7 +13,7 @@ namespace FileCabinetApp.Interfaces
         /// Validate parameters.
         /// </summary>
         /// <param name="parameters">Parameters.</param>
-        void ValidateParameters(RecordEventArgs parameters);
+        void ValidateParameters(RecordArgs parameters);
 
         /// <summary>
         /// Validate string.

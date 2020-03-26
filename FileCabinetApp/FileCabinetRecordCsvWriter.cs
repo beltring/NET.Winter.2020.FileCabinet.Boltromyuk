@@ -35,9 +35,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException($"{nameof(record)} can't be null");
             }
 
-            CultureInfo cultureInfo = CultureInfo.CreateSpecificCulture("es-ES");
-
-            string result = $"{record.Id},{record.FirstName},{record.LastName},{record.DateOfBirth.ToString("d", cultureInfo)}," +
+            string result = $"{record.Id},{record.FirstName},{record.LastName},{record.DateOfBirth.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)}," +
                     $"{record.Salary},{record.WorkRate},{record.Gender}";
 
             this.writer.WriteLine(result);

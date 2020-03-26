@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
@@ -35,6 +36,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("edit", Edit),
             new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("export", Export),
+            new Tuple<string, Action<string>>("import", Import),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -47,6 +49,7 @@ namespace FileCabinetApp
             new string[] { "edit", "editing record", "The 'edit' command editing record" },
             new string[] { "find", "find records", "The 'find' command find records" },
             new string[] { "export", "export records", "The 'export' command export records to csv or xml file." },
+            new string[] { "import", "import records", "The 'import' command import records to csv or xml file." },
         };
 
         /// <summary>
@@ -142,7 +145,7 @@ namespace FileCabinetApp
 
         private static void Create(string parameters)
         {
-            RecordEventArgs eventArgs = ConsoleRead();
+            RecordArgs eventArgs = ConsoleRead();
 
             int id = fileCabinetService.CreateRecord(eventArgs);
             Console.WriteLine($"Record #{id} is created.");
@@ -152,7 +155,9 @@ namespace FileCabinetApp
         {
             ReadOnlyCollection<FileCabinetRecord> records = fileCabinetService.GetRecords();
 
-            Representation(records);
+            var sortRecords = records.OrderBy(x => x.Id).ToList();
+
+            Representation(sortRecords);
         }
 
         private static void Edit(string parameters)
@@ -163,7 +168,7 @@ namespace FileCabinetApp
             id = int.Parse(parameters, CultureInfo);
             if (id <= fileCabinetService.GetStat())
             {
-                RecordEventArgs eventArgs = ConsoleRead();
+                RecordArgs eventArgs = ConsoleRead();
 
                 fileCabinetService.EditRecord(id, eventArgs);
                 Console.WriteLine($"Record #{id} is updated.");
@@ -178,51 +183,110 @@ namespace FileCabinetApp
         {
             string[] param = parameters.Split(' ');
             ReadOnlyCollection<FileCabinetRecord> records = null;
-            CultureInfo.DateTimeFormat.ShortDatePattern = "yyyy-MMM-dd";
 
-            string search = param[1].Trim('"');
-            string searchParam = param[0].ToLower(CultureInfo);
-
-            switch (searchParam)
+            if (param.Length > 1)
             {
-                case "firstname":
-                    records = new ReadOnlyCollection<FileCabinetRecord>(fileCabinetService.FindByFirstName(search));
-                    break;
-                case "lastname":
-                    records = new ReadOnlyCollection<FileCabinetRecord>(fileCabinetService.FindByLastName(search));
-                    break;
-                case "dateofbirth":
-                    DateTime dateofbirth = DateTime.ParseExact(search, "d", CultureInfo);
-                    records = new ReadOnlyCollection<FileCabinetRecord>(fileCabinetService.FindByDateOfBirth(dateofbirth));
-                    break;
-            }
+                string search = param[1].Trim('"');
+                string searchParam = param[0].ToLower(CultureInfo);
 
-            Representation(records);
+                switch (searchParam)
+                {
+                    case "firstname":
+                        records = fileCabinetService.FindByFirstName(search);
+                        Representation(records);
+                        break;
+                    case "lastname":
+                        records = fileCabinetService.FindByLastName(search);
+                        Representation(records);
+                        break;
+                    case "dateofbirth":
+                        DateTime dateofbirth = DateTime.ParseExact(search, "yyyy-MMM-dd", CultureInfo);
+                        records = fileCabinetService.FindByDateOfBirth(dateofbirth);
+                        Representation(records);
+                        break;
+                    default:
+                        Console.WriteLine("There is no such category.Available categories:'firstname', 'lastname', 'dateofbirth'");
+                        break;
+                }
+            }
+            else
+            {
+                Console.WriteLine("The command was entered incorrectly. Input format: \"find category item\".");
+            }
         }
 
         private static void Export(string parameters)
         {
-            string[] param = parameters.Split(' ');
-            string path = param[1];
-            if (param[0] == "csv")
+            if (!string.IsNullOrEmpty(parameters))
             {
-                ExportToCsv(path);
-            }
+                string[] param = parameters.Split(' ');
+                string path = param[1];
+                if (param[0] == "csv")
+                {
+                    ExportToCsv(path);
+                }
 
-            if (param[0] == "xml")
+                if (param[0] == "xml")
+                {
+                    ExportToXml(path);
+                }
+            }
+            else
             {
-                ExportToXml(path);
+                throw new ArgumentException($"{nameof(parameters)} can't be empty.");
             }
         }
 
-        private static void Representation(ReadOnlyCollection<FileCabinetRecord> records)
+        private static void Import(string parameters)
         {
-            CultureInfo.DateTimeFormat.ShortDatePattern = "yyyy-MMM-dd";
+            string[] commands = parameters.Split(' ');
+            string fileFormat = commands[0];
+            string path = commands[1];
 
-            foreach (FileCabinetRecord record in records)
+            if (commands.Length > 1)
             {
-                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("d", CultureInfo)}, " +
-                    $"{record.Salary}, {record.WorkRate}, {record.Gender}");
+                if (!File.Exists(path))
+                {
+                    Console.WriteLine($"Import error: file {nameof(path)} is not exist.");
+                    return;
+                }
+
+                switch (fileFormat)
+                {
+                    case "csv":
+                        ImportFromCsv(path);
+                        break;
+                    case "xml":
+                        ImportFromXML(path);
+                        break;
+                    default:
+                        Console.WriteLine($"Unknown file format '{fileFormat}'.Available formats: 'csv', 'xml'.");
+                        break;
+                }
+            }
+            else
+            {
+                Console.WriteLine("The command was entered incorrectly. Input format: \"import type path\".");
+            }
+        }
+
+        private static void Representation(ICollection<FileCabinetRecord> records)
+        {
+            if (records is null)
+            {
+                Console.WriteLine("The record is not found");
+            }
+            else if (records.Count < 1)
+            {
+                Console.WriteLine("The record is not found");
+            }
+            else
+            {
+                foreach (FileCabinetRecord record in records)
+                {
+                    Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo)}, " +
+                        $"{record.Salary}, {record.WorkRate}, {record.Gender}");
+                }
             }
         }
 
@@ -251,7 +315,7 @@ namespace FileCabinetApp
             return result;
         }
 
-        private static RecordEventArgs ConsoleRead()
+        private static RecordArgs ConsoleRead()
         {
             Func<string, Tuple<bool, string, string>> stringConverter = Converter.StringConverter;
             Func<string, Tuple<bool, string>> stringValidator = validator.StringValidator;
@@ -286,7 +350,7 @@ namespace FileCabinetApp
             Console.Write("Gender: ");
             char gender = ReadInput(genderConverter, genderValidator);
 
-            RecordEventArgs eventArgs = new RecordEventArgs()
+            RecordArgs eventArgs = new RecordArgs()
             {
                 FirstName = firstName,
                 LastName = lastName,
@@ -348,6 +412,10 @@ namespace FileCabinetApp
                     Console.WriteLine("Add at least one record.");
                 }
             }
+            else
+            {
+                Console.WriteLine($"File {path} didn't found.");
+            }
         }
 
         private static void ExportToXml(string path)
@@ -369,6 +437,10 @@ namespace FileCabinetApp
                     Console.WriteLine($"Export failed: can't open file {path}.");
                 }
             }
+            else
+            {
+                Console.WriteLine($"File {path} didn't found.");
+            }
         }
 
         private static bool IsExists(string path)
@@ -381,6 +453,56 @@ namespace FileCabinetApp
             }
 
             return true;
+        }
+
+        private static void ImportFromCsv(string path)
+        {
+            FileCabinetServiceSnapshot snapshot = new FileCabinetServiceSnapshot();
+            using StreamReader reader = new StreamReader(path);
+
+            snapshot.LoadFromCSV(reader, out int countRecords);
+            fileCabinetService.Restore(snapshot, out Dictionary<int, string> exceptions);
+
+            countRecords -= exceptions.Count;
+
+            foreach (var ex in exceptions)
+            {
+                Console.WriteLine($"Record #{ex.Key} was not imported.Error:{ex.Value}");
+            }
+
+            if (countRecords > 0)
+            {
+                Console.WriteLine($"{countRecords} records were imported from {path}.");
+            }
+            else
+            {
+                Console.WriteLine("Records were not imported, and the file is empty.");
+            }
+        }
+
+        private static void ImportFromXML(string path)
+        {
+            FileCabinetServiceSnapshot snapshot = new FileCabinetServiceSnapshot();
+
+            using StreamReader reader = new StreamReader(path);
+            snapshot.LoadFromXML(reader, out int countRecords);
+            fileCabinetService.Restore(snapshot, out Dictionary<int, string> exceptions);
+
+            countRecords -= exceptions.Count;
+
+            foreach (var ex in exceptions)
+            {
+                Console.WriteLine($"Record #{ex.Key} was not imported.Error:{ex.Value}");
+            }
+
+            if (countRecords > 0)
+            {
+                Console.WriteLine($"{countRecords} records were imported from {path}.");
+            }
+            else
+            {
+                Console.WriteLine("Records were not imported, and the file is empty.");
+            }
         }
     }
 }

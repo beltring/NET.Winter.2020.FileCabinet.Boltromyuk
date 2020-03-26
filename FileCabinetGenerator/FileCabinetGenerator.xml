@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FileCabinetGenerator</name>
+    </assembly>
+    <members>
+        <member name="T:FileCabinetGenerator.FileCabinetRecord">
+            <summary>This class describes the record entity.</summary>
+        </member>
+        <member name="P:FileCabinetGenerator.FileCabinetRecord.Id">
+            <summary>
+            Gets or sets id.
+            </summary>
+            <value>
+            Integer number.
+            </value>
+        </member>
+        <member name="P:FileCabinetGenerator.FileCabinetRecord.FullName">
+            <summary>
+            Gets or sets full name.
+            </summary>
+            <value>
+            Full name.
+            </value>
+        </member>
+        <member name="P:FileCabinetGenerator.FileCabinetRecord.DateOfBirth">
+            <summary>
+            Gets or sets DateOfBirth.
+            </summary>
+            <value>
+            DateOfBirth.
+            </value>
+        </member>
+        <member name="P:FileCabinetGenerator.FileCabinetRecord.Salary">
+            <summary>
+            Gets or sets Salary.
+            </summary>
+            <value>
+            Salary.
+            </value>
+        </member>
+        <member name="P:FileCabinetGenerator.FileCabinetRecord.WorkRate">
+            <summary>
+            Gets or sets WorkRate.
+            </summary>
+            <value>
+            WorkRate.
+            </value>
+        </member>
+        <member name="P:FileCabinetGenerator.FileCabinetRecord.Gender">
+            <summary>
+            Gets or sets Gender.
+            </summary>
+            <value>
+            Gender.
+            </value>
+        </member>
+        <member name="P:FileCabinetGenerator.FileCabinetRecord.GenderString">
+            <summary>Gets or sets the gender string.</summary>
+            <value>The gender string.</value>
+        </member>
+        <member name="M:FileCabinetGenerator.FileCabinetRecord.ToString">
+            <summary>Converts to string.</summary>
+            <returns>A <see cref="T:System.String"/> that represents this instance.</returns>
+        </member>
+        <member name="T:FileCabinetGenerator.FullName">
+            <summary>The full name.</summary>
+        </member>
+        <member name="P:FileCabinetGenerator.FullName.FirstName">
+            <summary>
+            Gets or sets the first name.
+            </summary>
+            <value>
+            The first name.
+            </value>
+        </member>
+        <member name="P:FileCabinetGenerator.FullName.LastName">
+            <summary>
+            Gets or sets the last name.
+            </summary>
+            <value>
+            The last name.
+            </value>
+        </member>
+        <member name="T:FileCabinetGenerator.Program">
+            <summary>Class Program.</summary>
+        </member>
+        <member name="M:FileCabinetGenerator.Program.Main(System.String[])">
+            <summary>Defines the entry point of the application.</summary>
+            <param name="args">The arguments.</param>
+        </member>
+        <member name="T:FileCabinetGenerator.Records">
+            <summary>XMl export model.</summary>
+        </member>
+        <member name="P:FileCabinetGenerator.Records.FileCabinetRecords">
+            <summary>Gets the file cabinet records.</summary>
+            <value>The file cabinet records.</value>
+        </member>
+    </members>
+</doc>
