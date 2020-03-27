@@ -174,8 +174,9 @@
             <summary>This method return records.</summary>
             <returns>Array of the records.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetFilesystemService.GetStat">
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.GetStat(System.Int32@)">
             <summary>This method returns count of records.</summary>
+            <param name="deletedRecordsCount">Number of deleted records.</param>
             <returns>Count records.</returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.MakeSnapshot">
@@ -225,10 +226,9 @@
             </summary>
             <returns>Array of the records.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetMemoryService.GetStat">
-            <summary>
-            This method returns count of records.
-            </summary>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.GetStat(System.Int32@)">
+            <summary>This method returns count of records.</summary>
+            <param name="deletedRecordsCount">Number of deleted records.</param>
             <returns>Count records.</returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.EditRecord(System.Int32,FileCabinetApp.RecordArgs)">
@@ -448,10 +448,9 @@
             </summary>
             <returns>Array of the records.</returns>
         </member>
-        <member name="M:FileCabinetApp.Interfaces.IFileCabinetService.GetStat">
-            <summary>
-            This method returns count of records.
-            </summary>
+        <member name="M:FileCabinetApp.Interfaces.IFileCabinetService.GetStat(System.Int32@)">
+            <summary>This method returns count of records.</summary>
+            <param name="deletedRecordsCount">Number of deleted records.</param>
             <returns>Count records.</returns>
         </member>
         <member name="M:FileCabinetApp.Interfaces.IFileCabinetService.EditRecord(System.Int32,FileCabinetApp.RecordArgs)">

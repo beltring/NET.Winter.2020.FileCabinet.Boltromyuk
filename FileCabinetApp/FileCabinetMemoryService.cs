@@ -71,12 +71,12 @@ namespace FileCabinetApp
             return records;
         }
 
-        /// <summary>
-        /// This method returns count of records.
-        /// </summary>
+        /// <summary>This method returns count of records.</summary>
+        /// <param name="deletedRecordsCount">Number of deleted records.</param>
         /// <returns>Count records.</returns>
-        public int GetStat()
+        public int GetStat(out int deletedRecordsCount)
         {
+            deletedRecordsCount = 0;
             return this.list.Count;
         }
 

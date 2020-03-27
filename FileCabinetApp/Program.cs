@@ -143,8 +143,8 @@ namespace FileCabinetApp
 
         private static void Stat(string parameters)
         {
-            var recordsCount = Program.fileCabinetService.GetStat();
-            Console.WriteLine($"{recordsCount} record(s).");
+            var recordsCount = Program.fileCabinetService.GetStat(out int deletedRecordsCount);
+            Console.WriteLine($"{recordsCount} record(s). Number of deleted records: {deletedRecordsCount}.");
         }
 
         private static void Create(string parameters)
@@ -170,7 +170,7 @@ namespace FileCabinetApp
             CultureInfo.DateTimeFormat.ShortDatePattern = "MM/dd/yyyy";
 
             id = int.Parse(parameters, CultureInfo);
-            if (id <= fileCabinetService.GetStat())
+            if (id <= fileCabinetService.GetStat(out int deletedRecordsCount))
             {
                 RecordArgs eventArgs = ConsoleRead();
 
@@ -283,7 +283,7 @@ namespace FileCabinetApp
                 return;
             }
 
-            if (id == 0 || fileCabinetService.GetStat() == 0)
+            if (id == 0 || fileCabinetService.GetStat(out int deletedRecordsCount) == 0)
             {
                 Console.WriteLine($"Record #{parameters} doesn't exists.");
                 return;

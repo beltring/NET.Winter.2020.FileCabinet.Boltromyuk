@@ -23,11 +23,10 @@ namespace FileCabinetApp.Interfaces
         /// <returns>Array of the records.</returns>
         ReadOnlyCollection<FileCabinetRecord> GetRecords();
 
-        /// <summary>
-        /// This method returns count of records.
-        /// </summary>
+        /// <summary>This method returns count of records.</summary>
+        /// <param name="deletedRecordsCount">Number of deleted records.</param>
         /// <returns>Count records.</returns>
-        int GetStat();
+        int GetStat(out int deletedRecordsCount);
 
         /// <summary>
         /// This method changes the record.

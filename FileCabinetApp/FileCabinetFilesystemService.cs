@@ -267,10 +267,18 @@ namespace FileCabinetApp
         }
 
         /// <summary>This method returns count of records.</summary>
+        /// <param name="deletedRecordsCount">Number of deleted records.</param>
         /// <returns>Count records.</returns>
-        public int GetStat()
+        public int GetStat(out int deletedRecordsCount)
         {
-            return (int)(this.fileStream.Position / RecordLength);
+            using BinaryReader reader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
+
+            this.AddIdPositionToSortedList(reader);
+
+            this.fileStream.Seek(0, SeekOrigin.End);
+            int recordsCount = (int)(this.fileStream.Position / RecordLength);
+            deletedRecordsCount = recordsCount - this.idpositions.Count;
+            return recordsCount;
         }
 
         /// <summary>Makes the snapshot.</summary>
@@ -344,6 +352,7 @@ namespace FileCabinetApp
 
             this.fileStream.Seek(RecordLength * index, SeekOrigin.Begin);
             this.fileStream.WriteByte(1);
+            this.idpositions.Remove(id);
         }
 
         /// <summary>Purges the specified deleted records count.</summary>
