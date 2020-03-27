@@ -37,6 +37,8 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("export", Export),
             new Tuple<string, Action<string>>("import", Import),
+            new Tuple<string, Action<string>>("remove", Remove),
+            new Tuple<string, Action<string>>("purge", Purge),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -50,6 +52,8 @@ namespace FileCabinetApp
             new string[] { "find", "find records", "The 'find' command find records" },
             new string[] { "export", "export records", "The 'export' command export records to csv or xml file." },
             new string[] { "import", "import records", "The 'import' command import records to csv or xml file." },
+            new string[] { "remove", "removes a record by id", "The 'remove' command remove record" },
+            new string[] { "purge", "defragment a data file", "The 'purge' command defragment a data file." },
         };
 
         /// <summary>
@@ -139,8 +143,8 @@ namespace FileCabinetApp
 
         private static void Stat(string parameters)
         {
-            var recordsCount = Program.fileCabinetService.GetStat();
-            Console.WriteLine($"{recordsCount} record(s).");
+            var recordsCount = Program.fileCabinetService.GetStat(out int deletedRecordsCount);
+            Console.WriteLine($"{recordsCount} record(s). Number of deleted records: {deletedRecordsCount}.");
         }
 
         private static void Create(string parameters)
@@ -166,7 +170,7 @@ namespace FileCabinetApp
             CultureInfo.DateTimeFormat.ShortDatePattern = "MM/dd/yyyy";
 
             id = int.Parse(parameters, CultureInfo);
-            if (id <= fileCabinetService.GetStat())
+            if (id <= fileCabinetService.GetStat(out int deletedRecordsCount))
             {
                 RecordArgs eventArgs = ConsoleRead();
 
@@ -240,11 +244,12 @@ namespace FileCabinetApp
         private static void Import(string parameters)
         {
             string[] commands = parameters.Split(' ');
-            string fileFormat = commands[0];
-            string path = commands[1];
 
             if (commands.Length > 1)
             {
+                string fileFormat = commands[0];
+                string path = commands[1];
+
                 if (!File.Exists(path))
                 {
                     Console.WriteLine($"Import error: file {nameof(path)} is not exist.");
@@ -267,6 +272,44 @@ namespace FileCabinetApp
             else
             {
                 Console.WriteLine("The command was entered incorrectly. Input format: \"import type path\".");
+            }
+        }
+
+        private static void Remove(string parameters)
+        {
+            if (!int.TryParse(parameters, out int id))
+            {
+                Console.WriteLine("The command was entered incorrectly. Input format: \"remove (int number)\".");
+                return;
+            }
+
+            if (id == 0 || fileCabinetService.GetStat(out int deletedRecordsCount) == 0)
+            {
+                Console.WriteLine($"Record #{parameters} doesn't exists.");
+                return;
+            }
+
+            try
+            {
+                fileCabinetService.Remove(id);
+                Console.WriteLine($"Record #{parameters} is removed.");
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        private static void Purge(string parameters)
+        {
+            fileCabinetService.Purge(out int deletedRecordsCount, out int recordsCount);
+            if (fileCabinetService is FileCabinetFilesystemService)
+            {
+                Console.WriteLine($"Data file processing is completed: {deletedRecordsCount} of {recordsCount} records were purged.");
+            }
+            else
+            {
+                Console.WriteLine("This command is not supported by this mode of operation.");
             }
         }
 

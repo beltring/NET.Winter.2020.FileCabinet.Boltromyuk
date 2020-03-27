@@ -71,12 +71,12 @@ namespace FileCabinetApp
             return records;
         }
 
-        /// <summary>
-        /// This method returns count of records.
-        /// </summary>
+        /// <summary>This method returns count of records.</summary>
+        /// <param name="deletedRecordsCount">Number of deleted records.</param>
         /// <returns>Count records.</returns>
-        public int GetStat()
+        public int GetStat(out int deletedRecordsCount)
         {
+            deletedRecordsCount = 0;
             return this.list.Count;
         }
 
@@ -224,6 +224,38 @@ namespace FileCabinetApp
                            select matches.First();
 
             this.list = distinct.ToList();
+        }
+
+        /// <summary>Removes the specified identifier.</summary>
+        /// <param name="id">The identifier.</param>
+        /// <exception cref="ArgumentException">Record #{id} doesn't exists.</exception>
+        public void Remove(int id)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException($"{nameof(id)} have to be larger than zero.");
+            }
+
+            if (this.list.Exists(x => x.Id == id))
+            {
+                FileCabinetRecord record = this.list.Find(x => x.Id == id);
+                int index = this.list.IndexOf(record);
+                this.RemoveFromDictionaries(index);
+                this.list.Remove(record);
+            }
+            else
+            {
+                throw new ArgumentException($"Record #{id} doesn't exists.");
+            }
+        }
+
+        /// <summary>Purges the specified deleted records count.</summary>
+        /// <param name="deletedRecordsCount">The deleted records count.</param>
+        /// <param name="recordsCount">The records count.</param>
+        public void Purge(out int deletedRecordsCount, out int recordsCount)
+        {
+            deletedRecordsCount = 0;
+            recordsCount = 0;
         }
 
         private void AddToDictionaries(FileCabinetRecord record)

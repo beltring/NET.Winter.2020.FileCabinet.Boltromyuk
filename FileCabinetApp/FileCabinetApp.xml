@@ -174,8 +174,9 @@
             <summary>This method return records.</summary>
             <returns>Array of the records.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetFilesystemService.GetStat">
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.GetStat(System.Int32@)">
             <summary>This method returns count of records.</summary>
+            <param name="deletedRecordsCount">Number of deleted records.</param>
             <returns>Count records.</returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.MakeSnapshot">
@@ -186,6 +187,20 @@
             <summary>Restores the specified snapshot.</summary>
             <param name="snapshot">The snapshot.</param>
             <param name="exceptions">dictionary.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.Remove(System.Int32)">
+            <summary>
+              <para></para>
+              <para>Removes the specified identifier.
+            </para>
+            </summary>
+            <param name="id">The identifier.</param>
+            <exception cref="T:System.ArgumentException">Record #{id} doesn't exists.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.Purge(System.Int32@,System.Int32@)">
+            <summary>Purges the specified deleted records count.</summary>
+            <param name="deletedRecordsCount">The deleted records count.</param>
+            <param name="recordsCount">The records count.</param>
         </member>
         <member name="T:FileCabinetApp.FileCabinetMemoryService">
             <summary>
@@ -211,10 +226,9 @@
             </summary>
             <returns>Array of the records.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetMemoryService.GetStat">
-            <summary>
-            This method returns count of records.
-            </summary>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.GetStat(System.Int32@)">
+            <summary>This method returns count of records.</summary>
+            <param name="deletedRecordsCount">Number of deleted records.</param>
             <returns>Count records.</returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.EditRecord(System.Int32,FileCabinetApp.RecordArgs)">
@@ -253,6 +267,16 @@
             <summary>Restores the specified snapshot.</summary>
             <param name="snapshot">The snapshot.</param>
             <param name="exceptions">dictionary.</param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.Remove(System.Int32)">
+            <summary>Removes the specified identifier.</summary>
+            <param name="id">The identifier.</param>
+            <exception cref="T:System.ArgumentException">Record #{id} doesn't exists.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.Purge(System.Int32@,System.Int32@)">
+            <summary>Purges the specified deleted records count.</summary>
+            <param name="deletedRecordsCount">The deleted records count.</param>
+            <param name="recordsCount">The records count.</param>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
@@ -424,10 +448,9 @@
             </summary>
             <returns>Array of the records.</returns>
         </member>
-        <member name="M:FileCabinetApp.Interfaces.IFileCabinetService.GetStat">
-            <summary>
-            This method returns count of records.
-            </summary>
+        <member name="M:FileCabinetApp.Interfaces.IFileCabinetService.GetStat(System.Int32@)">
+            <summary>This method returns count of records.</summary>
+            <param name="deletedRecordsCount">Number of deleted records.</param>
             <returns>Count records.</returns>
         </member>
         <member name="M:FileCabinetApp.Interfaces.IFileCabinetService.EditRecord(System.Int32,FileCabinetApp.RecordArgs)">
@@ -466,6 +489,15 @@
             <summary>Restores the specified snapshot.</summary>
             <param name="snapshot">The snapshot.</param>
             <param name="exceptions">Exception dictionary.</param>
+        </member>
+        <member name="M:FileCabinetApp.Interfaces.IFileCabinetService.Remove(System.Int32)">
+            <summary>Removes the specified identifier.</summary>
+            <param name="id">The identifier.</param>
+        </member>
+        <member name="M:FileCabinetApp.Interfaces.IFileCabinetService.Purge(System.Int32@,System.Int32@)">
+            <summary>Purges the specified deleted records count.</summary>
+            <param name="deletedRecordsCount">The deleted records count.</param>
+            <param name="recordsCount">The records count.</param>
         </member>
         <member name="T:FileCabinetApp.Interfaces.IRecordValidator">
             <summary>

@@ -23,11 +23,10 @@ namespace FileCabinetApp.Interfaces
         /// <returns>Array of the records.</returns>
         ReadOnlyCollection<FileCabinetRecord> GetRecords();
 
-        /// <summary>
-        /// This method returns count of records.
-        /// </summary>
+        /// <summary>This method returns count of records.</summary>
+        /// <param name="deletedRecordsCount">Number of deleted records.</param>
         /// <returns>Count records.</returns>
-        int GetStat();
+        int GetStat(out int deletedRecordsCount);
 
         /// <summary>
         /// This method changes the record.
@@ -65,5 +64,14 @@ namespace FileCabinetApp.Interfaces
         /// <param name="snapshot">The snapshot.</param>
         /// <param name="exceptions">Exception dictionary.</param>
         void Restore(FileCabinetServiceSnapshot snapshot, out Dictionary<int, string> exceptions);
+
+        /// <summary>Removes the specified identifier.</summary>
+        /// <param name="id">The identifier.</param>
+        void Remove(int id);
+
+        /// <summary>Purges the specified deleted records count.</summary>
+        /// <param name="deletedRecordsCount">The deleted records count.</param>
+        /// <param name="recordsCount">The records count.</param>
+        void Purge(out int deletedRecordsCount, out int recordsCount);
     }
 }
