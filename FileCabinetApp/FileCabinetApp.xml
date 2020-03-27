@@ -196,6 +196,11 @@
             <param name="id">The identifier.</param>
             <exception cref="T:System.ArgumentException">Record #{id} doesn't exists.</exception>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.Purge(System.Int32@,System.Int32@)">
+            <summary>Purges the specified deleted records count.</summary>
+            <param name="deletedRecordsCount">The deleted records count.</param>
+            <param name="recordsCount">The records count.</param>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetMemoryService">
             <summary>
             This class provides functionality for working with record.
@@ -267,6 +272,11 @@
             <summary>Removes the specified identifier.</summary>
             <param name="id">The identifier.</param>
             <exception cref="T:System.ArgumentException">Record #{id} doesn't exists.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.Purge(System.Int32@,System.Int32@)">
+            <summary>Purges the specified deleted records count.</summary>
+            <param name="deletedRecordsCount">The deleted records count.</param>
+            <param name="recordsCount">The records count.</param>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
@@ -484,6 +494,11 @@
         <member name="M:FileCabinetApp.Interfaces.IFileCabinetService.Remove(System.Int32)">
             <summary>Removes the specified identifier.</summary>
             <param name="id">The identifier.</param>
+        </member>
+        <member name="M:FileCabinetApp.Interfaces.IFileCabinetService.Purge(System.Int32@,System.Int32@)">
+            <summary>Purges the specified deleted records count.</summary>
+            <param name="deletedRecordsCount">The deleted records count.</param>
+            <param name="recordsCount">The records count.</param>
         </member>
         <member name="T:FileCabinetApp.Interfaces.IRecordValidator">
             <summary>

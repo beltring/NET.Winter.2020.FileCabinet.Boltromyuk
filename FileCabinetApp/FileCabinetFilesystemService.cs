@@ -317,7 +317,6 @@ namespace FileCabinetApp
                 else
                 {
                     this.fileStream.Seek(0, SeekOrigin.End);
-                    this.idpositions.Add(record.Id, this.fileStream.Position - RecordLength);
                 }
 
                 this.WriteToBinaryFile(record);
@@ -345,6 +344,55 @@ namespace FileCabinetApp
 
             this.fileStream.Seek(RecordLength * index, SeekOrigin.Begin);
             this.fileStream.WriteByte(1);
+        }
+
+        /// <summary>Purges the specified deleted records count.</summary>
+        /// <param name="deletedRecordsCount">The deleted records count.</param>
+        /// <param name="recordsCount">The records count.</param>
+        public void Purge(out int deletedRecordsCount, out int recordsCount)
+        {
+            this.fileStream.Seek(0, SeekOrigin.Begin);
+            int count = (int)(this.fileStream.Length / RecordLength);
+            recordsCount = count;
+            deletedRecordsCount = 0;
+            byte[] buffer = new byte[RecordLength];
+            Queue<long> deletedRecordPositions = new Queue<long>();
+            long lastDeletedRecordPosition = -1;
+            long lastAliveRecordPosition = 0;
+
+            using (BinaryReader reader = new BinaryReader(this.fileStream, Encoding.Unicode, true))
+            using (BinaryWriter writer = new BinaryWriter(this.fileStream, Encoding.Unicode, true))
+            {
+                while (count-- > 0)
+                {
+                    if (reader.ReadBytes(StatusLength)[0] == 1)
+                    {
+                        this.fileStream.Seek(-StatusLength, SeekOrigin.Current);
+                        deletedRecordPositions.Enqueue(this.fileStream.Position);
+                        deletedRecordsCount++;
+                    }
+                    else
+                    {
+                        this.fileStream.Seek(-StatusLength, SeekOrigin.Current);
+                        if (deletedRecordPositions.TryDequeue(out lastDeletedRecordPosition))
+                        {
+                            buffer = reader.ReadBytes(RecordLength);
+                            this.fileStream.Seek(-RecordLength, SeekOrigin.Current);
+                            this.fileStream.WriteByte(1); // deleted
+                            this.fileStream.Seek(lastDeletedRecordPosition, SeekOrigin.Begin);
+                            writer.Write(buffer, 0, RecordLength);
+                        }
+                        else
+                        {
+                            this.fileStream.Seek(RecordLength, SeekOrigin.Current);
+                        }
+
+                        lastAliveRecordPosition = this.fileStream.Position;
+                    }
+                }
+            }
+
+            this.fileStream.SetLength(lastAliveRecordPosition);
         }
 
         private static decimal ToDecimal(byte[] bytes)

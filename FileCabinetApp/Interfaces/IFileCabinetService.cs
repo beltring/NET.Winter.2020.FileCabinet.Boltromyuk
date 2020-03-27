@@ -69,5 +69,10 @@ namespace FileCabinetApp.Interfaces
         /// <summary>Removes the specified identifier.</summary>
         /// <param name="id">The identifier.</param>
         void Remove(int id);
+
+        /// <summary>Purges the specified deleted records count.</summary>
+        /// <param name="deletedRecordsCount">The deleted records count.</param>
+        /// <param name="recordsCount">The records count.</param>
+        void Purge(out int deletedRecordsCount, out int recordsCount);
     }
 }

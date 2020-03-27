@@ -38,6 +38,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("export", Export),
             new Tuple<string, Action<string>>("import", Import),
             new Tuple<string, Action<string>>("remove", Remove),
+            new Tuple<string, Action<string>>("purge", Purge),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -51,7 +52,8 @@ namespace FileCabinetApp
             new string[] { "find", "find records", "The 'find' command find records" },
             new string[] { "export", "export records", "The 'export' command export records to csv or xml file." },
             new string[] { "import", "import records", "The 'import' command import records to csv or xml file." },
-            new string[] { "remove", "removes a record by id", "The 'import' command import records to csv or xml file." },
+            new string[] { "remove", "removes a record by id", "The 'remove' command remove record" },
+            new string[] { "purge", "defragment a data file", "The 'purge' command defragment a data file." },
         };
 
         /// <summary>
@@ -295,6 +297,19 @@ namespace FileCabinetApp
             catch (ArgumentException ex)
             {
                 Console.WriteLine(ex.Message);
+            }
+        }
+
+        private static void Purge(string parameters)
+        {
+            fileCabinetService.Purge(out int deletedRecordsCount, out int recordsCount);
+            if (fileCabinetService is FileCabinetFilesystemService)
+            {
+                Console.WriteLine($"Data file processing is completed: {deletedRecordsCount} of {recordsCount} records were purged.");
+            }
+            else
+            {
+                Console.WriteLine("This command is not supported by this mode of operation.");
             }
         }
 
