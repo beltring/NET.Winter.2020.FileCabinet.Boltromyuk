@@ -226,6 +226,29 @@ namespace FileCabinetApp
             this.list = distinct.ToList();
         }
 
+        /// <summary>Removes the specified identifier.</summary>
+        /// <param name="id">The identifier.</param>
+        /// <exception cref="ArgumentException">Record #{id} doesn't exists.</exception>
+        public void Remove(int id)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException($"{nameof(id)} have to be larger than zero.");
+            }
+
+            if (this.list.Exists(x => x.Id == id))
+            {
+                FileCabinetRecord record = this.list.Find(x => x.Id == id);
+                int index = this.list.IndexOf(record);
+                this.RemoveFromDictionaries(index);
+                this.list.Remove(record);
+            }
+            else
+            {
+                throw new ArgumentException($"Record #{id} doesn't exists.");
+            }
+        }
+
         private void AddToDictionaries(FileCabinetRecord record)
         {
             string firstName = record.FirstName.ToLower(this.cultureInfo);

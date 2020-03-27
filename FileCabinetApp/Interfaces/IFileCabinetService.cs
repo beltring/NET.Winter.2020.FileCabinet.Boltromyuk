@@ -65,5 +65,9 @@ namespace FileCabinetApp.Interfaces
         /// <param name="snapshot">The snapshot.</param>
         /// <param name="exceptions">Exception dictionary.</param>
         void Restore(FileCabinetServiceSnapshot snapshot, out Dictionary<int, string> exceptions);
+
+        /// <summary>Removes the specified identifier.</summary>
+        /// <param name="id">The identifier.</param>
+        void Remove(int id);
     }
 }
