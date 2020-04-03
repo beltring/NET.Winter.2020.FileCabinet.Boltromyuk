@@ -56,6 +56,12 @@ namespace FileCabinetApp.Interfaces
         /// <returns>Array of the records.</returns>
         ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth);
 
+        /// <summary>Checks the identifier.</summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="index">The index.</param>
+        /// <returns>Check id.</returns>
+        bool CheckId(int id, out int index);
+
         /// <summary>Makes the snapshot.</summary>
         /// <returns>Snapshot.</returns>
         FileCabinetServiceSnapshot MakeSnapshot();

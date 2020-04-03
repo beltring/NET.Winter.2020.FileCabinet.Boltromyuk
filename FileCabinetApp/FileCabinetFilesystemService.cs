@@ -404,6 +404,39 @@ namespace FileCabinetApp
             this.fileStream.SetLength(lastAliveRecordPosition);
         }
 
+        /// <summary>Checks the identifier.</summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="index">The index.</param>
+        /// <returns>Check id.</returns>
+        public bool CheckId(int id, out int index)
+        {
+            index = -1;
+            using BinaryReader binaryReader = new BinaryReader(this.fileStream, this.encoding, true);
+
+            int count = (int)(this.fileStream.Length / RecordLength);
+            this.fileStream.Seek(0, SeekOrigin.Begin);
+            int position = 0;
+
+            while (count-- > 0)
+            {
+                if (binaryReader.ReadBytes(StatusLength)[0] == 0)
+                {
+                    if (binaryReader.ReadInt32() == id)
+                    {
+                        index = position;
+                        return true;
+                    }
+
+                    this.fileStream.Seek(-FirstNamePosition, SeekOrigin.Current);
+                }
+
+                position++;
+                this.fileStream.Seek(RecordLength, SeekOrigin.Current);
+            }
+
+            return false;
+        }
+
         private static decimal ToDecimal(byte[] bytes)
         {
             if (bytes.Length != 16)
@@ -433,35 +466,6 @@ namespace FileCabinetApp
             binaryWriter.Write(record.Salary);
             binaryWriter.Write(record.WorkRate);
             binaryWriter.Write(record.Gender);
-        }
-
-        private bool CheckId(int id, out int index)
-        {
-            index = -1;
-            using BinaryReader binaryReader = new BinaryReader(this.fileStream, this.encoding, true);
-
-            int count = (int)(this.fileStream.Length / RecordLength);
-            this.fileStream.Seek(0, SeekOrigin.Begin);
-            int position = 0;
-
-            while (count-- > 0)
-            {
-                if (binaryReader.ReadBytes(StatusLength)[0] == 0)
-                {
-                    if (binaryReader.ReadInt32() == id)
-                    {
-                        index = position;
-                        return true;
-                    }
-
-                    this.fileStream.Seek(-FirstNamePosition, SeekOrigin.Current);
-                }
-
-                position++;
-                this.fileStream.Seek(RecordLength, SeekOrigin.Current);
-            }
-
-            return false;
         }
 
         private Dictionary<int, string> CheckException(List<FileCabinetRecord> recordsFromFile)
