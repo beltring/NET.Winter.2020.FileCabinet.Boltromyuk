@@ -11,10 +11,12 @@ namespace FileCabinetApp
         /// <summary>Consoles the read.</summary>
         /// <param name="validator">The validator.</param>
         /// <returns>Record arguments.</returns>
-        public static RecordArgs ConsoleRead(IRecordValidator validator)
+        public static RecordArgs ConsoleRead(IInputValidator validator)
         {
             Func<string, Tuple<bool, string, string>> stringConverter = Converter.StringConverter;
-            Func<string, Tuple<bool, string>> stringValidator = validator.StringValidator;
+            Func<string, Tuple<bool, string>> firstNameValidator = validator.FirstNameValidator;
+
+            Func<string, Tuple<bool, string>> lastNameValidator = validator.LastNameValidator;
 
             Func<string, Tuple<bool, string, DateTime>> dateConverter = Converter.DateConverter;
             Func<DateTime, Tuple<bool, string>> dateOfBirthValidator = validator.DateOfBirthValidator;
@@ -29,10 +31,10 @@ namespace FileCabinetApp
             Func<char, Tuple<bool, string>> genderValidator = validator.GenderValidator;
 
             Console.Write("First name: ");
-            string firstName = ReadInput(stringConverter, stringValidator);
+            string firstName = ReadInput(stringConverter, firstNameValidator);
 
             Console.Write("Last name: ");
-            var lastName = ReadInput(stringConverter, stringValidator);
+            var lastName = ReadInput(stringConverter, lastNameValidator);
 
             Console.Write("Date of birth: ");
             var dob = ReadInput(dateConverter, dateOfBirthValidator);

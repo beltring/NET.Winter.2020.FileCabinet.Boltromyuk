@@ -8,6 +8,7 @@ using System.Xml;
 using FileCabinetApp.CommandHandlers;
 using FileCabinetApp.Enums;
 using FileCabinetApp.Interfaces;
+using FileCabinetApp.Validators.InputValidators;
 
 namespace FileCabinetApp
 {
@@ -23,7 +24,7 @@ namespace FileCabinetApp
         private static IFileCabinetService fileCabinetService;
         private static ValidatorType validatorType;
         private static ServiceType serviceType;
-        private static IRecordValidator validator;
+        private static IInputValidator validator;
         private static bool isRunning;
 
         /// <summary>
@@ -104,13 +105,16 @@ namespace FileCabinetApp
 
         private static void CreateService(ValidatorType validatorType, ServiceType serviceType)
         {
+            IRecordValidator recordValidator = new DefaultValidator();
+
             switch (validatorType)
             {
                 case ValidatorType.Custom:
-                    validator = new CustomValidator();
+                    validator = InputValidatorBuilder.CreateCustom();
+                    recordValidator = new CustomValidator();
                     break;
                 case ValidatorType.Default:
-                    validator = new DefaultValidator();
+                    validator = InputValidatorBuilder.CreateDefault();
                     break;
             }
 
@@ -118,10 +122,10 @@ namespace FileCabinetApp
             {
                 case ServiceType.File:
                     fileStream = new FileStream(DefaultBinaryFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-                    fileCabinetService = new FileCabinetFilesystemService(validator, fileStream);
+                    fileCabinetService = new FileCabinetFilesystemService(recordValidator, fileStream);
                     break;
                 case ServiceType.Memory:
-                    fileCabinetService = new FileCabinetMemoryService(validator);
+                    fileCabinetService = new FileCabinetMemoryService(recordValidator);
                     break;
             }
         }

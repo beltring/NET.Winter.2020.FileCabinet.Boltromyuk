@@ -10,12 +10,12 @@ namespace FileCabinetApp.CommandHandlers
     /// <seealso cref="FileCabinetApp.CommandHandlers.CommandHandlerBase" />
     internal class EditCommandHandler : ServiceCommandHandlerBase
     {
-        private IRecordValidator validator;
+        private IInputValidator validator;
 
         /// <summary>Initializes a new instance of the <see cref="EditCommandHandler"/> class.</summary>
         /// <param name="service">The service.</param>
         /// <param name="validator">The validator.</param>
-        public EditCommandHandler(IFileCabinetService service, IRecordValidator validator)
+        public EditCommandHandler(IFileCabinetService service, IInputValidator validator)
             : base(service)
         {
             this.validator = validator;
