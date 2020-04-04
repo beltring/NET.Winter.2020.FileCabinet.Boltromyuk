@@ -11,11 +11,15 @@ namespace FileCabinetApp.CommandHandlers
     /// <seealso cref="FileCabinetApp.CommandHandlers.CommandHandlerBase" />
     internal class FindCommandHandler : ServiceCommandHandlerBase
     {
+        private readonly IRecordPrinter printer;
+
         /// <summary>Initializes a new instance of the <see cref="FindCommandHandler"/> class.</summary>
         /// <param name="service">The service.</param>
-        public FindCommandHandler(IFileCabinetService service)
+        /// <param name="printer">The printer.</param>
+        public FindCommandHandler(IFileCabinetService service, IRecordPrinter printer)
             : base(service)
         {
+            this.printer = printer;
         }
 
         /// <summary>Handles the specified request.</summary>
@@ -32,27 +36,6 @@ namespace FileCabinetApp.CommandHandlers
             return base.Handle(request);
         }
 
-        private static void Print(ICollection<FileCabinetRecord> records)
-        {
-            if (records is null)
-            {
-                Console.WriteLine("The record is not found");
-            }
-            else if (records.Count < 1)
-            {
-                Console.WriteLine("The record is not found");
-            }
-            else
-            {
-                foreach (FileCabinetRecord record in records)
-                {
-                    Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, " +
-                        $"{record.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture)}, " +
-                        $"{record.Salary}, {record.WorkRate}, {record.Gender}");
-                }
-            }
-        }
-
         private void Find(string parameters)
         {
             string[] param = parameters.Split(' ');
@@ -67,16 +50,16 @@ namespace FileCabinetApp.CommandHandlers
                 {
                     case "firstname":
                         records = this.Service.FindByFirstName(search);
-                        Print(records);
+                        this.printer.Print(records);
                         break;
                     case "lastname":
                         records = this.Service.FindByLastName(search);
-                        Print(records);
+                        this.printer.Print(records);
                         break;
                     case "dateofbirth":
                         DateTime dateofbirth = DateTime.ParseExact(search, "yyyy-MMM-dd", CultureInfo.InvariantCulture);
                         records = this.Service.FindByDateOfBirth(dateofbirth);
-                        Print(records);
+                        this.printer.Print(records);
                         break;
                     default:
                         Console.WriteLine("There is no such category.Available categories:'firstname', 'lastname', 'dateofbirth'");

@@ -8,6 +8,7 @@ using System.Xml;
 using FileCabinetApp.CommandHandlers;
 using FileCabinetApp.Enums;
 using FileCabinetApp.Interfaces;
+using FileCabinetApp.Printer;
 
 namespace FileCabinetApp
 {
@@ -73,15 +74,17 @@ namespace FileCabinetApp
 
         private static ICommandHandler CreateCommandHandlers()
         {
+            var recordPrinter = new DefaultRecordPrinter();
+
             var exitHandler = new ExitCommandHandler(fileStream, x => isRunning = x);
             var helpHandler = new HelpCommandHandler();
             var createHandle = new CreateCommandHandler(fileCabinetService, validator);
             var editHandler = new EditCommandHandler(fileCabinetService, validator);
-            var findHandler = new FindCommandHandler(fileCabinetService);
+            var findHandler = new FindCommandHandler(fileCabinetService, recordPrinter);
             var exportHandler = new ExportCommandHandler(fileCabinetService);
             var importHandler = new ImportCommandHandler(fileCabinetService);
             var removeHandler = new RemoveCommandHandler(fileCabinetService);
-            var listHandle = new ListCommandHandler(fileCabinetService);
+            var listHandle = new ListCommandHandler(fileCabinetService, recordPrinter);
             var statHandler = new StatCommandHandler(fileCabinetService);
             var purgeHadler = new PurgeCommandHandler(fileCabinetService);
             var missedCommandHandler = new MissedCommandHandler();

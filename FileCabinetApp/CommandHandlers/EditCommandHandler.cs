@@ -56,6 +56,10 @@ namespace FileCabinetApp.CommandHandlers
             {
                 Console.WriteLine(ex.Message);
             }
+            catch (FormatException)
+            {
+                Console.WriteLine("The command was entered incorrectly. Input format: \"edit Id(integer number)\".");
+            }
         }
     }
 }
