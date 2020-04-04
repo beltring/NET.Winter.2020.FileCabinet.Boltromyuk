@@ -34,9 +34,9 @@ namespace FileCabinetApp.Validators.RecordValidator
             }
 
             if ((firstname.Length < this.minLength)
-                || (firstname.Length >= this.maxLength)
-                || !Regex.IsMatch(firstname, NamePattern)
-                || string.IsNullOrWhiteSpace(firstname))
+                && (firstname.Length >= this.maxLength)
+                && !Regex.IsMatch(firstname, NamePattern)
+                && string.IsNullOrWhiteSpace(firstname))
             {
                 throw new ArgumentException($"The length of {nameof(parameters.FirstName)} must be between " +
                     $"{this.minLength} and {this.maxLength} characters");
