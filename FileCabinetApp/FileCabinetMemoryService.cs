@@ -258,6 +258,23 @@ namespace FileCabinetApp
             recordsCount = 0;
         }
 
+        /// <summary>Checks the identifier.</summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="index">The index.</param>
+        /// <returns>Check id.</returns>
+        public bool CheckId(int id, out int index)
+        {
+            if (this.list.Exists(x => x.Id == id))
+            {
+                FileCabinetRecord record = this.list.Find(x => x.Id == id);
+                index = this.list.IndexOf(record);
+                return true;
+            }
+
+            index = -1;
+            return false;
+        }
+
         private void AddToDictionaries(FileCabinetRecord record)
         {
             string firstName = record.FirstName.ToLower(this.cultureInfo);
