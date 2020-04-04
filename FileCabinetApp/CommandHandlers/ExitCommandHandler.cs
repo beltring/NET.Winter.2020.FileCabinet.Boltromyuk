@@ -10,12 +10,15 @@ namespace FileCabinetApp.CommandHandlers
     internal class ExitCommandHandler : CommandHandlerBase
     {
         private static FileStream stream;
+        private readonly Action<bool> isRunningAction;
 
         /// <summary>Initializes a new instance of the <see cref="ExitCommandHandler"/> class.</summary>
         /// <param name="fileStream">The file stream.</param>
-        public ExitCommandHandler(FileStream fileStream)
+        /// <param name="isRunningAction">is running.</param>
+        public ExitCommandHandler(FileStream fileStream, Action<bool> isRunningAction)
         {
             stream = fileStream;
+            this.isRunningAction = isRunningAction;
         }
 
         /// <summary>Handles the specified request.</summary>
@@ -25,17 +28,17 @@ namespace FileCabinetApp.CommandHandlers
         {
             if (request.Command == "exit")
             {
-                Exit(request.Parameters);
+                this.Exit(request.Parameters);
                 return null;
             }
 
             return base.Handle(request);
         }
 
-        private static void Exit(string parameters)
+        private void Exit(string parameters)
         {
             Console.WriteLine("Exiting an application...");
-            Program.IsRunning = false;
+            this.isRunningAction(false);
             stream?.Close();
         }
     }

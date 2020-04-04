@@ -84,9 +84,10 @@
             <summary>Exit command handler.</summary>
             <seealso cref="T:FileCabinetApp.CommandHandlers.CommandHandlerBase" />
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ExitCommandHandler.#ctor(System.IO.FileStream)">
+        <member name="M:FileCabinetApp.CommandHandlers.ExitCommandHandler.#ctor(System.IO.FileStream,System.Action{System.Boolean})">
             <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ExitCommandHandler"/> class.</summary>
             <param name="fileStream">The file stream.</param>
+            <param name="isRunningAction">is running.</param>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.ExitCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <summary>Handles the specified request.</summary>
@@ -823,11 +824,6 @@
             <summary>
             Class Program.
             </summary>
-        </member>
-        <member name="P:FileCabinetApp.Program.IsRunning">
-            <summary>Gets or sets a value indicating whether this instance is running.</summary>
-            <value>
-              <c>true</c> if this instance is running; otherwise, <c>false</c>.</value>
         </member>
         <member name="M:FileCabinetApp.Program.Main(System.String[])">
             <summary>

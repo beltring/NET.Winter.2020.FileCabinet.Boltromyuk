@@ -24,11 +24,7 @@ namespace FileCabinetApp
         private static ValidatorType validatorType;
         private static ServiceType serviceType;
         private static IRecordValidator validator;
-
-        /// <summary>Gets or sets a value indicating whether this instance is running.</summary>
-        /// <value>
-        ///   <c>true</c> if this instance is running; otherwise, <c>false</c>.</value>
-        public static bool IsRunning { get; set; }
+        private static bool isRunning;
 
         /// <summary>
         /// The method that starts the program execution.
@@ -41,7 +37,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException($"{nameof(args)} can't be null.");
             }
 
-            IsRunning = true;
+            isRunning = true;
             ParseArguments(args);
             CreateService(validatorType, serviceType);
             var commandHandler = CreateCommandHandlers();
@@ -63,7 +59,7 @@ namespace FileCabinetApp
                 var parameters = inputs.Length > 1 ? inputs[parametersIndex] : string.Empty;
                 commandHandler.Handle(new AppCommandRequest(command, parameters));
             }
-            while (IsRunning);
+            while (isRunning);
         }
 
         private static void ParseArguments(string[] args)
@@ -77,7 +73,7 @@ namespace FileCabinetApp
 
         private static ICommandHandler CreateCommandHandlers()
         {
-            var exitHandler = new ExitCommandHandler(fileStream);
+            var exitHandler = new ExitCommandHandler(fileStream, x => isRunning = x);
             var helpHandler = new HelpCommandHandler();
             var createHandle = new CreateCommandHandler(fileCabinetService, validator);
             var editHandler = new EditCommandHandler(fileCabinetService, validator);
