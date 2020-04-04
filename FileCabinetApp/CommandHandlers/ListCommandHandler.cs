@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using FileCabinetApp.Interfaces;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -11,6 +12,15 @@ namespace FileCabinetApp.CommandHandlers
     /// <seealso cref="FileCabinetApp.CommandHandlers.CommandHandlerBase" />
     internal class ListCommandHandler : CommandHandlerBase
     {
+        private IFileCabinetService service;
+
+        /// <summary>Initializes a new instance of the <see cref="ListCommandHandler"/> class.</summary>
+        /// <param name="service">The service.</param>
+        public ListCommandHandler(IFileCabinetService service)
+        {
+            this.service = service;
+        }
+
         /// <summary>Handles the specified request.</summary>
         /// <param name="request">The request.</param>
         /// <returns>Class AppCommandRequest Instance.</returns>
@@ -18,20 +28,11 @@ namespace FileCabinetApp.CommandHandlers
         {
             if (request.Command == "list")
             {
-                List(request.Parameters);
+                this.List(request.Parameters);
                 return null;
             }
 
             return base.Handle(request);
-        }
-
-        private static void List(string parameters)
-        {
-            ReadOnlyCollection<FileCabinetRecord> records = Program.FileCabinetService.GetRecords();
-
-            var sortRecords = records.OrderBy(x => x.Id).ToList();
-
-            Print(sortRecords);
         }
 
         private static void Print(ICollection<FileCabinetRecord> records)
@@ -53,6 +54,15 @@ namespace FileCabinetApp.CommandHandlers
                         $"{record.Salary}, {record.WorkRate}, {record.Gender}");
                 }
             }
+        }
+
+        private void List(string parameters)
+        {
+            ReadOnlyCollection<FileCabinetRecord> records = this.service.GetRecords();
+
+            var sortRecords = records.OrderBy(x => x.Id).ToList();
+
+            Print(sortRecords);
         }
     }
 }

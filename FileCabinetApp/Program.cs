@@ -20,27 +20,15 @@ namespace FileCabinetApp
         private const string HintMessage = "Enter your command, or enter 'help' to get help.";
         private const string DefaultBinaryFileName = "cabinet-records.db";
         private static FileStream fileStream;
+        private static IFileCabinetService fileCabinetService;
+        private static ValidatorType validatorType;
+        private static ServiceType serviceType;
+        private static IRecordValidator validator;
 
         /// <summary>Gets or sets a value indicating whether this instance is running.</summary>
         /// <value>
         ///   <c>true</c> if this instance is running; otherwise, <c>false</c>.</value>
         public static bool IsRunning { get; set; }
-
-        /// <summary>Gets the file cabinet service.</summary>
-        /// <value>The file cabinet service.</value>
-        public static IFileCabinetService FileCabinetService { get; private set; }
-
-        /// <summary>Gets the type of the validator.</summary>
-        /// <value>The type of the validator.</value>
-        public static ValidatorType ValidatorType { get; private set; }
-
-        /// <summary>Gets the type of the service.</summary>
-        /// <value>The type of the service.</value>
-        public static ServiceType ServiceType { get; private set; }
-
-        /// <summary>Gets the validator.</summary>
-        /// <value>The validator.</value>
-        public static IRecordValidator Validator { get; private set; }
 
         /// <summary>
         /// The method that starts the program execution.
@@ -55,12 +43,12 @@ namespace FileCabinetApp
 
             IsRunning = true;
             ParseArguments(args);
-            CreateService(ValidatorType, ServiceType);
+            CreateService(validatorType, serviceType);
             var commandHandler = CreateCommandHandlers();
 
             Console.WriteLine($"File Cabinet Application, developed by {DeveloperName}");
-            Console.WriteLine($"Using {ValidatorType} validation rules.");
-            Console.WriteLine($"The {ServiceType} service.");
+            Console.WriteLine($"Using {validatorType} validation rules.");
+            Console.WriteLine($"The {serviceType} service.");
             Console.WriteLine(HintMessage);
             Console.WriteLine();
 
@@ -83,23 +71,23 @@ namespace FileCabinetApp
             bool isCustom = args.Any(x => x.Contains(ValidatorType.Custom.ToString(), StringComparison.OrdinalIgnoreCase));
             bool isFile = args.Any(x => x.Contains(ServiceType.File.ToString(), StringComparison.OrdinalIgnoreCase));
 
-            ValidatorType = isCustom ? ValidatorType.Custom : ValidatorType.Default;
-            ServiceType = isFile ? ServiceType.File : ServiceType.Memory;
+            validatorType = isCustom ? ValidatorType.Custom : ValidatorType.Default;
+            serviceType = isFile ? ServiceType.File : ServiceType.Memory;
         }
 
         private static ICommandHandler CreateCommandHandlers()
         {
-            var exitHandler = new ExitCommandHandler();
+            var exitHandler = new ExitCommandHandler(fileStream);
             var helpHandler = new HelpCommandHandler();
-            var createHandle = new CreateCommandHandler();
-            var editHandler = new EditCommandHandler();
-            var findHandler = new FindCommandHandler();
-            var exportHandler = new ExportCommandHandler();
-            var importHandler = new ImportCommandHandler();
-            var removeHandler = new RemoveCommandHandler();
-            var listHandle = new ListCommandHandler();
-            var statHandler = new StatCommandHandler();
-            var purgeHadler = new PurgeCommandHandler();
+            var createHandle = new CreateCommandHandler(fileCabinetService, validator);
+            var editHandler = new EditCommandHandler(fileCabinetService, validator);
+            var findHandler = new FindCommandHandler(fileCabinetService);
+            var exportHandler = new ExportCommandHandler(fileCabinetService);
+            var importHandler = new ImportCommandHandler(fileCabinetService);
+            var removeHandler = new RemoveCommandHandler(fileCabinetService);
+            var listHandle = new ListCommandHandler(fileCabinetService);
+            var statHandler = new StatCommandHandler(fileCabinetService);
+            var purgeHadler = new PurgeCommandHandler(fileCabinetService);
             var missedCommandHandler = new MissedCommandHandler();
             helpHandler
                 .SetNext(exitHandler)
@@ -121,10 +109,10 @@ namespace FileCabinetApp
             switch (validatorType)
             {
                 case ValidatorType.Custom:
-                    Validator = new CustomValidator();
+                    validator = new CustomValidator();
                     break;
                 case ValidatorType.Default:
-                    Validator = new DefaultValidator();
+                    validator = new DefaultValidator();
                     break;
             }
 
@@ -132,10 +120,10 @@ namespace FileCabinetApp
             {
                 case ServiceType.File:
                     fileStream = new FileStream(DefaultBinaryFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-                    Program.FileCabinetService = new FileCabinetFilesystemService(Validator, fileStream);
+                    fileCabinetService = new FileCabinetFilesystemService(validator, fileStream);
                     break;
                 case ServiceType.Memory:
-                    Program.FileCabinetService = new FileCabinetMemoryService(Validator);
+                    fileCabinetService = new FileCabinetMemoryService(validator);
                     break;
             }
         }

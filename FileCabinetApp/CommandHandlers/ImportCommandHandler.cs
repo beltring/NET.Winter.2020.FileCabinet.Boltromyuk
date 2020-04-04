@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using FileCabinetApp.Interfaces;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -9,6 +10,15 @@ namespace FileCabinetApp.CommandHandlers
     /// <seealso cref="FileCabinetApp.CommandHandlers.CommandHandlerBase" />
     internal class ImportCommandHandler : CommandHandlerBase
     {
+        private IFileCabinetService service;
+
+        /// <summary>Initializes a new instance of the <see cref="ImportCommandHandler"/> class.</summary>
+        /// <param name="service">The service.</param>
+        public ImportCommandHandler(IFileCabinetService service)
+        {
+            this.service = service;
+        }
+
         /// <summary>Handles the specified request.</summary>
         /// <param name="request">The request.</param>
         /// <returns>Class AppCommandRequest Instance.</returns>
@@ -16,14 +26,14 @@ namespace FileCabinetApp.CommandHandlers
         {
             if (request.Command == "import")
             {
-                Import(request.Parameters);
+                this.Import(request.Parameters);
                 return null;
             }
 
             return base.Handle(request);
         }
 
-        private static void Import(string parameters)
+        private void Import(string parameters)
         {
             string[] commands = parameters.Split(' ');
 
@@ -41,10 +51,10 @@ namespace FileCabinetApp.CommandHandlers
                 switch (fileFormat)
                 {
                     case "csv":
-                        ImportFromCsv(path);
+                        this.ImportFromCsv(path);
                         break;
                     case "xml":
-                        ImportFromXML(path);
+                        this.ImportFromXML(path);
                         break;
                     default:
                         Console.WriteLine($"Unknown file format '{fileFormat}'.Available formats: 'csv', 'xml'.");
@@ -57,13 +67,13 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
-        private static void ImportFromCsv(string path)
+        private void ImportFromCsv(string path)
         {
             FileCabinetServiceSnapshot snapshot = new FileCabinetServiceSnapshot();
             using StreamReader reader = new StreamReader(path);
 
             snapshot.LoadFromCSV(reader, out int countRecords);
-            Program.FileCabinetService.Restore(snapshot, out Dictionary<int, string> exceptions);
+            this.service.Restore(snapshot, out Dictionary<int, string> exceptions);
 
             countRecords -= exceptions.Count;
 
@@ -82,13 +92,13 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
-        private static void ImportFromXML(string path)
+        private void ImportFromXML(string path)
         {
             FileCabinetServiceSnapshot snapshot = new FileCabinetServiceSnapshot();
 
             using StreamReader reader = new StreamReader(path);
             snapshot.LoadFromXML(reader, out int countRecords);
-            Program.FileCabinetService.Restore(snapshot, out Dictionary<int, string> exceptions);
+            this.service.Restore(snapshot, out Dictionary<int, string> exceptions);
 
             countRecords -= exceptions.Count;
 

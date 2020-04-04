@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using FileCabinetApp.Interfaces;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -8,6 +9,15 @@ namespace FileCabinetApp.CommandHandlers
     /// <seealso cref="FileCabinetApp.CommandHandlers.CommandHandlerBase" />
     internal class PurgeCommandHandler : CommandHandlerBase
     {
+        private IFileCabinetService service;
+
+        /// <summary>Initializes a new instance of the <see cref="PurgeCommandHandler"/> class.</summary>
+        /// <param name="service">The service.</param>
+        public PurgeCommandHandler(IFileCabinetService service)
+        {
+            this.service = service;
+        }
+
         /// <summary>Handles the specified request.</summary>
         /// <param name="request">The request.</param>
         /// <returns>Class AppCommandRequest Instance.</returns>
@@ -15,17 +25,18 @@ namespace FileCabinetApp.CommandHandlers
         {
             if (request.Command == "purge")
             {
-                Purge(request.Parameters);
+                this.Purge(request.Parameters);
                 return null;
             }
 
             return base.Handle(request);
         }
 
-        private static void Purge(string parameters)
+        private void Purge(string parameters)
         {
-            Program.FileCabinetService.Purge(out int deletedRecordsCount, out int recordsCount);
-            if (Program.FileCabinetService is FileCabinetFilesystemService)
+            this.service.Purge(out int deletedRecordsCount, out int recordsCount);
+
+            if (this.service is FileCabinetFilesystemService)
             {
                 Console.WriteLine($"Data file processing is completed: {deletedRecordsCount} of {recordsCount} records were purged.");
             }

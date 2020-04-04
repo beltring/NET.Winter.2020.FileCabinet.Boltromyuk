@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Text;
+using FileCabinetApp.Interfaces;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -10,6 +11,15 @@ namespace FileCabinetApp.CommandHandlers
     /// <seealso cref="FileCabinetApp.CommandHandlers.CommandHandlerBase" />
     internal class FindCommandHandler : CommandHandlerBase
     {
+        private IFileCabinetService service;
+
+        /// <summary>Initializes a new instance of the <see cref="FindCommandHandler"/> class.</summary>
+        /// <param name="service">The service.</param>
+        public FindCommandHandler(IFileCabinetService service)
+        {
+            this.service = service;
+        }
+
         /// <summary>Handles the specified request.</summary>
         /// <param name="request">The request.</param>
         /// <returns>Class AppCommandRequest Instance.</returns>
@@ -17,47 +27,11 @@ namespace FileCabinetApp.CommandHandlers
         {
             if (request.Command == "find")
             {
-                Find(request.Parameters);
+                this.Find(request.Parameters);
                 return null;
             }
 
             return base.Handle(request);
-        }
-
-        private static void Find(string parameters)
-        {
-            string[] param = parameters.Split(' ');
-            ReadOnlyCollection<FileCabinetRecord> records = null;
-
-            if (param.Length > 1)
-            {
-                string search = param[1].Trim('"');
-                string searchParam = param[0].ToLower(CultureInfo.CurrentCulture);
-
-                switch (searchParam)
-                {
-                    case "firstname":
-                        records = Program.FileCabinetService.FindByFirstName(search);
-                        Print(records);
-                        break;
-                    case "lastname":
-                        records = Program.FileCabinetService.FindByLastName(search);
-                        Print(records);
-                        break;
-                    case "dateofbirth":
-                        DateTime dateofbirth = DateTime.ParseExact(search, "yyyy-MMM-dd", CultureInfo.InvariantCulture);
-                        records = Program.FileCabinetService.FindByDateOfBirth(dateofbirth);
-                        Print(records);
-                        break;
-                    default:
-                        Console.WriteLine("There is no such category.Available categories:'firstname', 'lastname', 'dateofbirth'");
-                        break;
-                }
-            }
-            else
-            {
-                Console.WriteLine("The command was entered incorrectly. Input format: \"find category item\".");
-            }
         }
 
         private static void Print(ICollection<FileCabinetRecord> records)
@@ -78,6 +52,42 @@ namespace FileCabinetApp.CommandHandlers
                         $"{record.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture)}, " +
                         $"{record.Salary}, {record.WorkRate}, {record.Gender}");
                 }
+            }
+        }
+
+        private void Find(string parameters)
+        {
+            string[] param = parameters.Split(' ');
+            ReadOnlyCollection<FileCabinetRecord> records = null;
+
+            if (param.Length > 1)
+            {
+                string search = param[1].Trim('"');
+                string searchParam = param[0].ToLower(CultureInfo.CurrentCulture);
+
+                switch (searchParam)
+                {
+                    case "firstname":
+                        records = this.service.FindByFirstName(search);
+                        Print(records);
+                        break;
+                    case "lastname":
+                        records = this.service.FindByLastName(search);
+                        Print(records);
+                        break;
+                    case "dateofbirth":
+                        DateTime dateofbirth = DateTime.ParseExact(search, "yyyy-MMM-dd", CultureInfo.InvariantCulture);
+                        records = this.service.FindByDateOfBirth(dateofbirth);
+                        Print(records);
+                        break;
+                    default:
+                        Console.WriteLine("There is no such category.Available categories:'firstname', 'lastname', 'dateofbirth'");
+                        break;
+                }
+            }
+            else
+            {
+                Console.WriteLine("The command was entered incorrectly. Input format: \"find category item\".");
             }
         }
     }

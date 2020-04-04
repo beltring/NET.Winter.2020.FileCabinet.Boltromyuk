@@ -56,6 +56,11 @@
             <summary>Create command handler.</summary>
             <seealso cref="T:FileCabinetApp.CommandHandlers.CommandHandlerBase" />
         </member>
+        <member name="M:FileCabinetApp.CommandHandlers.CreateCommandHandler.#ctor(FileCabinetApp.Interfaces.IFileCabinetService,FileCabinetApp.Interfaces.IRecordValidator)">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.CreateCommandHandler"/> class.</summary>
+            <param name="service">The service.</param>
+            <param name="validator">The validator.</param>
+        </member>
         <member name="M:FileCabinetApp.CommandHandlers.CreateCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <summary>Handles the specified request.</summary>
             <param name="request">The request.</param>
@@ -64,6 +69,11 @@
         <member name="T:FileCabinetApp.CommandHandlers.EditCommandHandler">
             <summary>Edit command handler.</summary>
             <seealso cref="T:FileCabinetApp.CommandHandlers.CommandHandlerBase" />
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.EditCommandHandler.#ctor(FileCabinetApp.Interfaces.IFileCabinetService,FileCabinetApp.Interfaces.IRecordValidator)">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.EditCommandHandler"/> class.</summary>
+            <param name="service">The service.</param>
+            <param name="validator">The validator.</param>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.EditCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <summary>Handles the specified request.</summary>
@@ -74,6 +84,10 @@
             <summary>Exit command handler.</summary>
             <seealso cref="T:FileCabinetApp.CommandHandlers.CommandHandlerBase" />
         </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ExitCommandHandler.#ctor(System.IO.FileStream)">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ExitCommandHandler"/> class.</summary>
+            <param name="fileStream">The file stream.</param>
+        </member>
         <member name="M:FileCabinetApp.CommandHandlers.ExitCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <summary>Handles the specified request.</summary>
             <param name="request">The request.</param>
@@ -83,6 +97,10 @@
             <summary>Export command handler.</summary>
             <seealso cref="T:FileCabinetApp.CommandHandlers.CommandHandlerBase" />
         </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ExportCommandHandler.#ctor(FileCabinetApp.Interfaces.IFileCabinetService)">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ExportCommandHandler"/> class.</summary>
+            <param name="service">The service.</param>
+        </member>
         <member name="M:FileCabinetApp.CommandHandlers.ExportCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <summary>Handles the specified request.</summary>
             <param name="request">The request.</param>
@@ -91,6 +109,10 @@
         <member name="T:FileCabinetApp.CommandHandlers.FindCommandHandler">
             <summary>Find command handler.</summary>
             <seealso cref="T:FileCabinetApp.CommandHandlers.CommandHandlerBase" />
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.#ctor(FileCabinetApp.Interfaces.IFileCabinetService)">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.FindCommandHandler"/> class.</summary>
+            <param name="service">The service.</param>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <summary>Handles the specified request.</summary>
@@ -126,6 +148,10 @@
             <summary>Import command handler.</summary>
             <seealso cref="T:FileCabinetApp.CommandHandlers.CommandHandlerBase" />
         </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ImportCommandHandler.#ctor(FileCabinetApp.Interfaces.IFileCabinetService)">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ImportCommandHandler"/> class.</summary>
+            <param name="service">The service.</param>
+        </member>
         <member name="M:FileCabinetApp.CommandHandlers.ImportCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <summary>Handles the specified request.</summary>
             <param name="request">The request.</param>
@@ -134,6 +160,10 @@
         <member name="T:FileCabinetApp.CommandHandlers.ListCommandHandler">
             <summary>List command handler.</summary>
             <seealso cref="T:FileCabinetApp.CommandHandlers.CommandHandlerBase" />
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ListCommandHandler.#ctor(FileCabinetApp.Interfaces.IFileCabinetService)">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ListCommandHandler"/> class.</summary>
+            <param name="service">The service.</param>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.ListCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <summary>Handles the specified request.</summary>
@@ -153,6 +183,10 @@
             <summary>Purge command handler.</summary>
             <seealso cref="T:FileCabinetApp.CommandHandlers.CommandHandlerBase" />
         </member>
+        <member name="M:FileCabinetApp.CommandHandlers.PurgeCommandHandler.#ctor(FileCabinetApp.Interfaces.IFileCabinetService)">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.PurgeCommandHandler"/> class.</summary>
+            <param name="service">The service.</param>
+        </member>
         <member name="M:FileCabinetApp.CommandHandlers.PurgeCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <summary>Handles the specified request.</summary>
             <param name="request">The request.</param>
@@ -161,6 +195,10 @@
         <member name="T:FileCabinetApp.CommandHandlers.RemoveCommandHandler">
             <summary>Remove command handler.</summary>
             <seealso cref="T:FileCabinetApp.CommandHandlers.CommandHandlerBase" />
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.RemoveCommandHandler.#ctor(FileCabinetApp.Interfaces.IFileCabinetService)">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.RemoveCommandHandler"/> class.</summary>
+            <param name="service">The service.</param>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.RemoveCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <summary>Handles the specified request.</summary>
@@ -171,6 +209,10 @@
             <summary>Stat command handler.</summary>
             <seealso cref="T:FileCabinetApp.CommandHandlers.CommandHandlerBase" />
         </member>
+        <member name="M:FileCabinetApp.CommandHandlers.StatCommandHandler.#ctor(FileCabinetApp.Interfaces.IFileCabinetService)">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.StatCommandHandler"/> class.</summary>
+            <param name="service">The service.</param>
+        </member>
         <member name="M:FileCabinetApp.CommandHandlers.StatCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <summary>Handles the specified request.</summary>
             <param name="request">The request.</param>
@@ -179,8 +221,9 @@
         <member name="T:FileCabinetApp.ConsoleReader">
             <summary>Сlass for reading data from the console.</summary>
         </member>
-        <member name="M:FileCabinetApp.ConsoleReader.ConsoleRead">
+        <member name="M:FileCabinetApp.ConsoleReader.ConsoleRead(FileCabinetApp.Interfaces.IRecordValidator)">
             <summary>Consoles the read.</summary>
+            <param name="validator">The validator.</param>
             <returns>Record arguments.</returns>
         </member>
         <member name="T:FileCabinetApp.Converter">
@@ -773,22 +816,6 @@
             <summary>Gets or sets a value indicating whether this instance is running.</summary>
             <value>
               <c>true</c> if this instance is running; otherwise, <c>false</c>.</value>
-        </member>
-        <member name="P:FileCabinetApp.Program.FileCabinetService">
-            <summary>Gets the file cabinet service.</summary>
-            <value>The file cabinet service.</value>
-        </member>
-        <member name="P:FileCabinetApp.Program.ValidatorType">
-            <summary>Gets the type of the validator.</summary>
-            <value>The type of the validator.</value>
-        </member>
-        <member name="P:FileCabinetApp.Program.ServiceType">
-            <summary>Gets the type of the service.</summary>
-            <value>The type of the service.</value>
-        </member>
-        <member name="P:FileCabinetApp.Program.Validator">
-            <summary>Gets the validator.</summary>
-            <value>The validator.</value>
         </member>
         <member name="M:FileCabinetApp.Program.Main(System.String[])">
             <summary>

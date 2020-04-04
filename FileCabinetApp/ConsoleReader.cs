@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using FileCabinetApp.Interfaces;
 
 namespace FileCabinetApp
 {
@@ -8,23 +9,24 @@ namespace FileCabinetApp
     internal static class ConsoleReader
     {
         /// <summary>Consoles the read.</summary>
+        /// <param name="validator">The validator.</param>
         /// <returns>Record arguments.</returns>
-        public static RecordArgs ConsoleRead()
+        public static RecordArgs ConsoleRead(IRecordValidator validator)
         {
             Func<string, Tuple<bool, string, string>> stringConverter = Converter.StringConverter;
-            Func<string, Tuple<bool, string>> stringValidator = Program.Validator.StringValidator;
+            Func<string, Tuple<bool, string>> stringValidator = validator.StringValidator;
 
             Func<string, Tuple<bool, string, DateTime>> dateConverter = Converter.DateConverter;
-            Func<DateTime, Tuple<bool, string>> dateOfBirthValidator = Program.Validator.DateOfBirthValidator;
+            Func<DateTime, Tuple<bool, string>> dateOfBirthValidator = validator.DateOfBirthValidator;
 
             Func<string, Tuple<bool, string, short>> salaryConverter = Converter.SalaryConverter;
-            Func<short, Tuple<bool, string>> salaryValidator = Program.Validator.SalaryValidator;
+            Func<short, Tuple<bool, string>> salaryValidator = validator.SalaryValidator;
 
             Func<string, Tuple<bool, string, decimal>> workRateConverter = Converter.WorkRateConverter;
-            Func<decimal, Tuple<bool, string>> workRateValidator = Program.Validator.WorkRateValidator;
+            Func<decimal, Tuple<bool, string>> workRateValidator = validator.WorkRateValidator;
 
             Func<string, Tuple<bool, string, char>> genderConverter = Converter.GenderConverter;
-            Func<char, Tuple<bool, string>> genderValidator = Program.Validator.GenderValidator;
+            Func<char, Tuple<bool, string>> genderValidator = validator.GenderValidator;
 
             Console.Write("First name: ");
             string firstName = ReadInput(stringConverter, stringValidator);

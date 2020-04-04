@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using FileCabinetApp.Interfaces;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -8,6 +9,18 @@ namespace FileCabinetApp.CommandHandlers
     /// <seealso cref="FileCabinetApp.CommandHandlers.CommandHandlerBase" />
     internal class CreateCommandHandler : CommandHandlerBase
     {
+        private IFileCabinetService service;
+        private IRecordValidator validator;
+
+        /// <summary>Initializes a new instance of the <see cref="CreateCommandHandler"/> class.</summary>
+        /// <param name="service">The service.</param>
+        /// <param name="validator">The validator.</param>
+        public CreateCommandHandler(IFileCabinetService service, IRecordValidator validator)
+        {
+            this.service = service;
+            this.validator = validator;
+        }
+
         /// <summary>Handles the specified request.</summary>
         /// <param name="request">The request.</param>
         /// <returns>Class AppCommandRequest Instance.</returns>
@@ -15,18 +28,18 @@ namespace FileCabinetApp.CommandHandlers
         {
             if (request.Command == "create")
             {
-                Create(request.Parameters);
+                this.Create(request.Parameters);
                 return null;
             }
 
             return base.Handle(request);
         }
 
-        private static void Create(string parameters)
+        private void Create(string parameters)
         {
-            RecordArgs eventArgs = ConsoleReader.ConsoleRead();
+            RecordArgs eventArgs = ConsoleReader.ConsoleRead(this.validator);
 
-            int id = Program.FileCabinetService.CreateRecord(eventArgs);
+            int id = this.service.CreateRecord(eventArgs);
             Console.WriteLine($"Record #{id} is created.");
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using FileCabinetApp.Interfaces;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -8,6 +9,15 @@ namespace FileCabinetApp.CommandHandlers
     /// <seealso cref="FileCabinetApp.CommandHandlers.CommandHandlerBase" />
     internal class RemoveCommandHandler : CommandHandlerBase
     {
+        private IFileCabinetService service;
+
+        /// <summary>Initializes a new instance of the <see cref="RemoveCommandHandler"/> class.</summary>
+        /// <param name="service">The service.</param>
+        public RemoveCommandHandler(IFileCabinetService service)
+        {
+            this.service = service;
+        }
+
         /// <summary>Handles the specified request.</summary>
         /// <param name="request">The request.</param>
         /// <returns>Class AppCommandRequest Instance.</returns>
@@ -15,14 +25,14 @@ namespace FileCabinetApp.CommandHandlers
         {
             if (request.Command == "remove")
             {
-                Remove(request.Parameters);
+                this.Remove(request.Parameters);
                 return null;
             }
 
             return base.Handle(request);
         }
 
-        private static void Remove(string parameters)
+        private void Remove(string parameters)
         {
             if (!int.TryParse(parameters, out int id))
             {
@@ -30,7 +40,7 @@ namespace FileCabinetApp.CommandHandlers
                 return;
             }
 
-            if (id == 0 || Program.FileCabinetService.GetStat(out int deletedRecordsCount) == 0)
+            if (id == 0 || this.service.GetStat(out int deletedRecordsCount) == 0)
             {
                 Console.WriteLine($"Record #{parameters} doesn't exists.");
                 return;
@@ -38,7 +48,7 @@ namespace FileCabinetApp.CommandHandlers
 
             try
             {
-                Program.FileCabinetService.Remove(id);
+                this.service.Remove(id);
                 Console.WriteLine($"Record #{parameters} is removed.");
             }
             catch (ArgumentException ex)

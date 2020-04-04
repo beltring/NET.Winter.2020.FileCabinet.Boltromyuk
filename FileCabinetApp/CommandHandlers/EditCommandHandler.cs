@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using FileCabinetApp.Interfaces;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -9,6 +10,18 @@ namespace FileCabinetApp.CommandHandlers
     /// <seealso cref="FileCabinetApp.CommandHandlers.CommandHandlerBase" />
     internal class EditCommandHandler : CommandHandlerBase
     {
+        private IFileCabinetService service;
+        private IRecordValidator validator;
+
+        /// <summary>Initializes a new instance of the <see cref="EditCommandHandler"/> class.</summary>
+        /// <param name="service">The service.</param>
+        /// <param name="validator">The validator.</param>
+        public EditCommandHandler(IFileCabinetService service, IRecordValidator validator)
+        {
+            this.service = service;
+            this.validator = validator;
+        }
+
         /// <summary>Handles the specified request.</summary>
         /// <param name="request">The request.</param>
         /// <returns>Class AppCommandRequest Instance.</returns>
@@ -16,25 +29,23 @@ namespace FileCabinetApp.CommandHandlers
         {
             if (request.Command == "edit")
             {
-                Edit(request.Parameters);
+                this.Edit(request.Parameters);
                 return null;
             }
 
             return base.Handle(request);
         }
 
-        private static void Edit(string parameters)
+        private void Edit(string parameters)
         {
-            int id = 0;
-
-            id = int.Parse(parameters, CultureInfo.InvariantCulture);
             try
             {
-                if (Program.FileCabinetService.CheckId(id, out int index))
+                int id = int.Parse(parameters, CultureInfo.InvariantCulture);
+                if (this.service.CheckId(id, out int index))
                 {
-                    RecordArgs eventArgs = ConsoleReader.ConsoleRead();
+                    RecordArgs eventArgs = ConsoleReader.ConsoleRead(this.validator);
 
-                    Program.FileCabinetService.EditRecord(id, eventArgs);
+                    this.service.EditRecord(id, eventArgs);
                     Console.WriteLine($"Record #{id} is updated.");
                 }
                 else

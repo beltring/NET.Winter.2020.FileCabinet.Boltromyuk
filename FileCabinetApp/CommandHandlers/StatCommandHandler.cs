@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using FileCabinetApp.Interfaces;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -8,6 +9,15 @@ namespace FileCabinetApp.CommandHandlers
     /// <seealso cref="FileCabinetApp.CommandHandlers.CommandHandlerBase" />
     internal class StatCommandHandler : CommandHandlerBase
     {
+        private IFileCabinetService service;
+
+        /// <summary>Initializes a new instance of the <see cref="StatCommandHandler"/> class.</summary>
+        /// <param name="service">The service.</param>
+        public StatCommandHandler(IFileCabinetService service)
+        {
+            this.service = service;
+        }
+
         /// <summary>Handles the specified request.</summary>
         /// <param name="request">The request.</param>
         /// <returns>Class AppCommandRequest Instance.</returns>
@@ -15,16 +25,16 @@ namespace FileCabinetApp.CommandHandlers
         {
             if (request.Command == "stat")
             {
-                Stat(request.Parameters);
+                this.Stat(request.Parameters);
                 return null;
             }
 
             return base.Handle(request);
         }
 
-        private static void Stat(string parameters)
+        private void Stat(string parameters)
         {
-            var recordsCount = Program.FileCabinetService.GetStat(out int deletedRecordsCount);
+            var recordsCount = this.service.GetStat(out int deletedRecordsCount);
             Console.WriteLine($"{recordsCount} record(s). Number of deleted records: {deletedRecordsCount}.");
         }
     }

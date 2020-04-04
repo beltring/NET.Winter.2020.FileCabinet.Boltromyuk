@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
+using FileCabinetApp.Interfaces;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -10,6 +11,15 @@ namespace FileCabinetApp.CommandHandlers
     /// <seealso cref="FileCabinetApp.CommandHandlers.CommandHandlerBase" />
     internal class ExportCommandHandler : CommandHandlerBase
     {
+        private IFileCabinetService service;
+
+        /// <summary>Initializes a new instance of the <see cref="ExportCommandHandler"/> class.</summary>
+        /// <param name="service">The service.</param>
+        public ExportCommandHandler(IFileCabinetService service)
+        {
+            this.service = service;
+        }
+
         /// <summary>Handles the specified request.</summary>
         /// <param name="request">The request.</param>
         /// <returns>Class AppCommandRequest Instance.</returns>
@@ -17,14 +27,26 @@ namespace FileCabinetApp.CommandHandlers
         {
             if (request.Command == "export")
             {
-                Export(request.Parameters);
+                this.Export(request.Parameters);
                 return null;
             }
 
             return base.Handle(request);
         }
 
-        private static void Export(string parameters)
+        private static bool IsExists(string path)
+        {
+            if (File.Exists(path))
+            {
+                Console.WriteLine($"File is exist - rewrite {path}?[Y / n]");
+                string result = Console.ReadLine();
+                return result == "Y" ? true : false;
+            }
+
+            return true;
+        }
+
+        private void Export(string parameters)
         {
             if (!string.IsNullOrEmpty(parameters))
             {
@@ -32,12 +54,12 @@ namespace FileCabinetApp.CommandHandlers
                 string path = param[1];
                 if (param[0] == "csv")
                 {
-                    ExportToCsv(path);
+                    this.ExportToCsv(path);
                 }
 
                 if (param[0] == "xml")
                 {
-                    ExportToXml(path);
+                    this.ExportToXml(path);
                 }
             }
             else
@@ -46,14 +68,14 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
-        private static void ExportToCsv(string path)
+        private void ExportToCsv(string path)
         {
             if (IsExists(path))
             {
                 try
                 {
                     using StreamWriter sw = new StreamWriter(path);
-                    var snapshot = Program.FileCabinetService.MakeSnapshot();
+                    var snapshot = this.service.MakeSnapshot();
                     snapshot.SaveToCsv(sw);
                     Console.WriteLine($"All records are exported to file {path}.");
                 }
@@ -72,7 +94,7 @@ namespace FileCabinetApp.CommandHandlers
             }
         }
 
-        private static void ExportToXml(string path)
+        private void ExportToXml(string path)
         {
             if (IsExists(path))
             {
@@ -82,7 +104,7 @@ namespace FileCabinetApp.CommandHandlers
                     settings.WriteEndDocumentOnClose = true;
 
                     using XmlWriter xmlWriter = XmlWriter.Create(path, settings);
-                    var snapshot = Program.FileCabinetService.MakeSnapshot();
+                    var snapshot = this.service.MakeSnapshot();
                     snapshot.SaveToXML(xmlWriter);
                     Console.WriteLine($"All records are exported to file {path}.");
                 }
@@ -95,18 +117,6 @@ namespace FileCabinetApp.CommandHandlers
             {
                 Console.WriteLine($"File {path} didn't found.");
             }
-        }
-
-        private static bool IsExists(string path)
-        {
-            if (File.Exists(path))
-            {
-                Console.WriteLine($"File is exist - rewrite {path}?[Y / n]");
-                string result = Console.ReadLine();
-                return result == "Y" ? true : false;
-            }
-
-            return true;
         }
     }
 }
