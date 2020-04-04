@@ -951,6 +951,22 @@
             </summary>
             <returns>Custom input validator.</returns>
         </member>
+        <member name="T:FileCabinetApp.Validators.RecordValidator.CompositeValidator">
+            <summary>Composite validator.</summary>
+            <seealso cref="T:FileCabinetApp.Interfaces.IRecordValidator" />
+        </member>
+        <member name="M:FileCabinetApp.Validators.RecordValidator.CompositeValidator.#ctor(System.Collections.Generic.IEnumerable{FileCabinetApp.Interfaces.IRecordValidator})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Validators.RecordValidator.CompositeValidator"/> class.
+            </summary>
+            <param name="validators">The validators.</param>
+        </member>
+        <member name="M:FileCabinetApp.Validators.RecordValidator.CompositeValidator.ValidateParameters(FileCabinetApp.RecordArgs)">
+            <summary>
+            Validates the parameters.
+            </summary>
+            <param name="parameters">The parameters.</param>
+        </member>
         <member name="T:FileCabinetApp.Validators.RecordValidator.DateOfBirthValidator">
             <summary>
               <para>Date of birth validator.</para>
@@ -1019,6 +1035,70 @@
             <summary>Validate parameters.</summary>
             <param name="parameters">Parameters.</param>
         </member>
+        <member name="T:FileCabinetApp.Validators.RecordValidator.ValidatorBuilder">
+            <summary>
+            Validator builder.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.RecordValidator.ValidatorBuilder.#ctor">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.Validators.RecordValidator.ValidatorBuilder"/> class.</summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.RecordValidator.ValidatorBuilder.#ctor(System.Collections.Generic.List{FileCabinetApp.Interfaces.IRecordValidator})">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.Validators.RecordValidator.ValidatorBuilder"/> class.</summary>
+            <param name="validators">The validators.</param>
+        </member>
+        <member name="M:FileCabinetApp.Validators.RecordValidator.ValidatorBuilder.Create">
+            <summary>Creates this instance.</summary>
+            <returns>Validator.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Validators.RecordValidator.ValidatorBuilder.ValidateFirstName(System.Int32,System.Int32)">
+            <summary>Validates the first name.</summary>
+            <param name="minLength">The minimum length.</param>
+            <param name="maxLength">The maximum length.</param>
+            <returns>Validator builder.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Validators.RecordValidator.ValidatorBuilder.ValidateLastName(System.Int32,System.Int32)">
+            <summary>Validates the last name.</summary>
+            <param name="minLength">The minimum length.</param>
+            <param name="maxLength">The maximum length.</param>
+            <returns>Validator builder.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Validators.RecordValidator.ValidatorBuilder.ValidateDateOfBirth(System.DateTime,System.DateTime)">
+            <summary>Validates the date of birth.</summary>
+            <param name="from">From.</param>
+            <param name="to">To.</param>
+            <returns>Validator builder.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Validators.RecordValidator.ValidatorBuilder.ValidateSalary(System.Int16,System.Int16)">
+            <summary>Validates the salary.</summary>
+            <param name="min">The minimum.</param>
+            <param name="max">The maximum.</param>
+            <returns>Validator builder.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Validators.RecordValidator.ValidatorBuilder.ValidateWorkRate(System.Decimal,System.Decimal)">
+            <summary>Validates the work rate.</summary>
+            <param name="min">The minimum.</param>
+            <param name="max">The maximum.</param>
+            <returns>Validator builder.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Validators.RecordValidator.ValidatorBuilder.ValidateGender(System.Char[])">
+            <summary>Validates the gender.</summary>
+            <param name="gender">The gender.</param>
+            <returns>Validator builder.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Validators.RecordValidator.ValidatorBuilderExtensions">
+            <summary>Builder extension.</summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.RecordValidator.ValidatorBuilderExtensions.CreateDefault(FileCabinetApp.Validators.RecordValidator.ValidatorBuilder)">
+            <summary>Creates the default.</summary>
+            <param name="validatorBuilder">The validator builder.</param>
+            <returns>Record validator.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Validators.RecordValidator.ValidatorBuilderExtensions.CreateCustom(FileCabinetApp.Validators.RecordValidator.ValidatorBuilder)">
+            <summary>Creates the custom.</summary>
+            <param name="validatorBuilder">The validator builder.</param>
+            <returns>Record validator.</returns>
+        </member>
         <member name="T:FileCabinetApp.Validators.RecordValidator.WorkRateValidator">
             <summary>Work rate validator.</summary>
             <seealso cref="T:FileCabinetApp.Interfaces.IRecordValidator" />
@@ -1030,28 +1110,6 @@
         </member>
         <member name="M:FileCabinetApp.Validators.RecordValidator.WorkRateValidator.ValidateParameters(FileCabinetApp.RecordArgs)">
             <summary>Validate parameters.</summary>
-            <param name="parameters">Parameters.</param>
-        </member>
-        <member name="T:FileCabinetApp.CustomValidator">
-            <summary>
-            This class provides data validation.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.CustomValidator.ValidateParameters(FileCabinetApp.RecordArgs)">
-            <summary>
-            Custom validate parameters.
-            </summary>
-            <param name="parameters">Parameters.</param>
-        </member>
-        <member name="T:FileCabinetApp.DefaultValidator">
-            <summary>
-            This class provides data validation.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.DefaultValidator.ValidateParameters(FileCabinetApp.RecordArgs)">
-            <summary>
-            Default validate parameters.
-            </summary>
             <param name="parameters">Parameters.</param>
         </member>
     </members>

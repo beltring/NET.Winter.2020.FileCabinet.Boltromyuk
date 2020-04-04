@@ -9,6 +9,7 @@ using FileCabinetApp.CommandHandlers;
 using FileCabinetApp.Enums;
 using FileCabinetApp.Interfaces;
 using FileCabinetApp.Validators.InputValidators;
+using FileCabinetApp.Validators.RecordValidator;
 
 namespace FileCabinetApp
 {
@@ -105,13 +106,13 @@ namespace FileCabinetApp
 
         private static void CreateService(ValidatorType validatorType, ServiceType serviceType)
         {
-            IRecordValidator recordValidator = new DefaultValidator();
+            IRecordValidator recordValidator = new ValidatorBuilder().CreateDefault();
 
             switch (validatorType)
             {
                 case ValidatorType.Custom:
                     validator = InputValidatorBuilder.CreateCustom();
-                    recordValidator = new CustomValidator();
+                    recordValidator = new ValidatorBuilder().CreateCustom();
                     break;
                 case ValidatorType.Default:
                     validator = InputValidatorBuilder.CreateDefault();

@@ -13,7 +13,7 @@ namespace FileCabinetApp.CommandHandlers
         /// <param name="fileCabinetService">The file cabinet service.</param>
         protected ServiceCommandHandlerBase(IFileCabinetService fileCabinetService)
         {
-            this.Service = fileCabinetService;
+            this.Service = fileCabinetService ?? throw new ArgumentNullException($"{nameof(fileCabinetService)} can't be null.");
         }
 
         /// <summary>Gets the service.</summary>

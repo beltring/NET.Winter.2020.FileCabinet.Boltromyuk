@@ -48,7 +48,7 @@ namespace FileCabinetApp.Validators.RecordValidator
                 string exc = null;
                 foreach (var item in this.gender)
                 {
-                    exc += item + " ";
+                    exc += item + ",";
                 }
 
                 throw new ArgumentException($"Invalid value, the value of the {nameof(this.gender)} can be only {exc}.");
