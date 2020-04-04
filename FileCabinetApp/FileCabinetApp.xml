@@ -30,15 +30,6 @@
             The parameters.
             </value>
         </member>
-        <member name="T:FileCabinetApp.CommandHandlers.CommandHandler">
-            <summary>Abstract command handler.</summary>
-            <seealso cref="T:FileCabinetApp.CommandHandlers.CommandHandlerBase" />
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.CommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
-            <summary>Handles the specified request.</summary>
-            <param name="request">The request.</param>
-            <returns>Class AppCommandRequest Instance.</returns>
-        </member>
         <member name="T:FileCabinetApp.CommandHandlers.CommandHandlerBase">
             <summary>Abstract command handler.</summary>
             <seealso cref="T:FileCabinetApp.CommandHandlers.ICommandHandler" />
@@ -61,6 +52,60 @@
             Class AppCommandRequest Instance.
             </returns>
         </member>
+        <member name="T:FileCabinetApp.CommandHandlers.CreateCommandHandler">
+            <summary>Create command handler.</summary>
+            <seealso cref="T:FileCabinetApp.CommandHandlers.CommandHandlerBase" />
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.CreateCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>Handles the specified request.</summary>
+            <param name="request">The request.</param>
+            <returns>Class AppCommandRequest Instance.</returns>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.EditCommandHandler">
+            <summary>Edit command handler.</summary>
+            <seealso cref="T:FileCabinetApp.CommandHandlers.CommandHandlerBase" />
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.EditCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>Handles the specified request.</summary>
+            <param name="request">The request.</param>
+            <returns>Class AppCommandRequest Instance.</returns>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ExitCommandHandler">
+            <summary>Exit command handler.</summary>
+            <seealso cref="T:FileCabinetApp.CommandHandlers.CommandHandlerBase" />
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ExitCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>Handles the specified request.</summary>
+            <param name="request">The request.</param>
+            <returns>Class AppCommandRequest Instance.</returns>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ExportCommandHandler">
+            <summary>Export command handler.</summary>
+            <seealso cref="T:FileCabinetApp.CommandHandlers.CommandHandlerBase" />
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ExportCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>Handles the specified request.</summary>
+            <param name="request">The request.</param>
+            <returns>Class AppCommandRequest Instance.</returns>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.FindCommandHandler">
+            <summary>Find command handler.</summary>
+            <seealso cref="T:FileCabinetApp.CommandHandlers.CommandHandlerBase" />
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>Handles the specified request.</summary>
+            <param name="request">The request.</param>
+            <returns>Class AppCommandRequest Instance.</returns>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.HelpCommandHandler">
+            <summary>Help command handler.</summary>
+            <seealso cref="T:FileCabinetApp.CommandHandlers.CommandHandlerBase" />
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.HelpCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>Handles the specified request.</summary>
+            <param name="request">The request.</param>
+            <returns>Class AppCommandRequest Instance.</returns>
+        </member>
         <member name="T:FileCabinetApp.CommandHandlers.ICommandHandler">
             <summary>
             The Handler interface declares a method for constructing a chain of handlers.
@@ -76,6 +121,67 @@
             <summary>Handles the specified request.</summary>
             <param name="request">The request.</param>
             <returns>Class AppCommandRequest Instance.</returns>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ImportCommandHandler">
+            <summary>Import command handler.</summary>
+            <seealso cref="T:FileCabinetApp.CommandHandlers.CommandHandlerBase" />
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ImportCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>Handles the specified request.</summary>
+            <param name="request">The request.</param>
+            <returns>Class AppCommandRequest Instance.</returns>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ListCommandHandler">
+            <summary>List command handler.</summary>
+            <seealso cref="T:FileCabinetApp.CommandHandlers.CommandHandlerBase" />
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ListCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>Handles the specified request.</summary>
+            <param name="request">The request.</param>
+            <returns>Class AppCommandRequest Instance.</returns>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.MissedCommandHandler">
+            <summary>Missed command handler.</summary>
+            <seealso cref="T:FileCabinetApp.CommandHandlers.CommandHandlerBase" />
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.MissedCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>Handles the specified request.</summary>
+            <param name="request">The request.</param>
+            <returns>Class AppCommandRequest Instance.</returns>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.PurgeCommandHandler">
+            <summary>Purge command handler.</summary>
+            <seealso cref="T:FileCabinetApp.CommandHandlers.CommandHandlerBase" />
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.PurgeCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>Handles the specified request.</summary>
+            <param name="request">The request.</param>
+            <returns>Class AppCommandRequest Instance.</returns>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.RemoveCommandHandler">
+            <summary>Remove command handler.</summary>
+            <seealso cref="T:FileCabinetApp.CommandHandlers.CommandHandlerBase" />
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.RemoveCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>Handles the specified request.</summary>
+            <param name="request">The request.</param>
+            <returns>Class AppCommandRequest Instance.</returns>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.StatCommandHandler">
+            <summary>Stat command handler.</summary>
+            <seealso cref="T:FileCabinetApp.CommandHandlers.CommandHandlerBase" />
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.StatCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <summary>Handles the specified request.</summary>
+            <param name="request">The request.</param>
+            <returns>Class AppCommandRequest Instance.</returns>
+        </member>
+        <member name="T:FileCabinetApp.ConsoleReader">
+            <summary>Сlass for reading data from the console.</summary>
+        </member>
+        <member name="M:FileCabinetApp.ConsoleReader.ConsoleRead">
+            <summary>Consoles the read.</summary>
+            <returns>Record arguments.</returns>
         </member>
         <member name="T:FileCabinetApp.Converter">
             <summary>
@@ -663,17 +769,26 @@
             Class Program.
             </summary>
         </member>
-        <member name="F:FileCabinetApp.Program.isRunning">
-            <summary>The is running.</summary>
+        <member name="P:FileCabinetApp.Program.IsRunning">
+            <summary>Gets or sets a value indicating whether this instance is running.</summary>
+            <value>
+              <c>true</c> if this instance is running; otherwise, <c>false</c>.</value>
         </member>
-        <member name="F:FileCabinetApp.Program.fileCabinetService">
-            <summary>The file cabinet service.</summary>
+        <member name="P:FileCabinetApp.Program.FileCabinetService">
+            <summary>Gets the file cabinet service.</summary>
+            <value>The file cabinet service.</value>
         </member>
-        <member name="F:FileCabinetApp.Program.validatorType">
-            <summary>The validator type.</summary>
+        <member name="P:FileCabinetApp.Program.ValidatorType">
+            <summary>Gets the type of the validator.</summary>
+            <value>The type of the validator.</value>
         </member>
-        <member name="F:FileCabinetApp.Program.serviceType">
-            <summary>The service type.</summary>
+        <member name="P:FileCabinetApp.Program.ServiceType">
+            <summary>Gets the type of the service.</summary>
+            <value>The type of the service.</value>
+        </member>
+        <member name="P:FileCabinetApp.Program.Validator">
+            <summary>Gets the validator.</summary>
+            <value>The validator.</value>
         </member>
         <member name="M:FileCabinetApp.Program.Main(System.String[])">
             <summary>
