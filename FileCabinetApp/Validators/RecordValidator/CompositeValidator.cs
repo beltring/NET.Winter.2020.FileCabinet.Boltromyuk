@@ -16,7 +16,7 @@ namespace FileCabinetApp.Validators.RecordValidator
         /// Initializes a new instance of the <see cref="CompositeValidator"/> class.
         /// </summary>
         /// <param name="validators">The validators.</param>
-        protected CompositeValidator(IEnumerable<IRecordValidator> validators)
+        public CompositeValidator(IEnumerable<IRecordValidator> validators)
         {
             this.validators = validators.ToList();
         }
