@@ -8,7 +8,6 @@ using System.Xml;
 using FileCabinetApp.CommandHandlers;
 using FileCabinetApp.Enums;
 using FileCabinetApp.Interfaces;
-using FileCabinetApp.Printer;
 
 namespace FileCabinetApp
 {
@@ -74,7 +73,7 @@ namespace FileCabinetApp
 
         private static ICommandHandler CreateCommandHandlers()
         {
-            var recordPrinter = new DefaultRecordPrinter();
+            var recordPrinter = new Action<IEnumerable<FileCabinetRecord>>(x => DefaultRecordPrint(x));
 
             var exitHandler = new ExitCommandHandler(fileStream, x => isRunning = x);
             var helpHandler = new HelpCommandHandler();
@@ -124,6 +123,29 @@ namespace FileCabinetApp
                 case ServiceType.Memory:
                     fileCabinetService = new FileCabinetMemoryService(validator);
                     break;
+            }
+        }
+
+        private static void DefaultRecordPrint(IEnumerable<FileCabinetRecord> records)
+        {
+            int count = records.Count();
+
+            if (records is null)
+            {
+                Console.WriteLine("The record is not found");
+            }
+            else if (count < 1)
+            {
+                Console.WriteLine("The record is not found");
+            }
+            else
+            {
+                foreach (FileCabinetRecord record in records)
+                {
+                    Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, " +
+                        $"{record.DateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture)}, " +
+                        $"{record.Salary}, {record.WorkRate}, {record.Gender}");
+                }
             }
         }
     }

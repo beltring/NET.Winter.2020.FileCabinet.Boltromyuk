@@ -11,12 +11,12 @@ namespace FileCabinetApp.CommandHandlers
     /// <seealso cref="FileCabinetApp.CommandHandlers.CommandHandlerBase" />
     internal class FindCommandHandler : ServiceCommandHandlerBase
     {
-        private readonly IRecordPrinter printer;
+        private readonly Action<IEnumerable<FileCabinetRecord>> printer;
 
         /// <summary>Initializes a new instance of the <see cref="FindCommandHandler"/> class.</summary>
         /// <param name="service">The service.</param>
         /// <param name="printer">The printer.</param>
-        public FindCommandHandler(IFileCabinetService service, IRecordPrinter printer)
+        public FindCommandHandler(IFileCabinetService service, Action<IEnumerable<FileCabinetRecord>> printer)
             : base(service)
         {
             this.printer = printer;
@@ -50,16 +50,16 @@ namespace FileCabinetApp.CommandHandlers
                 {
                     case "firstname":
                         records = this.Service.FindByFirstName(search);
-                        this.printer.Print(records);
+                        this.printer(records);
                         break;
                     case "lastname":
                         records = this.Service.FindByLastName(search);
-                        this.printer.Print(records);
+                        this.printer(records);
                         break;
                     case "dateofbirth":
                         DateTime dateofbirth = DateTime.ParseExact(search, "yyyy-MMM-dd", CultureInfo.InvariantCulture);
                         records = this.Service.FindByDateOfBirth(dateofbirth);
-                        this.printer.Print(records);
+                        this.printer(records);
                         break;
                     default:
                         Console.WriteLine("There is no such category.Available categories:'firstname', 'lastname', 'dateofbirth'");

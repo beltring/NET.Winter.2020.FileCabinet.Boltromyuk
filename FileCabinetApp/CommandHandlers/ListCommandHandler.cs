@@ -12,12 +12,12 @@ namespace FileCabinetApp.CommandHandlers
     /// <seealso cref="FileCabinetApp.CommandHandlers.CommandHandlerBase" />
     internal class ListCommandHandler : ServiceCommandHandlerBase
     {
-        private readonly IRecordPrinter printer;
+        private readonly Action<IEnumerable<FileCabinetRecord>> printer;
 
         /// <summary>Initializes a new instance of the <see cref="ListCommandHandler"/> class.</summary>
         /// <param name="service">The service.</param>
         /// <param name="printer">The printer.</param>
-        public ListCommandHandler(IFileCabinetService service, IRecordPrinter printer)
+        public ListCommandHandler(IFileCabinetService service, Action<IEnumerable<FileCabinetRecord>> printer)
             : base(service)
         {
             this.printer = printer;
@@ -43,7 +43,7 @@ namespace FileCabinetApp.CommandHandlers
 
             var sortRecords = records.OrderBy(x => x.Id).ToList();
 
-            this.printer.Print(sortRecords);
+            this.printer(sortRecords);
         }
     }
 }
