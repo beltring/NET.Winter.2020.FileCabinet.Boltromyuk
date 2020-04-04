@@ -7,17 +7,16 @@ namespace FileCabinetApp.CommandHandlers
 {
     /// <summary>Create command handler.</summary>
     /// <seealso cref="FileCabinetApp.CommandHandlers.CommandHandlerBase" />
-    internal class CreateCommandHandler : CommandHandlerBase
+    internal class CreateCommandHandler : ServiceCommandHandlerBase
     {
-        private IFileCabinetService service;
         private IRecordValidator validator;
 
         /// <summary>Initializes a new instance of the <see cref="CreateCommandHandler"/> class.</summary>
         /// <param name="service">The service.</param>
         /// <param name="validator">The validator.</param>
         public CreateCommandHandler(IFileCabinetService service, IRecordValidator validator)
+            : base(service)
         {
-            this.service = service;
             this.validator = validator;
         }
 
@@ -39,7 +38,7 @@ namespace FileCabinetApp.CommandHandlers
         {
             RecordArgs eventArgs = ConsoleReader.ConsoleRead(this.validator);
 
-            int id = this.service.CreateRecord(eventArgs);
+            int id = this.Service.CreateRecord(eventArgs);
             Console.WriteLine($"Record #{id} is created.");
         }
     }

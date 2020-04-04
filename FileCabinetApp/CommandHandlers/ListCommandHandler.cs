@@ -10,15 +10,13 @@ namespace FileCabinetApp.CommandHandlers
 {
     /// <summary>List command handler.</summary>
     /// <seealso cref="FileCabinetApp.CommandHandlers.CommandHandlerBase" />
-    internal class ListCommandHandler : CommandHandlerBase
+    internal class ListCommandHandler : ServiceCommandHandlerBase
     {
-        private IFileCabinetService service;
-
         /// <summary>Initializes a new instance of the <see cref="ListCommandHandler"/> class.</summary>
         /// <param name="service">The service.</param>
         public ListCommandHandler(IFileCabinetService service)
+            : base(service)
         {
-            this.service = service;
         }
 
         /// <summary>Handles the specified request.</summary>
@@ -58,7 +56,7 @@ namespace FileCabinetApp.CommandHandlers
 
         private void List(string parameters)
         {
-            ReadOnlyCollection<FileCabinetRecord> records = this.service.GetRecords();
+            ReadOnlyCollection<FileCabinetRecord> records = this.Service.GetRecords();
 
             var sortRecords = records.OrderBy(x => x.Id).ToList();
 

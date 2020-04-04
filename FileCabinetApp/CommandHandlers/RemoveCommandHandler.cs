@@ -7,15 +7,13 @@ namespace FileCabinetApp.CommandHandlers
 {
     /// <summary>Remove command handler.</summary>
     /// <seealso cref="FileCabinetApp.CommandHandlers.CommandHandlerBase" />
-    internal class RemoveCommandHandler : CommandHandlerBase
+    internal class RemoveCommandHandler : ServiceCommandHandlerBase
     {
-        private IFileCabinetService service;
-
         /// <summary>Initializes a new instance of the <see cref="RemoveCommandHandler"/> class.</summary>
         /// <param name="service">The service.</param>
         public RemoveCommandHandler(IFileCabinetService service)
+            : base(service)
         {
-            this.service = service;
         }
 
         /// <summary>Handles the specified request.</summary>
@@ -40,7 +38,7 @@ namespace FileCabinetApp.CommandHandlers
                 return;
             }
 
-            if (id == 0 || this.service.GetStat(out int deletedRecordsCount) == 0)
+            if (id == 0 || this.Service.GetStat(out int deletedRecordsCount) == 0)
             {
                 Console.WriteLine($"Record #{parameters} doesn't exists.");
                 return;
@@ -48,7 +46,7 @@ namespace FileCabinetApp.CommandHandlers
 
             try
             {
-                this.service.Remove(id);
+                this.Service.Remove(id);
                 Console.WriteLine($"Record #{parameters} is removed.");
             }
             catch (ArgumentException ex)

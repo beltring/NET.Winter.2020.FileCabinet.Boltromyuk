@@ -8,17 +8,16 @@ namespace FileCabinetApp.CommandHandlers
 {
     /// <summary>Edit command handler.</summary>
     /// <seealso cref="FileCabinetApp.CommandHandlers.CommandHandlerBase" />
-    internal class EditCommandHandler : CommandHandlerBase
+    internal class EditCommandHandler : ServiceCommandHandlerBase
     {
-        private IFileCabinetService service;
         private IRecordValidator validator;
 
         /// <summary>Initializes a new instance of the <see cref="EditCommandHandler"/> class.</summary>
         /// <param name="service">The service.</param>
         /// <param name="validator">The validator.</param>
         public EditCommandHandler(IFileCabinetService service, IRecordValidator validator)
+            : base(service)
         {
-            this.service = service;
             this.validator = validator;
         }
 
@@ -41,11 +40,11 @@ namespace FileCabinetApp.CommandHandlers
             try
             {
                 int id = int.Parse(parameters, CultureInfo.InvariantCulture);
-                if (this.service.CheckId(id, out int index))
+                if (this.Service.CheckId(id, out int index))
                 {
                     RecordArgs eventArgs = ConsoleReader.ConsoleRead(this.validator);
 
-                    this.service.EditRecord(id, eventArgs);
+                    this.Service.EditRecord(id, eventArgs);
                     Console.WriteLine($"Record #{id} is updated.");
                 }
                 else

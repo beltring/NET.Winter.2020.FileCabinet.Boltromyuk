@@ -9,15 +9,13 @@ namespace FileCabinetApp.CommandHandlers
 {
     /// <summary>Find command handler.</summary>
     /// <seealso cref="FileCabinetApp.CommandHandlers.CommandHandlerBase" />
-    internal class FindCommandHandler : CommandHandlerBase
+    internal class FindCommandHandler : ServiceCommandHandlerBase
     {
-        private IFileCabinetService service;
-
         /// <summary>Initializes a new instance of the <see cref="FindCommandHandler"/> class.</summary>
         /// <param name="service">The service.</param>
         public FindCommandHandler(IFileCabinetService service)
+            : base(service)
         {
-            this.service = service;
         }
 
         /// <summary>Handles the specified request.</summary>
@@ -68,16 +66,16 @@ namespace FileCabinetApp.CommandHandlers
                 switch (searchParam)
                 {
                     case "firstname":
-                        records = this.service.FindByFirstName(search);
+                        records = this.Service.FindByFirstName(search);
                         Print(records);
                         break;
                     case "lastname":
-                        records = this.service.FindByLastName(search);
+                        records = this.Service.FindByLastName(search);
                         Print(records);
                         break;
                     case "dateofbirth":
                         DateTime dateofbirth = DateTime.ParseExact(search, "yyyy-MMM-dd", CultureInfo.InvariantCulture);
-                        records = this.service.FindByDateOfBirth(dateofbirth);
+                        records = this.Service.FindByDateOfBirth(dateofbirth);
                         Print(records);
                         break;
                     default:

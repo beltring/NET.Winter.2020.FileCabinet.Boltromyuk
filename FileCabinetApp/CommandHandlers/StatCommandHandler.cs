@@ -7,15 +7,13 @@ namespace FileCabinetApp.CommandHandlers
 {
     /// <summary>Stat command handler.</summary>
     /// <seealso cref="FileCabinetApp.CommandHandlers.CommandHandlerBase" />
-    internal class StatCommandHandler : CommandHandlerBase
+    internal class StatCommandHandler : ServiceCommandHandlerBase
     {
-        private IFileCabinetService service;
-
         /// <summary>Initializes a new instance of the <see cref="StatCommandHandler"/> class.</summary>
         /// <param name="service">The service.</param>
         public StatCommandHandler(IFileCabinetService service)
+            : base(service)
         {
-            this.service = service;
         }
 
         /// <summary>Handles the specified request.</summary>
@@ -34,7 +32,7 @@ namespace FileCabinetApp.CommandHandlers
 
         private void Stat(string parameters)
         {
-            var recordsCount = this.service.GetStat(out int deletedRecordsCount);
+            var recordsCount = this.Service.GetStat(out int deletedRecordsCount);
             Console.WriteLine($"{recordsCount} record(s). Number of deleted records: {deletedRecordsCount}.");
         }
     }

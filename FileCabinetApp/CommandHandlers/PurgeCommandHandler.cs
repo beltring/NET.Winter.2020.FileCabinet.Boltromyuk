@@ -7,15 +7,13 @@ namespace FileCabinetApp.CommandHandlers
 {
     /// <summary>Purge command handler.</summary>
     /// <seealso cref="FileCabinetApp.CommandHandlers.CommandHandlerBase" />
-    internal class PurgeCommandHandler : CommandHandlerBase
+    internal class PurgeCommandHandler : ServiceCommandHandlerBase
     {
-        private IFileCabinetService service;
-
         /// <summary>Initializes a new instance of the <see cref="PurgeCommandHandler"/> class.</summary>
         /// <param name="service">The service.</param>
         public PurgeCommandHandler(IFileCabinetService service)
+            : base(service)
         {
-            this.service = service;
         }
 
         /// <summary>Handles the specified request.</summary>
@@ -34,9 +32,9 @@ namespace FileCabinetApp.CommandHandlers
 
         private void Purge(string parameters)
         {
-            this.service.Purge(out int deletedRecordsCount, out int recordsCount);
+            this.Service.Purge(out int deletedRecordsCount, out int recordsCount);
 
-            if (this.service is FileCabinetFilesystemService)
+            if (this.Service is FileCabinetFilesystemService)
             {
                 Console.WriteLine($"Data file processing is completed: {deletedRecordsCount} of {recordsCount} records were purged.");
             }

@@ -8,15 +8,13 @@ namespace FileCabinetApp.CommandHandlers
 {
     /// <summary>Import command handler.</summary>
     /// <seealso cref="FileCabinetApp.CommandHandlers.CommandHandlerBase" />
-    internal class ImportCommandHandler : CommandHandlerBase
+    internal class ImportCommandHandler : ServiceCommandHandlerBase
     {
-        private IFileCabinetService service;
-
         /// <summary>Initializes a new instance of the <see cref="ImportCommandHandler"/> class.</summary>
         /// <param name="service">The service.</param>
         public ImportCommandHandler(IFileCabinetService service)
+            : base(service)
         {
-            this.service = service;
         }
 
         /// <summary>Handles the specified request.</summary>
@@ -73,7 +71,7 @@ namespace FileCabinetApp.CommandHandlers
             using StreamReader reader = new StreamReader(path);
 
             snapshot.LoadFromCSV(reader, out int countRecords);
-            this.service.Restore(snapshot, out Dictionary<int, string> exceptions);
+            this.Service.Restore(snapshot, out Dictionary<int, string> exceptions);
 
             countRecords -= exceptions.Count;
 
@@ -98,7 +96,7 @@ namespace FileCabinetApp.CommandHandlers
 
             using StreamReader reader = new StreamReader(path);
             snapshot.LoadFromXML(reader, out int countRecords);
-            this.service.Restore(snapshot, out Dictionary<int, string> exceptions);
+            this.Service.Restore(snapshot, out Dictionary<int, string> exceptions);
 
             countRecords -= exceptions.Count;
 

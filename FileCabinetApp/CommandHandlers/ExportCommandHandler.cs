@@ -9,15 +9,13 @@ namespace FileCabinetApp.CommandHandlers
 {
     /// <summary>Export command handler.</summary>
     /// <seealso cref="FileCabinetApp.CommandHandlers.CommandHandlerBase" />
-    internal class ExportCommandHandler : CommandHandlerBase
+    internal class ExportCommandHandler : ServiceCommandHandlerBase
     {
-        private IFileCabinetService service;
-
         /// <summary>Initializes a new instance of the <see cref="ExportCommandHandler"/> class.</summary>
         /// <param name="service">The service.</param>
         public ExportCommandHandler(IFileCabinetService service)
+            : base(service)
         {
-            this.service = service;
         }
 
         /// <summary>Handles the specified request.</summary>
@@ -75,7 +73,7 @@ namespace FileCabinetApp.CommandHandlers
                 try
                 {
                     using StreamWriter sw = new StreamWriter(path);
-                    var snapshot = this.service.MakeSnapshot();
+                    var snapshot = this.Service.MakeSnapshot();
                     snapshot.SaveToCsv(sw);
                     Console.WriteLine($"All records are exported to file {path}.");
                 }
@@ -104,7 +102,7 @@ namespace FileCabinetApp.CommandHandlers
                     settings.WriteEndDocumentOnClose = true;
 
                     using XmlWriter xmlWriter = XmlWriter.Create(path, settings);
-                    var snapshot = this.service.MakeSnapshot();
+                    var snapshot = this.Service.MakeSnapshot();
                     snapshot.SaveToXML(xmlWriter);
                     Console.WriteLine($"All records are exported to file {path}.");
                 }
